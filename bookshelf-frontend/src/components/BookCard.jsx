@@ -4,6 +4,14 @@ export default function BookCard({ book, onAddToCart }) {
   return (
     <article className="book-card">
       <div className="book-card__cover" style={{ '--cover-color': book.cover }}>
+        {book.coverImage && (
+          <img
+            src={book.coverImage}
+            alt={book.title}
+            loading="lazy"
+            className="book-card__cover-image"
+          />
+        )}
         <span className="book-card__genre">{book.genre}</span>
         <span className="book-card__cover-title">{book.title}</span>
       </div>
