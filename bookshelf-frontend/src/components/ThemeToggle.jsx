@@ -1,7 +1,7 @@
 import { useLayoutEffect, useState } from 'react';
 import './ThemeToggle.css';
 
-const STORAGE_KEY = 'bookshelf-theme';
+const STORAGE_KEY = 'theme';
 
 function getInitialTheme() {
   const saved = window.localStorage.getItem(STORAGE_KEY);
@@ -15,8 +15,6 @@ function getInitialTheme() {
 export default function ThemeToggle() {
   const [theme, setTheme] = useState(getInitialTheme);
 
-  // useLayoutEffect (instead of useEffect) applies the theme before the
-  // browser paints, to avoid a flash of the wrong theme on load.
   useLayoutEffect(() => {
     document.documentElement.setAttribute('data-theme', theme);
     window.localStorage.setItem(STORAGE_KEY, theme);

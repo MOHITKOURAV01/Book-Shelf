@@ -2,13 +2,21 @@ import { useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { books } from '../data/books.js';
 import Rating from '../components/Rating.jsx';
+import { useContext } from 'react';
+import { useParams, Link } from 'react-router-dom';
+import { books } from '../data/books.js';
+import WishlistButton from '../components/WishlistButton.jsx';
+import { CartContext } from '../context/CartContext.jsx';
+import { WishlistContext } from '../context/WishlistContext.jsx';
 import './BookDetail.css';
 
-export default function BookDetail({ onAddToCart }) {
+export default function BookDetail() {
   const { id } = useParams();
   const [rating, setRating] = useState(0);
   const [reviewText, setReviewText] = useState('');
   const [error, setError] = useState('');
+  const { addToCart } = useContext(CartContext);
+  const { wishlist, toggleWishlist } = useContext(WishlistContext);
   
   const book = books.find((item) => item.id === id);
 
@@ -73,9 +81,12 @@ export default function BookDetail({ onAddToCart }) {
             {book.year && <p><strong>Publication Year:</strong> {book.year}</p>}
           </div>
 
-          <button className="book-detail-add-btn" onClick={() => onAddToCart && onAddToCart(book)}>
-            Add to cart
-          </button>
+          <div className="book-detail-actions">
+            <button className="book-detail-add-btn" onClick={() => addToCart(book)}>
+              Add to cart
+            </button>
+            <WishlistButton active={wishlist?.includes(book.id)} onToggle={() => toggleWishlist(book.id)} />
+          </div>
         </div>
       </div>
       

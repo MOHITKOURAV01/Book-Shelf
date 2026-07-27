@@ -1,9 +1,11 @@
-import { useState } from 'react';
+import { useState, useContext } from 'react';
 import { Link } from 'react-router-dom';
+import { CartContext } from '../context/CartContext.jsx';
 import './Navbar.css';
 
-export default function Navbar({ cartCount, onCartClick, searchQuery, setSearchQuery }) {
+export default function Navbar({ searchQuery, setSearchQuery }) {
   const [mobileOpen, setMobileOpen] = useState(false);
+  const { cart, setIsCartOpen } = useContext(CartContext);
 
   return (
     <div className="nav-wrapper">
@@ -23,9 +25,11 @@ export default function Navbar({ cartCount, onCartClick, searchQuery, setSearchQ
 
           {/* Desktop nav links */}
           <nav className="nav__links">
-            <a href="#shelf">The Shelf</a>
-            <a href="#catalog">Browse</a>
+            <a href="/#shelf">The Shelf</a>
+            <a href="/#catalog">Browse</a>
+            <Link to="/wishlist">Wishlist</Link>
             <Link to="/about">About</Link>
+            <Link to="/login">Login</Link>
           </nav>
 
           {/* Desktop actions */}
@@ -37,9 +41,9 @@ export default function Navbar({ cartCount, onCartClick, searchQuery, setSearchQ
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />
-            <button className="nav__cart" onClick={onCartClick} aria-label="Open cart">
+            <button className="nav__cart" onClick={() => setIsCartOpen(true)} aria-label="Open cart">
               Cart
-              <span className="nav__cart-count">{cartCount}</span>
+              <span className="nav__cart-count">{cart.length}</span>
             </button>
           </div>
 
@@ -70,9 +74,11 @@ export default function Navbar({ cartCount, onCartClick, searchQuery, setSearchQ
         {/* Mobile dropdown menu */}
         {mobileOpen && (
           <div className="nav__mobile-menu">
-            <a href="#shelf" onClick={() => setMobileOpen(false)}>The Shelf</a>
-            <a href="#catalog" onClick={() => setMobileOpen(false)}>Browse</a>
+            <a href="/#shelf" onClick={() => setMobileOpen(false)}>The Shelf</a>
+            <a href="/#catalog" onClick={() => setMobileOpen(false)}>Browse</a>
+            <Link to="/wishlist" onClick={() => setMobileOpen(false)}>Wishlist</Link>
             <Link to="/about" onClick={() => setMobileOpen(false)}>About</Link>
+            <Link to="/login" onClick={() => setMobileOpen(false)}>Login</Link>
             <input 
               className="nav__search nav__search--mobile" 
               type="search" 
