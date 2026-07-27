@@ -1,9 +1,21 @@
-import { createContext, useState } from 'react';
+import { createContext, useState, useEffect } from 'react';
 
 export const WishlistContext = createContext();
 
 export function WishlistProvider({ children }) {
-  const [wishlist, setWishlist] = useState([]);
+  const [wishlist, setWishlist] = useState(() => {
+    try {
+      const storedWishlist = localStorage.getItem('wishlist');
+      return storedWishlist ? JSON.parse(storedWishlist) : [];
+    } catch (error) {
+      console.error('Failed to parse wishlist from localStorage:', error);
+      return [];
+    }
+  });
+
+  useEffect(() => {
+    localStorage.setItem('wishlist', JSON.stringify(wishlist));
+  }, [wishlist]);
 
   function toggleWishlist(bookId) {
     setWishlist((prev) =>
