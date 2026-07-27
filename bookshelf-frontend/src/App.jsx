@@ -13,26 +13,15 @@ import AboutUs from './pages/AboutUs.jsx';
 import PrivacyPolicy from './pages/PrivacyPolicy.jsx';
 import TermsOfService from './pages/TermsOfService.jsx';
 import BookDetail from './pages/BookDetail.jsx';
+import Wishlist from './pages/Wishlist.jsx';
+import Login from './pages/Login.jsx';
+import Signup from './pages/Signup.jsx';
+import NotFound from './pages/NotFound.jsx';
 
 import './App.css';
 
 export default function App() {
-  const [cart, setCart] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
-  const [isCartOpen, setIsCartOpen] = useState(false);
-
-  function handleAddToCart(book) {
-    setCart((prev) => {
-      const existing = prev.find((item) => item.id === book.id);
-      if (existing) {
-        return prev.map((item) =>
-          item.id === book.id ? { ...item, quantity: item.quantity + 1 } : item
-        );
-      }
-      return [...prev, { ...book, quantity: 1 }];
-    });
-    setIsCartOpen(true);
-  }
 
   return (
     <div className="app">
@@ -41,28 +30,26 @@ export default function App() {
       <CustomCursor />
 
       <Navbar 
-        cartCount={cart.length} 
-        onCartClick={() => setIsCartOpen(true)} 
         searchQuery={searchQuery}
         setSearchQuery={setSearchQuery}
       />
       <div className="nav-spacer" />
 
       <Routes>
-        <Route path="/" element={<Home onAddToCart={handleAddToCart} searchQuery={searchQuery} />} />
-        <Route path="/book/:id" element={<BookDetail onAddToCart={handleAddToCart} />} />
+        <Route path="/" element={<Home searchQuery={searchQuery} />} />
+        <Route path="/book/:id" element={<BookDetail />} />
+        <Route path="/wishlist" element={<Wishlist />} />
         <Route path="/about" element={<AboutUs />} />
         <Route path="/privacy" element={<PrivacyPolicy />} />
         <Route path="/terms" element={<TermsOfService />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/signup" element={<Signup />} />
+        <Route path="*" element={<NotFound />} />
       </Routes>
 
       <Footer />
       
-      <CartDrawer 
-        cart={cart} 
-        isOpen={isCartOpen} 
-        onClose={() => setIsCartOpen(false)} 
-      />
+      <CartDrawer />
     </div>
   );
 }

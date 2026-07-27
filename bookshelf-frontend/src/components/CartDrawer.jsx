@@ -1,9 +1,17 @@
+ accessibility/cart-drawer-focus-trap-fix
 import { useEffect, useRef } from 'react';
 import './CartDrawer.css';
 
 export default function CartDrawer({ cart, isOpen, onClose }) {
   const drawerRef = useRef(null);
   const previousFocusRef = useRef(null);
+import { useContext } from 'react';
+import { CartContext } from '../context/CartContext.jsx';
+import './CartDrawer.css';
+
+export default function CartDrawer() {
+  const { cart, isCartOpen, setIsCartOpen } = useContext(CartContext);
+ main
   const total = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
 
   useEffect(() => {
@@ -60,6 +68,7 @@ export default function CartDrawer({ cart, isOpen, onClose }) {
 
   return (
     <>
+     accessibility/cart-drawer-focus-trap-fix
       <div className={`cart-drawer-overlay ${isOpen ? 'open' : ''}`} onClick={onClose} />
       <div 
         className={`cart-drawer ${isOpen ? 'open' : ''}`} 
@@ -71,6 +80,13 @@ export default function CartDrawer({ cart, isOpen, onClose }) {
         <div className="cart-drawer-header">
           <h2>Your Cart</h2>
           <button className="cart-drawer-close" onClick={onClose} aria-label="Close cart">&times;</button>
+
+      <div className={`cart-drawer-overlay ${isCartOpen ? 'open' : ''}`} onClick={() => setIsCartOpen(false)} />
+      <div className={`cart-drawer ${isCartOpen ? 'open' : ''}`}>
+        <div className="cart-drawer-header">
+          <h2>Your Cart</h2>
+          <button className="cart-drawer-close" onClick={() => setIsCartOpen(false)}>&times;</button>
+ main
         </div>
         
         <div className="cart-drawer-content">
