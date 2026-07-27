@@ -40,6 +40,8 @@
   background: rgba(0, 0, 0, 0.2);
   padding: 4px 8px;
   border-radius: 999px;
+  position: relative;
+  z-index: 1;
 }
 
 .book-card__cover-title {
@@ -48,6 +50,17 @@
   font-weight: 600;
   color: var(--paper);
   line-height: 1.15;
+  position: relative;
+  z-index: 1;
+}
+
+.book-card__cover-image {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 0;
 }
 
 .book-card__body {
