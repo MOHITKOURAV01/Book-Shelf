@@ -223,9 +223,6 @@ export default function PrivacyPolicy() {
           </div>
         </div>
       </article>
-
-      {/* ── Footer (same as landing page) ── */}
-      <Footer />
     </div>
   );
 }

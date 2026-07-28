@@ -1,0 +1,1117 @@
+*{box-sizing:border-box}
+.share-btn{
+display:inline-flex;
+align-items:center;
+justify-content:center;
+gap:8px;
+padding:12px 18px;
+border:none;
+border-radius:8px;
+cursor:pointer;
+font-weight:600;
+transition:all .25s ease;
+background:#2563eb;
+color:#fff;
+}
+.share-btn:hover:not(:disabled){
+transform:translateY(-2px);
+box-shadow:0 6px 16px rgba(0,0,0,.15);
+}
+.share-btn:active:not(:disabled){
+transform:scale(.98);
+}
+.share-btn:disabled,
+.share-btn--disabled{
+cursor:not-allowed;
+opacity:.6;
+}
+.share-btn--primary{background:#2563eb;color:#fff;}
+.share-btn--success{background:#16a34a;color:#fff;}
+.share-btn--danger{background:#dc2626;color:#fff;}
+.share-btn--secondary{background:#6b7280;color:#fff;}
+.share-btn--sm{padding:8px 14px;font-size:13px;}
+.share-btn--md{padding:12px 18px;font-size:15px;}
+.share-btn--lg{padding:16px 26px;font-size:18px;}
+.share-btn__icon{font-size:18px;}
+.share-btn:focus-visible{
+outline:3px solid rgba(37,99,235,.4);
+outline-offset:2px;
+}
+@media(max-width:600px){
+.share-btn{width:100%;}
+}
+/* ==========================================
+   ShareButton.css
+========================================== */
+
+*,
+*::before,
+*::after{
+    box-sizing:border-box;
+}
+
+/* ==========================================
+   Base Button
+========================================== */
+
+.share-btn{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    gap:8px;
+
+    position:relative;
+    overflow:hidden;
+
+    padding:12px 18px;
+
+    border:none;
+    border-radius:8px;
+
+    cursor:pointer;
+
+    font-family:inherit;
+    font-size:15px;
+    font-weight:600;
+
+    transition:
+        transform .25s ease,
+        box-shadow .25s ease,
+        background-color .25s ease,
+        color .25s ease,
+        opacity .25s ease;
+
+    background:#2563eb;
+    color:#fff;
+
+    user-select:none;
+}
+
+/* ==========================================
+   Hover
+========================================== */
+
+.share-btn:hover:not(:disabled){
+    transform:translateY(-2px);
+    box-shadow:0 8px 18px rgba(0,0,0,.15);
+}
+
+/* ==========================================
+   Active
+========================================== */
+
+.share-btn:active:not(:disabled){
+    transform:scale(.97);
+}
+
+/* ==========================================
+   Focus
+========================================== */
+
+.share-btn:focus-visible{
+    outline:3px solid rgba(37,99,235,.35);
+    outline-offset:3px;
+}
+
+/* ==========================================
+   Disabled
+========================================== */
+
+.share-btn:disabled,
+.share-btn--disabled{
+    opacity:.6;
+    cursor:not-allowed;
+    pointer-events:none;
+}
+
+/* ==========================================
+   Variants
+========================================== */
+
+.share-btn--primary{
+    background:#2563eb;
+    color:#fff;
+}
+
+.share-btn--secondary{
+    background:#6b7280;
+    color:#fff;
+}
+
+.share-btn--success{
+    background:#16a34a;
+    color:#fff;
+}
+
+.share-btn--danger{
+    background:#dc2626;
+    color:#fff;
+}
+
+.share-btn--warning{
+    background:#f59e0b;
+    color:#fff;
+}
+
+/* ==========================================
+   Outline Variant
+========================================== */
+
+.share-btn--outline{
+    background:transparent;
+    color:#2563eb;
+    border:2px solid #2563eb;
+}
+
+.share-btn--outline:hover{
+    background:#2563eb;
+    color:#fff;
+}
+
+/* ==========================================
+   Ghost Variant
+========================================== */
+
+.share-btn--ghost{
+    background:transparent;
+    color:#2563eb;
+}
+
+.share-btn--ghost:hover{
+    background:rgba(37,99,235,.08);
+}
+
+/* ==========================================
+   Sizes
+========================================== */
+
+.share-btn--sm{
+    padding:8px 14px;
+    font-size:13px;
+}
+
+.share-btn--md{
+    padding:12px 18px;
+    font-size:15px;
+}
+
+.share-btn--lg{
+    padding:16px 28px;
+    font-size:18px;
+}
+
+/* ==========================================
+   Width
+========================================== */
+
+.share-btn--full{
+    width:100%;
+}
+
+/* ==========================================
+   Rounded
+========================================== */
+
+.share-btn--rounded{
+    border-radius:999px;
+}
+
+/* ==========================================
+   Icons
+========================================== */
+
+.share-btn__icon{
+    font-size:18px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    transition:transform .25s ease;
+}
+
+.share-btn:hover .share-btn__icon{
+    transform:rotate(-15deg) scale(1.1);
+}
+
+.share-btn__text{
+    white-space:nowrap;
+}
+
+/* ==========================================
+   Loading
+========================================== */
+
+.share-btn--loading{
+    cursor:wait;
+}
+
+.share-btn__spinner{
+    width:18px;
+    height:18px;
+
+    border:3px solid rgba(255,255,255,.4);
+    border-top:3px solid #fff;
+
+    border-radius:50%;
+
+    animation:share-spin .8s linear infinite;
+}
+
+@keyframes share-spin{
+
+    from{
+        transform:rotate(0deg);
+    }
+
+    to{
+        transform:rotate(360deg);
+    }
+
+}
+
+/* ==========================================
+   Ripple Support
+========================================== */
+
+.share-btn__ripple{
+    position:absolute;
+    border-radius:50%;
+    background:rgba(255,255,255,.45);
+    transform:scale(0);
+    animation:share-ripple .6s linear;
+    pointer-events:none;
+}
+
+@keyframes share-ripple{
+
+    to{
+        transform:scale(4);
+        opacity:0;
+    }
+
+}
+
+/* ==========================================
+   Shadow Utilities
+========================================== */
+
+.share-btn--shadow{
+    box-shadow:0 8px 20px rgba(0,0,0,.15);
+}
+
+.share-btn--elevated:hover{
+    transform:translateY(-4px);
+}
+
+/* ==========================================
+   Dark Theme
+========================================== */
+
+.dark .share-btn{
+    background:#1f2937;
+    color:#fff;
+}
+
+/* ==========================================
+   Responsive
+========================================== */
+
+@media(max-width:768px){
+
+    .share-btn{
+        width:100%;
+        justify-content:center;
+    }
+
+}
+
+@media(max-width:480px){
+
+    .share-btn{
+        font-size:14px;
+        padding:12px 16px;
+    }
+
+}
+
+/* ==========================================
+   Reduced Motion
+========================================== */
+
+@media(prefers-reduced-motion:reduce){
+
+    .share-btn,
+    .share-btn__icon,
+    .share-btn__spinner,
+    .share-btn__ripple{
+
+        animation:none;
+        transition:none;
+
+    }
+
+}
+/* ==========================================
+   Social Brand Variants
+========================================== */
+
+.share-btn--facebook{
+    background:#1877f2;
+    color:#fff;
+}
+
+.share-btn--twitter{
+    background:#1da1f2;
+    color:#fff;
+}
+
+.share-btn--linkedin{
+    background:#0a66c2;
+    color:#fff;
+}
+
+.share-btn--whatsapp{
+    background:#25d366;
+    color:#fff;
+}
+
+.share-btn--telegram{
+    background:#229ed9;
+    color:#fff;
+}
+
+.share-btn--reddit{
+    background:#ff4500;
+    color:#fff;
+}
+
+.share-btn--email{
+    background:#4b5563;
+    color:#fff;
+}
+
+/* ==========================================
+   Gradient Variants
+========================================== */
+
+.share-btn--gradient-blue{
+    background:linear-gradient(135deg,#2563eb,#1d4ed8);
+    color:#fff;
+}
+
+.share-btn--gradient-green{
+    background:linear-gradient(135deg,#22c55e,#16a34a);
+    color:#fff;
+}
+
+.share-btn--gradient-red{
+    background:linear-gradient(135deg,#ef4444,#dc2626);
+    color:#fff;
+}
+
+.share-btn--gradient-purple{
+    background:linear-gradient(135deg,#8b5cf6,#6d28d9);
+    color:#fff;
+}
+
+/* ==========================================
+   Border Radius Utilities
+========================================== */
+
+.share-btn--radius-none{
+    border-radius:0;
+}
+
+.share-btn--radius-sm{
+    border-radius:4px;
+}
+
+.share-btn--radius-md{
+    border-radius:8px;
+}
+
+.share-btn--radius-lg{
+    border-radius:16px;
+}
+
+.share-btn--radius-xl{
+    border-radius:30px;
+}
+
+/* ==========================================
+   Shadow Levels
+========================================== */
+
+.share-btn--shadow-sm{
+    box-shadow:0 2px 6px rgba(0,0,0,.10);
+}
+
+.share-btn--shadow-md{
+    box-shadow:0 6px 15px rgba(0,0,0,.16);
+}
+
+.share-btn--shadow-lg{
+    box-shadow:0 10px 28px rgba(0,0,0,.22);
+}
+
+/* ==========================================
+   Hover Animations
+========================================== */
+
+.share-btn--lift:hover{
+    transform:translateY(-5px);
+}
+
+.share-btn--scale:hover{
+    transform:scale(1.05);
+}
+
+.share-btn--rotate:hover{
+    transform:rotate(-2deg);
+}
+
+.share-btn--skew:hover{
+    transform:skewX(-4deg);
+}
+
+.share-btn--glow:hover{
+    box-shadow:
+        0 0 10px rgba(37,99,235,.5),
+        0 0 25px rgba(37,99,235,.35);
+}
+
+/* ==========================================
+   Floating Animation
+========================================== */
+
+.share-btn--floating{
+    animation:shareFloating 3s ease-in-out infinite;
+}
+
+@keyframes shareFloating{
+
+    0%,100%{
+        transform:translateY(0);
+    }
+
+    50%{
+        transform:translateY(-6px);
+    }
+
+}
+
+/* ==========================================
+   Pulse Animation
+========================================== */
+
+.share-btn--pulse{
+    animation:sharePulse 2s infinite;
+}
+
+@keyframes sharePulse{
+
+    0%{
+        box-shadow:0 0 0 0 rgba(37,99,235,.5);
+    }
+
+    70%{
+        box-shadow:0 0 0 16px rgba(37,99,235,0);
+    }
+
+    100%{
+        box-shadow:0 0 0 0 rgba(37,99,235,0);
+    }
+
+}
+
+/* ==========================================
+   Bounce Animation
+========================================== */
+
+.share-btn--bounce:hover{
+    animation:shareBounce .6s;
+}
+
+@keyframes shareBounce{
+
+    0%,100%{
+        transform:translateY(0);
+    }
+
+    25%{
+        transform:translateY(-6px);
+    }
+
+    50%{
+        transform:translateY(2px);
+    }
+
+    75%{
+        transform:translateY(-3px);
+    }
+
+}
+
+/* ==========================================
+   Shine Effect
+========================================== */
+
+.share-btn--shine{
+    position:relative;
+}
+
+.share-btn--shine::before{
+
+    content:"";
+
+    position:absolute;
+
+    top:0;
+    left:-120%;
+
+    width:60%;
+    height:100%;
+
+    background:
+        linear-gradient(
+            120deg,
+            transparent,
+            rgba(255,255,255,.5),
+            transparent
+        );
+
+    transition:left .7s;
+
+}
+
+.share-btn--shine:hover::before{
+
+    left:130%;
+
+}
+
+/* ==========================================
+   Badge
+========================================== */
+
+.share-btn__badge{
+
+    position:absolute;
+
+    top:-6px;
+    right:-6px;
+
+    width:18px;
+    height:18px;
+
+    border-radius:50%;
+
+    background:#ef4444;
+
+    color:#fff;
+
+    font-size:10px;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+}
+
+/* ==========================================
+   Tooltip
+========================================== */
+
+.share-btn[data-tooltip]{
+
+    position:relative;
+
+}
+
+.share-btn[data-tooltip]::after{
+
+    content:attr(data-tooltip);
+
+    position:absolute;
+
+    bottom:125%;
+    left:50%;
+
+    transform:translateX(-50%);
+
+    background:#111827;
+
+    color:#fff;
+
+    padding:6px 10px;
+
+    border-radius:6px;
+
+    white-space:nowrap;
+
+    opacity:0;
+
+    visibility:hidden;
+
+    transition:.25s;
+
+    font-size:12px;
+
+}
+
+.share-btn[data-tooltip]:hover::after{
+
+    opacity:1;
+
+    visibility:visible;
+
+}
+
+/* ==========================================
+   Icon Utilities
+========================================== */
+
+.share-btn__icon-left{
+
+    margin-right:6px;
+
+}
+
+.share-btn__icon-right{
+
+    margin-left:6px;
+
+}
+
+/* ==========================================
+   Print
+========================================== */
+
+@media print{
+
+    .share-btn{
+
+        display:none;
+
+    }
+
+}
+
+/* ==========================================
+   High Contrast Mode
+========================================== */
+
+@media (prefers-contrast:more){
+
+    .share-btn{
+
+        border:2px solid currentColor;
+
+    }
+
+}
+
+/* ==========================================
+   Selection
+========================================== */
+
+.share-btn::selection{
+
+    background:#2563eb;
+    color:#fff;
+
+}
+/* ==========================================
+   Glass Morphism
+========================================== */
+
+.share-btn--glass{
+    background:rgba(255,255,255,.15);
+    backdrop-filter:blur(12px);
+    -webkit-backdrop-filter:blur(12px);
+    border:1px solid rgba(255,255,255,.25);
+    color:#fff;
+}
+
+/* ==========================================
+   Neon Effects
+========================================== */
+
+.share-btn--neon-blue:hover{
+    box-shadow:
+        0 0 8px #2563eb,
+        0 0 18px #2563eb,
+        0 0 32px #2563eb;
+}
+
+.share-btn--neon-green:hover{
+    box-shadow:
+        0 0 8px #22c55e,
+        0 0 18px #22c55e,
+        0 0 32px #22c55e;
+}
+
+.share-btn--neon-red:hover{
+    box-shadow:
+        0 0 8px #ef4444,
+        0 0 18px #ef4444,
+        0 0 32px #ef4444;
+}
+
+/* ==========================================
+   Success State
+========================================== */
+
+.share-btn--copied{
+    background:#16a34a;
+    color:#fff;
+    animation:shareCopied .35s ease;
+}
+
+@keyframes shareCopied{
+
+    0%{
+        transform:scale(.9);
+    }
+
+    100%{
+        transform:scale(1);
+    }
+
+}
+
+/* ==========================================
+   Error State
+========================================== */
+
+.share-btn--error{
+    background:#dc2626;
+    color:#fff;
+}
+
+/* ==========================================
+   Notification Dot
+========================================== */
+
+.share-btn__dot{
+
+    position:absolute;
+
+    top:8px;
+    right:8px;
+
+    width:10px;
+    height:10px;
+
+    border-radius:50%;
+
+    background:#ef4444;
+
+}
+
+/* ==========================================
+   Circular Button
+========================================== */
+
+.share-btn--circle{
+
+    width:52px;
+    height:52px;
+
+    padding:0;
+
+    border-radius:50%;
+
+}
+
+/* ==========================================
+   Square Button
+========================================== */
+
+.share-btn--square{
+
+    border-radius:0;
+
+}
+
+/* ==========================================
+   Soft Buttons
+========================================== */
+
+.share-btn--soft-primary{
+    background:rgba(37,99,235,.12);
+    color:#2563eb;
+}
+
+.share-btn--soft-success{
+    background:rgba(22,163,74,.12);
+    color:#16a34a;
+}
+
+.share-btn--soft-danger{
+    background:rgba(220,38,38,.12);
+    color:#dc2626;
+}
+
+/* ==========================================
+   Blur Hover
+========================================== */
+
+.share-btn--blur:hover{
+
+    filter:blur(.4px);
+
+}
+
+/* ==========================================
+   Saturation Hover
+========================================== */
+
+.share-btn--saturate:hover{
+
+    filter:saturate(140%);
+
+}
+
+/* ==========================================
+   Brightness Hover
+========================================== */
+
+.share-btn--bright:hover{
+
+    filter:brightness(1.08);
+
+}
+
+/* ==========================================
+   Icon Animation
+========================================== */
+
+.share-btn:hover .share-btn__icon{
+
+    animation:shareIcon .45s ease;
+
+}
+
+@keyframes shareIcon{
+
+    0%{
+        transform:translateX(0);
+    }
+
+    50%{
+        transform:translateX(4px);
+    }
+
+    100%{
+        transform:translateX(0);
+    }
+
+}
+
+/* ==========================================
+   Wiggle Animation
+========================================== */
+
+.share-btn--wiggle:hover{
+
+    animation:wiggle .45s ease;
+
+}
+
+@keyframes wiggle{
+
+    0%{transform:rotate(0);}
+    25%{transform:rotate(-4deg);}
+    50%{transform:rotate(4deg);}
+    75%{transform:rotate(-2deg);}
+    100%{transform:rotate(0);}
+
+}
+
+/* ==========================================
+   Flip Animation
+========================================== */
+
+.share-btn--flip:hover{
+
+    transform:rotateY(180deg);
+
+}
+
+/* ==========================================
+   Grow Animation
+========================================== */
+
+.share-btn--grow:hover{
+
+    transform:scale(1.08);
+
+}
+
+/* ==========================================
+   Shrink Animation
+========================================== */
+
+.share-btn--shrink:hover{
+
+    transform:scale(.95);
+
+}
+
+/* ==========================================
+   Rotate Icon
+========================================== */
+
+.share-btn--rotate-icon:hover .share-btn__icon{
+
+    transform:rotate(360deg);
+
+    transition:.5s;
+
+}
+
+/* ==========================================
+   Loading Overlay
+========================================== */
+
+.share-btn__overlay{
+
+    position:absolute;
+
+    inset:0;
+
+    background:rgba(255,255,255,.2);
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+}
+
+/* ==========================================
+   Disabled Hover Fix
+========================================== */
+
+.share-btn:disabled:hover{
+
+    transform:none;
+
+    box-shadow:none;
+
+}
+
+/* ==========================================
+   Cursor Helpers
+========================================== */
+
+.cursor-share{
+    cursor:pointer;
+}
+
+.cursor-disabled{
+    cursor:not-allowed;
+}
+
+.cursor-loading{
+    cursor:progress;
+}
+
+/* ==========================================
+   Overflow Handling
+========================================== */
+
+.share-btn__text{
+
+    overflow:hidden;
+
+    text-overflow:ellipsis;
+
+    max-width:220px;
+
+}
+
+/* ==========================================
+   Divider
+========================================== */
+
+.share-btn__divider{
+
+    width:1px;
+
+    height:18px;
+
+    background:rgba(255,255,255,.4);
+
+}
+
+/* ==========================================
+   Fade In
+========================================== */
+
+.share-btn--fade{
+
+    animation:fadeIn .5s ease;
+
+}
+
+@keyframes fadeIn{
+
+    from{
+
+        opacity:0;
+
+    }
+
+    to{
+
+        opacity:1;
+
+    }
+
+}
+
+/* ==========================================
+   Slide Up
+========================================== */
+
+.share-btn--slide{
+
+    animation:slideUp .4s ease;
+
+}
+
+@keyframes slideUp{
+
+    from{
+
+        transform:translateY(12px);
+        opacity:0;
+
+    }
+
+    to{
+
+        transform:translateY(0);
+        opacity:1;
+
+    }
+
+}
+
+/* ==========================================
+   Accessibility Helpers
+========================================== */
+
+.share-btn[aria-pressed="true"]{
+
+    outline:2px solid #2563eb;
+
+}
+
+.share-btn[aria-busy="true"]{
+
+    cursor:progress;
+
+}
