@@ -1,0 +1,31 @@
+{
+  "navbar": {
+    "logo": "BookShelf",
+    "home": "Home",
+    "catalog": "Catalog",
+    "about": "About Us",
+    "cart": "Cart",
+    "wishlist": "Wishlist",
+    "searchPlaceholder": "Search books...",
+    "orders": "Orders",
+    "profile": "Profile"
+  },
+  "home": {
+    "heroTitle": "Welcome to BookShelf",
+    "heroSubtitle": "Discover your next great read",
+    "featuredTitle": "Featured Books"
+  },
+  "bookDetail": {
+    "notFound": "Book not found.",
+    "returnToCatalog": "Return to Catalog",
+    "by": "by",
+    "noDescription": "No description available for this book.",
+    "isbn": "ISBN:",
+    "publicationYear": "Publication Year:",
+    "addToCart": "Add to cart",
+    "writeReview": "Write a Review",
+    "reviewPlaceholder": "Share your thoughts about this book...",
+    "submitReview": "Submit Review",
+    "relatedBooks": "You Might Also Like"
+  }
+}
