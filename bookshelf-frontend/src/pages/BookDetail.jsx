@@ -1,12 +1,9 @@
-import { useState } from 'react';
-import { useParams, Link } from 'react-router-dom';
-import { books } from '../data/books.js';
-import Rating from '../components/Rating.jsx';
-import { useContext } from 'react';
+import { useState, useContext } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { books } from '../data/books.js';
 import Rating from '../components/Rating.jsx';
 import WishlistButton from '../components/WishlistButton.jsx';
+import BookCard from '../components/BookCard.jsx';
 import { CartContext } from '../context/CartContext.jsx';
 import { WishlistContext } from '../context/WishlistContext.jsx';
 import './BookDetail.css';
@@ -52,6 +49,10 @@ export default function BookDetail() {
       </div>
     );
   }
+
+  const relatedBooks = books
+    .filter((b) => b.genre === book.genre && b.id !== book.id)
+    .slice(0, 4);
 
   return (
     <main className="book-detail-page">
@@ -109,6 +110,17 @@ export default function BookDetail() {
           <button type="submit" className="book-review-submit-btn">Submit Review</button>
         </form>
       </div>
+
+      {relatedBooks.length > 0 && (
+        <div className="book-related-section">
+          <h2 className="book-related-title">You Might Also Like</h2>
+          <div className="book-related-grid">
+            {relatedBooks.map(relatedBook => (
+              <BookCard key={relatedBook.id} book={relatedBook} />
+            ))}
+          </div>
+        </div>
+      )}
     </main>
   );
 }

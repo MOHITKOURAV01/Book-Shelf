@@ -1,11 +1,4 @@
- accessibility/cart-drawer-focus-trap-fix
-import { useEffect, useRef } from 'react';
-import './CartDrawer.css';
-
-export default function CartDrawer({ cart, isOpen, onClose }) {
-  const drawerRef = useRef(null);
-  const previousFocusRef = useRef(null);
-import { useContext } from 'react';
+import { useEffect, useRef, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { CartContext } from '../context/CartContext.jsx';
 import './CartDrawer.css';
@@ -13,17 +6,18 @@ import './CartDrawer.css';
 export default function CartDrawer() {
   const { cart, isCartOpen, setIsCartOpen } = useContext(CartContext);
   const navigate = useNavigate();
+  const drawerRef = useRef(null);
+  const previousFocusRef = useRef(null);
+
   const total = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
 
   const handleStartShopping = () => {
     setIsCartOpen(false);
     navigate('/');
   };
- main
-  const total = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
 
   useEffect(() => {
-    if (isOpen) {
+    if (isCartOpen) {
       previousFocusRef.current = document.activeElement;
       
       const focusableElements = drawerRef.current.querySelectorAll(
@@ -39,7 +33,7 @@ export default function CartDrawer() {
 
       const handleKeyDown = (e) => {
         if (e.key === 'Escape') {
-          onClose();
+          setIsCartOpen(false);
           return;
         }
 
@@ -72,14 +66,13 @@ export default function CartDrawer() {
         }
       };
     }
-  }, [isOpen, onClose]);
+  }, [isCartOpen, setIsCartOpen]);
 
   return (
     <>
-     accessibility/cart-drawer-focus-trap-fix
-      <div className={`cart-drawer-overlay ${isOpen ? 'open' : ''}`} onClick={onClose} />
+      <div className={`cart-drawer-overlay ${isCartOpen ? 'open' : ''}`} onClick={() => setIsCartOpen(false)} />
       <div 
-        className={`cart-drawer ${isOpen ? 'open' : ''}`} 
+        className={`cart-drawer ${isCartOpen ? 'open' : ''}`} 
         ref={drawerRef}
         role="dialog"
         aria-modal="true"
@@ -87,14 +80,7 @@ export default function CartDrawer() {
       >
         <div className="cart-drawer-header">
           <h2>Your Cart</h2>
-          <button className="cart-drawer-close" onClick={onClose} aria-label="Close cart">&times;</button>
-
-      <div className={`cart-drawer-overlay ${isCartOpen ? 'open' : ''}`} onClick={() => setIsCartOpen(false)} />
-      <div className={`cart-drawer ${isCartOpen ? 'open' : ''}`}>
-        <div className="cart-drawer-header">
-          <h2>Your Cart</h2>
-          <button className="cart-drawer-close" onClick={() => setIsCartOpen(false)}>&times;</button>
- main
+          <button className="cart-drawer-close" onClick={() => setIsCartOpen(false)} aria-label="Close cart">&times;</button>
         </div>
         
         <div className="cart-drawer-content">
