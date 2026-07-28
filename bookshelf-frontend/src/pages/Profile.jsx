@@ -6,6 +6,32 @@ export default function Profile() {
   const [activeTab, setActiveTab] = useState('details');
   const navigate = useNavigate();
 
+  // Mock initial states
+  const [accountInfo, setAccountInfo] = useState({
+    name: 'John Doe',
+    email: 'john@example.com',
+    username: 'johndoe88'
+  });
+  
+  const [passwordInfo, setPasswordInfo] = useState({
+    currentPassword: '',
+    newPassword: '',
+    confirmPassword: ''
+  });
+
+  const [notifications, setNotifications] = useState({
+    emailNotifications: true,
+    newsletter: true,
+    promotions: false,
+    orderUpdates: true
+  });
+
+  const [messages, setMessages] = useState({
+    account: { type: '', text: '' },
+    password: { type: '', text: '' },
+    notification: { type: '', text: '' }
+  });
+
   useEffect(() => {
     // Basic route protection
     const isAuth = localStorage.getItem('isAuthenticated');
@@ -17,6 +43,54 @@ export default function Profile() {
   const handleLogout = () => {
     localStorage.removeItem('isAuthenticated');
     navigate('/login');
+  };
+
+  const handleAccountSubmit = (e) => {
+    e.preventDefault();
+    const { name, email, username } = accountInfo;
+    
+    if (!name.trim() || !email.trim() || !username.trim()) {
+      setMessages({ ...messages, account: { type: 'error', text: 'All fields are required.' } });
+      return;
+    }
+    
+    if (!/\S+@\S+\.\S+/.test(email)) {
+      setMessages({ ...messages, account: { type: 'error', text: 'Please enter a valid email address.' } });
+      return;
+    }
+
+    setMessages({ ...messages, account: { type: 'success', text: 'Account information updated successfully.' } });
+    setTimeout(() => setMessages({ ...messages, account: { type: '', text: '' } }), 3000);
+  };
+
+  const handlePasswordSubmit = (e) => {
+    e.preventDefault();
+    const { currentPassword, newPassword, confirmPassword } = passwordInfo;
+
+    if (!currentPassword || !newPassword || !confirmPassword) {
+      setMessages({ ...messages, password: { type: 'error', text: 'All password fields are required.' } });
+      return;
+    }
+
+    if (newPassword.length < 6) {
+      setMessages({ ...messages, password: { type: 'error', text: 'New password must be at least 6 characters.' } });
+      return;
+    }
+
+    if (newPassword !== confirmPassword) {
+      setMessages({ ...messages, password: { type: 'error', text: 'New passwords do not match.' } });
+      return;
+    }
+
+    setMessages({ ...messages, password: { type: 'success', text: 'Password updated successfully.' } });
+    setPasswordInfo({ currentPassword: '', newPassword: '', confirmPassword: '' });
+    setTimeout(() => setMessages({ ...messages, password: { type: '', text: '' } }), 3000);
+  };
+
+  const handleNotificationsSubmit = (e) => {
+    e.preventDefault();
+    setMessages({ ...messages, notification: { type: 'success', text: 'Notification preferences saved.' } });
+    setTimeout(() => setMessages({ ...messages, notification: { type: '', text: '' } }), 3000);
   };
 
   return (
@@ -55,11 +129,11 @@ export default function Profile() {
               <div className="profile-info-grid">
                 <div className="profile-info-item">
                   <span className="profile-info-label">Name</span>
-                  <span className="profile-info-value">John Doe</span>
+                  <span className="profile-info-value">{accountInfo.name}</span>
                 </div>
                 <div className="profile-info-item">
                   <span className="profile-info-label">Email</span>
-                  <span className="profile-info-value">john@example.com</span>
+                  <span className="profile-info-value">{accountInfo.email}</span>
                 </div>
                 <div className="profile-info-item">
                   <span className="profile-info-label">Phone</span>
@@ -86,17 +160,112 @@ export default function Profile() {
             <div className="profile-tab-pane">
               <h2>Settings</h2>
               <div className="profile-settings-list">
-                <label className="profile-settings-item">
-                  <input type="checkbox" defaultChecked />
-                  <span>Receive email notifications</span>
-                </label>
-                <label className="profile-settings-item">
-                  <input type="checkbox" defaultChecked />
-                  <span>Enable SMS updates for deliveries</span>
-                </label>
-                <div className="profile-settings-actions">
-                  <button className="profile-action-btn">Update Password</button>
-                </div>
+                
+                {/* Account Information Section */}
+                <form className="settings-section" onSubmit={handleAccountSubmit}>
+                  <h3>Account Information</h3>
+                  {messages.account.text && <div className={`settings-msg ${messages.account.type}`}>{messages.account.text}</div>}
+                  <div className="settings-form-group">
+                    <label>Name</label>
+                    <input 
+                      type="text" 
+                      value={accountInfo.name} 
+                      onChange={(e) => setAccountInfo({...accountInfo, name: e.target.value})}
+                    />
+                  </div>
+                  <div className="settings-form-group">
+                    <label>Email</label>
+                    <input 
+                      type="email" 
+                      value={accountInfo.email} 
+                      onChange={(e) => setAccountInfo({...accountInfo, email: e.target.value})}
+                    />
+                  </div>
+                  <div className="settings-form-group">
+                    <label>Username</label>
+                    <input 
+                      type="text" 
+                      value={accountInfo.username} 
+                      onChange={(e) => setAccountInfo({...accountInfo, username: e.target.value})}
+                    />
+                  </div>
+                  <button type="submit" className="profile-action-btn">Save Changes</button>
+                </form>
+
+                <hr className="settings-divider" />
+
+                {/* Password Section */}
+                <form className="settings-section" onSubmit={handlePasswordSubmit}>
+                  <h3>Password</h3>
+                  {messages.password.text && <div className={`settings-msg ${messages.password.type}`}>{messages.password.text}</div>}
+                  <div className="settings-form-group">
+                    <label>Current Password</label>
+                    <input 
+                      type="password" 
+                      value={passwordInfo.currentPassword} 
+                      onChange={(e) => setPasswordInfo({...passwordInfo, currentPassword: e.target.value})}
+                    />
+                  </div>
+                  <div className="settings-form-group">
+                    <label>New Password</label>
+                    <input 
+                      type="password" 
+                      value={passwordInfo.newPassword} 
+                      onChange={(e) => setPasswordInfo({...passwordInfo, newPassword: e.target.value})}
+                    />
+                  </div>
+                  <div className="settings-form-group">
+                    <label>Confirm Password</label>
+                    <input 
+                      type="password" 
+                      value={passwordInfo.confirmPassword} 
+                      onChange={(e) => setPasswordInfo({...passwordInfo, confirmPassword: e.target.value})}
+                    />
+                  </div>
+                  <button type="submit" className="profile-action-btn">Update Password</button>
+                </form>
+
+                <hr className="settings-divider" />
+
+                {/* Notification Preferences Section */}
+                <form className="settings-section" onSubmit={handleNotificationsSubmit}>
+                  <h3>Notification Preferences</h3>
+                  {messages.notification.text && <div className={`settings-msg ${messages.notification.type}`}>{messages.notification.text}</div>}
+                  <label className="profile-settings-item">
+                    <input 
+                      type="checkbox" 
+                      checked={notifications.emailNotifications} 
+                      onChange={(e) => setNotifications({...notifications, emailNotifications: e.target.checked})}
+                    />
+                    <span>Email Notifications</span>
+                  </label>
+                  <label className="profile-settings-item">
+                    <input 
+                      type="checkbox" 
+                      checked={notifications.newsletter} 
+                      onChange={(e) => setNotifications({...notifications, newsletter: e.target.checked})}
+                    />
+                    <span>Newsletter</span>
+                  </label>
+                  <label className="profile-settings-item">
+                    <input 
+                      type="checkbox" 
+                      checked={notifications.promotions} 
+                      onChange={(e) => setNotifications({...notifications, promotions: e.target.checked})}
+                    />
+                    <span>Promotions</span>
+                  </label>
+                  <label className="profile-settings-item">
+                    <input 
+                      type="checkbox" 
+                      checked={notifications.orderUpdates} 
+                      onChange={(e) => setNotifications({...notifications, orderUpdates: e.target.checked})}
+                    />
+                    <span>Order Updates</span>
+                  </label>
+                  <button type="submit" className="profile-action-btn">Save Preferences</button>
+                </form>
+
               </div>
             </div>
           )}
