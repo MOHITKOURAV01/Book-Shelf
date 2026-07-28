@@ -1,9 +1,9 @@
-import { useState, useContext } from 'react';
+import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { books } from '../data/books.js';
 import Rating from '../components/Rating.jsx';
 import WishlistButton from '../components/WishlistButton.jsx';
-import BookCard from '../components/BookCard.jsx';
+import SkeletonLoader from '../components/SkeletonLoader.jsx';
 import { CartContext } from '../context/CartContext.jsx';
 import { WishlistContext } from '../context/WishlistContext.jsx';
 import { useTranslation } from 'react-i18next';
@@ -15,10 +15,16 @@ export default function BookDetail() {
   const [rating, setRating] = useState(0);
   const [reviewText, setReviewText] = useState('');
   const [error, setError] = useState('');
+  const [loading, setLoading] = useState(true);
   const { addToCart } = useContext(CartContext);
   const { wishlist, toggleWishlist } = useContext(WishlistContext);
-  
+
   const book = books.find((item) => item.id === id);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setLoading(false), 700);
+    return () => clearTimeout(timer);
+  }, [id]);
 
   const handleReviewSubmit = (e) => {
     e.preventDefault();
@@ -42,6 +48,14 @@ export default function BookDetail() {
     setReviewText('');
     alert('Thank you for your review!');
   };
+
+  if (loading) {
+    return (
+      <main className="book-detail-page">
+        <SkeletonLoader variant="detail" count={1} />
+      </main>
+    );
+  }
 
   if (!book) {
     return (

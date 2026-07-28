@@ -1,9 +1,11 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import SkeletonLoader from '../components/SkeletonLoader.jsx';
 import './Profile.css';
 
 export default function Profile() {
   const [activeTab, setActiveTab] = useState('details');
+  const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -11,13 +13,32 @@ export default function Profile() {
     const isAuth = localStorage.getItem('isAuthenticated');
     if (!isAuth) {
       navigate('/login');
+      return;
     }
+    const timer = setTimeout(() => setLoading(false), 500);
+    return () => clearTimeout(timer);
   }, [navigate]);
 
   const handleLogout = () => {
     localStorage.removeItem('isAuthenticated');
     navigate('/login');
   };
+
+  if (loading) {
+    return (
+      <main className="profile-page">
+        <div className="profile-container">
+          <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem', marginBottom: '2rem' }}>
+            <SkeletonLoader variant="avatar" count={1} />
+            <div style={{ flex: 1 }}>
+              <SkeletonLoader variant="text" count={1} />
+            </div>
+          </div>
+          <SkeletonLoader variant="text" count={3} />
+        </div>
+      </main>
+    );
+  }
 
   return (
     <main className="profile-page">
