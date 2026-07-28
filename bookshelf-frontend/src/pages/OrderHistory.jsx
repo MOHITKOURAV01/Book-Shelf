@@ -22,7 +22,10 @@ export default function OrderHistory() {
   return (
     <div className="page-container order-history-page">
       <h2>Your Order History</h2>
-      
+      <div className="orders-meta">
+        <span className="orders-meta-count">{loading ? '…' : orders.length}</span>
+        {loading ? 'Loading orders' : `${orders.length === 1 ? 'order' : 'orders'} placed`}
+      </div>
       {loading ? (
         <div className="orders-list">
           <SkeletonLoader variant="order" count={3} />
