@@ -216,6 +216,35 @@
   font-weight: 500;
 }
 
+<<<<<<< HEAD
+.book-review-success {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1rem;
+  background: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  border-left: 4px solid #16a34a;
+  border-radius: 8px;
+  color: #15803d;
+  font-size: 0.9rem;
+  font-weight: 500;
+  margin: 0;
+  animation: fadeInSuccess 0.3s ease;
+}
+
+.book-review-success::before {
+  content: '✓';
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+@keyframes fadeInSuccess {
+  from { opacity: 0; transform: translateY(-6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+=======
 /* Related Books Section */
 .book-related-section {
   margin-top: 4rem;
@@ -240,3 +269,4 @@
     grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
   }
 }
+>>>>>>> d97e676cd8170bebfd1bd78021e1f34dc573d5b0

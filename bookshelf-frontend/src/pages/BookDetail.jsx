@@ -15,6 +15,7 @@ export default function BookDetail() {
   const [rating, setRating] = useState(0);
   const [reviewText, setReviewText] = useState('');
   const [error, setError] = useState('');
+  const [successMsg, setSuccessMsg] = useState('');
   const [loading, setLoading] = useState(true);
   const { addToCart } = useContext(CartContext);
   const { wishlist, toggleWishlist } = useContext(WishlistContext);
@@ -40,13 +41,13 @@ export default function BookDetail() {
       review: reviewText,
     };
 
-    console.log('Mock submitting review payload:', payload);
     // TODO: Send to POST /api/reviews
-    
+
     // Reset form
     setRating(0);
     setReviewText('');
-    alert('Thank you for your review!');
+    setSuccessMsg('Thank you! Your review has been submitted.');
+    setTimeout(() => setSuccessMsg(''), 4000);
   };
 
   if (loading) {
@@ -115,6 +116,7 @@ export default function BookDetail() {
             <Rating value={rating} onChange={setRating} />
           </div>
           {error && <p className="book-review-error">{error}</p>}
+          {successMsg && <p className="book-review-success">{successMsg}</p>}
           <textarea
             className="book-review-textarea"
             placeholder={t('bookDetail.reviewPlaceholder')}
