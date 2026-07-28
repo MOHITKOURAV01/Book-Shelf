@@ -6,6 +6,7 @@ import Pagination from '../components/Pagination.jsx';
 import SkeletonLoader from '../components/SkeletonLoader.jsx';
 
 export default function Home({ searchQuery = '' }) {
+  const { t } = useTranslation();
   const [books, setBooks] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -62,7 +63,7 @@ export default function Home({ searchQuery = '' }) {
       <main className="catalog" id="catalog">
         <div className="catalog__inner">
           <div className="catalog__header">
-            <h2 className="catalog__title">Browse the catalog</h2>
+            <h2 className="catalog__title">{t('home.featuredTitle')}</h2>
             <p className="catalog__count">{totalBooks} titles total</p>
           </div>
 

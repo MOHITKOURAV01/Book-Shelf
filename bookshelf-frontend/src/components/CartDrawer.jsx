@@ -15,11 +15,6 @@ export default function CartDrawer() {
     setIsCartOpen(false);
     navigate('/');
   };
-  
-  const handleCheckout = () => {
-    setIsCartOpen(false);
-    navigate('/checkout');
-  };
 
   useEffect(() => {
     if (isCartOpen) {

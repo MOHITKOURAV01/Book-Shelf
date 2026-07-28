@@ -2,14 +2,15 @@ import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { books } from '../data/books.js';
 import Rating from '../components/Rating.jsx';
-import { useContext } from 'react';
 import WishlistButton from '../components/WishlistButton.jsx';
 import SkeletonLoader from '../components/SkeletonLoader.jsx';
 import { CartContext } from '../context/CartContext.jsx';
 import { WishlistContext } from '../context/WishlistContext.jsx';
+import { useTranslation } from 'react-i18next';
 import './BookDetail.css';
 
 export default function BookDetail() {
+  const { t } = useTranslation();
   const { id } = useParams();
   const [rating, setRating] = useState(0);
   const [reviewText, setReviewText] = useState('');
@@ -60,11 +61,15 @@ export default function BookDetail() {
   if (!book) {
     return (
       <div className="book-detail-not-found">
-        <h2>Book not found.</h2>
-        <Link to="/" className="book-detail-back-link">Return to Catalog</Link>
+        <h2>{t('bookDetail.notFound')}</h2>
+        <Link to="/" className="book-detail-back-link">{t('bookDetail.returnToCatalog')}</Link>
       </div>
     );
   }
+
+  const relatedBooks = books
+    .filter((b) => b.genre === book.genre && b.id !== book.id)
+    .slice(0, 4);
 
   return (
     <main className="book-detail-page">
@@ -78,7 +83,7 @@ export default function BookDetail() {
 
         <div className="book-detail-content">
           <h1 className="book-detail-title">{book.title}</h1>
-          <p className="book-detail-author">by {book.author}</p>
+          <p className="book-detail-author">{t('bookDetail.by')} {book.author}</p>
 
           <div className="book-detail-metadata">
             <span className="book-detail-badge">{book.genre}</span>
@@ -87,17 +92,17 @@ export default function BookDetail() {
           </div>
 
           <div className="book-detail-description">
-            <p>{book.description || 'No description available for this book.'}</p>
+            <p>{book.description || t('bookDetail.noDescription')}</p>
           </div>
 
           <div className="book-detail-extra-info">
-            {book.isbn && <p><strong>ISBN:</strong> {book.isbn}</p>}
-            {book.year && <p><strong>Publication Year:</strong> {book.year}</p>}
+            {book.isbn && <p><strong>{t('bookDetail.isbn')}</strong> {book.isbn}</p>}
+            {book.year && <p><strong>{t('bookDetail.publicationYear')}</strong> {book.year}</p>}
           </div>
 
           <div className="book-detail-actions">
             <button className="book-detail-add-btn" onClick={() => addToCart(book)}>
-              Add to cart
+              {t('bookDetail.addToCart')}
             </button>
             <WishlistButton active={wishlist?.includes(book.id)} onToggle={() => toggleWishlist(book.id)} />
           </div>
@@ -105,7 +110,7 @@ export default function BookDetail() {
       </div>
       
       <div className="book-review-section">
-        <h2 className="book-review-title">Write a Review</h2>
+        <h2 className="book-review-title">{t('bookDetail.writeReview')}</h2>
         <form className="book-review-form" onSubmit={handleReviewSubmit}>
           <div className="book-review-rating">
             <Rating value={rating} onChange={setRating} />
@@ -114,15 +119,26 @@ export default function BookDetail() {
           {successMsg && <p className="book-review-success">{successMsg}</p>}
           <textarea
             className="book-review-textarea"
-            placeholder="Share your thoughts about this book..."
+            placeholder={t('bookDetail.reviewPlaceholder')}
             value={reviewText}
             onChange={(e) => setReviewText(e.target.value)}
             rows={4}
             maxLength={1000}
           />
-          <button type="submit" className="book-review-submit-btn">Submit Review</button>
+          <button type="submit" className="book-review-submit-btn">{t('bookDetail.submitReview')}</button>
         </form>
       </div>
+
+      {relatedBooks.length > 0 && (
+        <div className="book-related-section">
+          <h2 className="book-related-title">{t('bookDetail.relatedBooks')}</h2>
+          <div className="book-related-grid">
+            {relatedBooks.map(relatedBook => (
+              <BookCard key={relatedBook.id} book={relatedBook} />
+            ))}
+          </div>
+        </div>
+      )}
     </main>
   );
 }
