@@ -3,7 +3,7 @@ import Hero from '../components/Hero.jsx';
 import GenreFilter from '../components/GenreFilter.jsx';
 import BookCard from '../components/BookCard.jsx';
 import Pagination from '../components/Pagination.jsx';
-import { useTranslation } from 'react-i18next';
+import SkeletonLoader from '../components/SkeletonLoader.jsx';
 
 export default function Home({ searchQuery = '' }) {
   const { t } = useTranslation();
@@ -70,7 +70,9 @@ export default function Home({ searchQuery = '' }) {
           <GenreFilter genres={genres} active={activeGenre} onSelect={setActiveGenre} />
 
           {loading ? (
-            <p style={{ textAlign: 'center', padding: '2rem 0', color: 'var(--text-secondary)' }}>Loading books...</p>
+            <div className="catalog__grid">
+              <SkeletonLoader variant="card" count={4} />
+            </div>
           ) : error ? (
             <p style={{ textAlign: 'center', padding: '2rem 0', color: 'var(--error)' }}>Unable to load books right now. Please try again later.</p>
           ) : books.length === 0 ? (

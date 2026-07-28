@@ -117,6 +117,25 @@ export default function CartDrawer() {
               <span>Total:</span>
               <span>₹{total}</span>
             </div>
+            <button 
+              className="cart-drawer-checkout-btn" 
+              onClick={handleCheckout} 
+              style={{
+                width: '100%', 
+                marginTop: '15px', 
+                padding: '12px', 
+                border: 'none', 
+                borderRadius: '6px', 
+                fontSize: '1rem', 
+                fontWeight: 'bold', 
+                cursor: 'pointer', 
+                backgroundColor: 'var(--primary-color)', 
+                color: 'white',
+                transition: 'background-color 0.3s ease'
+              }}
+            >
+              Proceed to Checkout
+            </button>
           </div>
         )}
       </div>
