@@ -1,15 +1,18 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import './Auth.css';
 
 export default function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const navigate = useNavigate();
 
   const handleSubmit = (e) => {
     e.preventDefault();
     // TODO: Connect to backend for JWT authentication
     console.log('Login attempt with:', { email, password });
+    localStorage.setItem('isAuthenticated', 'true');
+    navigate('/profile');
   };
 
   return (

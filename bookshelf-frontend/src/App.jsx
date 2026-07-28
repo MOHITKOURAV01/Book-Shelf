@@ -17,6 +17,7 @@ import Wishlist from './pages/Wishlist.jsx';
 import Login from './pages/Login.jsx';
 import Signup from './pages/Signup.jsx';
 import NotFound from './pages/NotFound.jsx';
+import Profile from './pages/Profile.jsx';
 
 import OrderHistory from './pages/OrderHistory.jsx';
 
@@ -47,6 +48,7 @@ export default function App() {
         <Route path="/terms" element={<TermsOfService />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
+        <Route path="/profile" element={<Profile />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
 
