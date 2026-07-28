@@ -28,6 +28,7 @@ export default function Navbar({ searchQuery, setSearchQuery }) {
             <a href="/#shelf">The Shelf</a>
             <a href="/#catalog">Browse</a>
             <Link to="/wishlist">Wishlist</Link>
+            <Link to="/orders">Orders</Link>
             <Link to="/about">About</Link>
             <Link to="/login">Login</Link>
           </nav>
@@ -77,6 +78,7 @@ export default function Navbar({ searchQuery, setSearchQuery }) {
             <a href="/#shelf" onClick={() => setMobileOpen(false)}>The Shelf</a>
             <a href="/#catalog" onClick={() => setMobileOpen(false)}>Browse</a>
             <Link to="/wishlist" onClick={() => setMobileOpen(false)}>Wishlist</Link>
+            <Link to="/orders" onClick={() => setMobileOpen(false)}>Orders</Link>
             <Link to="/about" onClick={() => setMobileOpen(false)}>About</Link>
             <Link to="/login" onClick={() => setMobileOpen(false)}>Login</Link>
             <input 
