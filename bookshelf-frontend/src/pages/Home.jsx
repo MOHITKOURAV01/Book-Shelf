@@ -11,6 +11,7 @@ export default function Home({ searchQuery = '' }) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [activeGenre, setActiveGenre] = useState('All');
+  const [activeSort, setActiveSort] = useState('');
   
   // Pagination state
   const [currentPage, setCurrentPage] = useState(1);
@@ -18,10 +19,10 @@ export default function Home({ searchQuery = '' }) {
   const [totalBooks, setTotalBooks] = useState(0);
   const limit = 4; // Items per page
 
-  // Reset to page 1 when search or genre changes
+  // Reset to page 1 when search, genre, or sort changes
   useEffect(() => {
     setCurrentPage(1);
-  }, [searchQuery, activeGenre]);
+  }, [searchQuery, activeGenre, activeSort]);
 
   useEffect(() => {
     const loadBooks = async () => {
@@ -31,7 +32,8 @@ export default function Home({ searchQuery = '' }) {
             page: currentPage,
             limit: limit,
             genre: activeGenre,
-            search: searchQuery
+            search: searchQuery,
+            ...(activeSort && { sort: activeSort }),
         });
         const response = await fetch(`http://localhost:5000/api/books?${params.toString()}`);
 
@@ -51,7 +53,7 @@ export default function Home({ searchQuery = '' }) {
     };
 
     loadBooks();
-  }, [currentPage, activeGenre, searchQuery]);
+  }, [currentPage, activeGenre, activeSort, searchQuery]);
 
   const genres = useMemo(() => {
     return ['All', 'Fiction', 'Sci-Fi', 'Mystery', 'Self-Help', 'Poetry']; // hardcoded from mock since pagination limits scope
@@ -68,6 +70,22 @@ export default function Home({ searchQuery = '' }) {
           </div>
 
           <GenreFilter genres={genres} active={activeGenre} onSelect={setActiveGenre} />
+
+          <div className="catalog__controls">
+            <select
+              id="sort-select"
+              className="catalog__sort-select"
+              value={activeSort}
+              onChange={(e) => setActiveSort(e.target.value)}
+              aria-label="Sort books"
+            >
+              <option value="">Sort: Default</option>
+              <option value="price_asc">Price: Low → High</option>
+              <option value="price_desc">Price: High → Low</option>
+              <option value="rating_desc">Top Rated</option>
+              <option value="title_asc">Title: A → Z</option>
+            </select>
+          </div>
 
           {loading ? (
             <div className="catalog__grid">
