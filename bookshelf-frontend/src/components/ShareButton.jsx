@@ -1,304 +1,209 @@
 import React, {
-    useState,
-    useRef,
-    useCallback,
-    forwardRef
+  useState,
+  useRef,
+  useEffect,
+  useCallback,
+  forwardRef,
 } from "react";
 
 import "./ShareButton.css";
 
-const ShareButton = forwardRef(({
+const ShareButton = forwardRef(
+  (
+    {
+      url = window.location.href,
+      title = document.title,
+      text = "Check this out!",
 
-    url = window.location.href,
+      label = "Copy Link",
+      copiedLabel = "Copied!",
 
-    title = document.title,
+      variant = "primary",
+      size = "md",
 
-    text = "Check this out!",
+      disabled = false,
+      loading = false,
 
-    disabled = false,
+      fullWidth = false,
+      rounded = false,
+      iconOnly = false,
 
-    loading = false,
+      tooltip = "",
 
-    variant = "primary",
+      leftIcon = "🔗",
+      rightIcon = null,
 
-    size = "md",
+      useNativeShare = false,
 
-    rounded = false,
+      className = "",
 
-    fullWidth = false,
+      onCopy,
+      onSuccess,
+      onError,
+      beforeCopy,
+      afterCopy,
 
-    iconOnly = false,
-
-    tooltip = "",
-
-    leftIcon = "🔗",
-
-    rightIcon = null,
-
-    className = "",
-
-    beforeShare = () => {},
-
-    afterShare = () => {},
-
-    onSuccess = () => {},
-
-    onError = () => {},
-
-    onShare = () => {},
-
-    ...props
-
-}, ref) => {
-
+      ...props
+    },
+    ref
+  ) => {
+    const [copied, setCopied] = useState(false);
     const [status, setStatus] = useState("idle");
-
     const [ripples, setRipples] = useState([]);
 
-    const timeoutRef = useRef(null);
+    const timerRef = useRef(null);
+
+    useEffect(() => {
+      return () => clearTimeout(timerRef.current);
+    }, []);
 
     const resetStatus = () => {
+      clearTimeout(timerRef.current);
 
-        clearTimeout(timeoutRef.current);
-
-        timeoutRef.current = setTimeout(() => {
-
-            setStatus("idle");
-
-        },2000);
-
+      timerRef.current = setTimeout(() => {
+        setCopied(false);
+        setStatus("idle");
+      }, 2000);
     };
 
-    const createRipple = useCallback((event)=>{
+    const createRipple = useCallback((event) => {
+      const rect = event.currentTarget.getBoundingClientRect();
+      const size = Math.max(rect.width, rect.height);
 
-        const rect = event.currentTarget.getBoundingClientRect();
+      const ripple = {
+        id: Date.now(),
+        x: event.clientX - rect.left - size / 2,
+        y: event.clientY - rect.top - size / 2,
+        size,
+      };
 
-        const size = Math.max(rect.width,rect.height);
+      setRipples((prev) => [...prev, ripple]);
 
-        const ripple = {
+      setTimeout(() => {
+        setRipples((prev) =>
+          prev.filter((item) => item.id !== ripple.id)
+        );
+      }, 600);
+    }, []);
 
-            id:Date.now(),
+    const handleCopy = async (event) => {
+      if (disabled || loading) return;
 
-            x:event.clientX - rect.left - size/2,
+      createRipple(event);
 
-            y:event.clientY - rect.top - size/2,
+      beforeCopy?.();
 
-            size
+      setStatus("loading");
 
-        };
-
-        setRipples(prev=>[...prev,ripple]);
-
-        setTimeout(()=>{
-
-            setRipples(prev=>prev.filter(r=>r.id!==ripple.id));
-
-        },600);
-
-    },[]);
-
-    const handleShare = useCallback(async(event)=>{
-
-        if(disabled || loading) return;
-
-        createRipple(event);
-
-        beforeShare();
-
-        setStatus("loading");
-
-        try{
-
-            if(navigator.share){
-
-                await navigator.share({
-
-                    title,
-
-                    text,
-
-                    url
-
-                });
-
-            }
-
-            else{
-
-                await navigator.clipboard.writeText(url);
-
-            }
-
-            setStatus("success");
-
-            onSuccess(url);
-
-            onShare(url);
-
+      try {
+        if (useNativeShare && navigator.share) {
+          await navigator.share({
+            title,
+            text,
+            url,
+          });
+        } else {
+          await navigator.clipboard.writeText(url);
         }
 
-        catch(error){
+        setCopied(true);
+        setStatus("success");
 
-            console.error(error);
+        onCopy?.(url);
+        onSuccess?.(url);
 
-            setStatus("error");
+        resetStatus();
+      } catch (error) {
+        console.error(error);
 
-            onError(error);
+        setStatus("error");
 
-        }
+        onError?.(error);
+      } finally {
+        afterCopy?.();
+      }
+    };
 
-        finally{
+    const handleKeyDown = (event) => {
+      if (disabled) return;
 
-            afterShare();
+      if (event.key === "Enter" || event.key === " ") {
+        event.preventDefault();
+        handleCopy(event);
+      }
+    };
 
-            resetStatus();
+    const classes = [
+      "share-btn",
+      `share-btn--${variant}`,
+      `share-btn--${size}`,
+      fullWidth && "share-btn--full",
+      rounded && "share-btn--rounded",
+      loading && "share-btn--loading",
+      copied && "share-btn--copied",
+      status === "error" && "share-btn--error",
+      className,
+    ]
+      .filter(Boolean)
+      .join(" ");
 
-        }
+    return (
+      <button
+        ref={ref}
+        type="button"
+        disabled={disabled || loading}
+        className={classes}
+        title={tooltip}
+        aria-label="Copy Link"
+        aria-live="polite"
+        aria-busy={loading}
+        onClick={handleCopy}
+        onKeyDown={handleKeyDown}
+        {...props}
+      >
+        {loading ? (
+          <span className="share-btn__spinner" />
+        ) : (
+          <>
+            <span className="share-btn__icon">
+              {leftIcon}
+            </span>
 
-    },[
-        disabled,
-        loading,
-        url,
-        title,
-        text,
-        createRipple,
-        beforeShare,
-        afterShare,
-        onSuccess,
-        onError,
-        onShare
-    ]);
-
-    const buttonClasses = [
-
-        "share-btn",
-
-        `share-btn--${variant}`,
-
-        `share-btn--${size}`,
-
-        rounded && "share-btn--rounded",
-
-        fullWidth && "share-btn--full",
-
-        disabled && "share-btn--disabled",
-
-        loading && "share-btn--loading",
-
-        className
-
-    ].filter(Boolean).join(" ");
-
-    return(
-
-        <button
-
-            ref={ref}
-
-            className={buttonClasses}
-
-            disabled={disabled || loading}
-
-            title={tooltip}
-
-            onClick={handleShare}
-
-            aria-label="Share"
-
-            aria-busy={loading}
-
-            {...props}
-
-        >
-
-            {status==="loading" ? (
-
-                <span className="share-btn__spinner"/>
-
-            ):(
-
-                <>
-
-                    <span className="share-btn__icon">
-
-                        {leftIcon}
-
-                    </span>
-
-                    {!iconOnly && (
-
-                        <span className="share-btn__text">
-
-                            {
-
-                                status==="success"
-
-                                ? "Copied!"
-
-                                : status==="error"
-
-                                ? "Failed"
-
-                                : "Share"
-
-                            }
-
-                        </span>
-
-                    )}
-
-                    {
-
-                        rightIcon && (
-
-                            <span className="share-btn__icon">
-
-                                {rightIcon}
-
-                            </span>
-
-                        )
-
-                    }
-
-                </>
-
+            {!iconOnly && (
+              <span className="share-btn__text">
+                {status === "error"
+                  ? "Failed"
+                  : copied
+                  ? copiedLabel
+                  : label}
+              </span>
             )}
 
-            {
+            {rightIcon && (
+              <span className="share-btn__icon">
+                {rightIcon}
+              </span>
+            )}
+          </>
+        )}
 
-                ripples.map(ripple=>(
-
-                    <span
-
-                        key={ripple.id}
-
-                        className="share-btn__ripple"
-
-                        style={{
-
-                            left:ripple.x,
-
-                            top:ripple.y,
-
-                            width:ripple.size,
-
-                            height:ripple.size
-
-                        }}
-
-                    />
-
-                ))
-
-            }
-
-        </button>
-
+        {ripples.map((ripple) => (
+          <span
+            key={ripple.id}
+            className="share-btn__ripple"
+            style={{
+              width: ripple.size,
+              height: ripple.size,
+              left: ripple.x,
+              top: ripple.y,
+            }}
+          />
+        ))}
+      </button>
     );
+  }
+);
 
-});
-
-ShareButton.displayName="ShareButton";
+ShareButton.displayName = "ShareButton";
 
 export default ShareButton;
