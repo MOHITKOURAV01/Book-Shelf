@@ -1,0 +1,22 @@
+.order-history-page {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+}
+
+.order-history-page h2 {
+  margin-bottom: 2rem;
+  font-size: 1.8rem;
+}
+
+.orders-loading {
+  text-align: center;
+  padding: 3rem;
+  color: var(--text-secondary);
+  font-size: 1.2rem;
+}
+
+.orders-list {
+  display: flex;
+  flex-direction: column;
+}

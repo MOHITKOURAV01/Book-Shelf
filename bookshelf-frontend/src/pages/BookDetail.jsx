@@ -1,6 +1,7 @@
-import { useContext } from 'react';
+import { useState, useContext } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { books } from '../data/books.js';
+import Rating from '../components/Rating.jsx';
 import WishlistButton from '../components/WishlistButton.jsx';
 import { CartContext } from '../context/CartContext.jsx';
 import { WishlistContext } from '../context/WishlistContext.jsx';
@@ -8,10 +9,36 @@ import './BookDetail.css';
 
 export default function BookDetail() {
   const { id } = useParams();
+  const [rating, setRating] = useState(0);
+  const [reviewText, setReviewText] = useState('');
+  const [error, setError] = useState('');
   const { addToCart } = useContext(CartContext);
   const { wishlist, toggleWishlist } = useContext(WishlistContext);
   
   const book = books.find((item) => item.id === id);
+
+  const handleReviewSubmit = (e) => {
+    e.preventDefault();
+    if (rating === 0) {
+      setError('Please select a rating before submitting.');
+      return;
+    }
+    setError('');
+
+    const payload = {
+      bookId: book.id,
+      rating,
+      review: reviewText,
+    };
+
+    console.log('Mock submitting review payload:', payload);
+    // TODO: Send to POST /api/reviews
+    
+    // Reset form
+    setRating(0);
+    setReviewText('');
+    alert('Thank you for your review!');
+  };
 
   if (!book) {
     return (
@@ -58,6 +85,25 @@ export default function BookDetail() {
             <WishlistButton active={wishlist?.includes(book.id)} onToggle={() => toggleWishlist(book.id)} />
           </div>
         </div>
+      </div>
+      
+      <div className="book-review-section">
+        <h2 className="book-review-title">Write a Review</h2>
+        <form className="book-review-form" onSubmit={handleReviewSubmit}>
+          <div className="book-review-rating">
+            <Rating value={rating} onChange={setRating} />
+          </div>
+          {error && <p className="book-review-error">{error}</p>}
+          <textarea
+            className="book-review-textarea"
+            placeholder="Share your thoughts about this book..."
+            value={reviewText}
+            onChange={(e) => setReviewText(e.target.value)}
+            rows={4}
+            maxLength={1000}
+          />
+          <button type="submit" className="book-review-submit-btn">Submit Review</button>
+        </form>
       </div>
     </main>
   );

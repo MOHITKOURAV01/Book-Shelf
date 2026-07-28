@@ -19,6 +19,8 @@ import Signup from './pages/Signup.jsx';
 import NotFound from './pages/NotFound.jsx';
 import Profile from './pages/Profile.jsx';
 
+import OrderHistory from './pages/OrderHistory.jsx';
+
 import './App.css';
 
 export default function App() {
@@ -40,6 +42,7 @@ export default function App() {
         <Route path="/" element={<Home searchQuery={searchQuery} />} />
         <Route path="/book/:id" element={<BookDetail />} />
         <Route path="/wishlist" element={<Wishlist />} />
+        <Route path="/orders" element={<OrderHistory />} />
         <Route path="/about" element={<AboutUs />} />
         <Route path="/privacy" element={<PrivacyPolicy />} />
         <Route path="/terms" element={<TermsOfService />} />

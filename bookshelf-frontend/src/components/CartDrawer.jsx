@@ -6,11 +6,19 @@ export default function CartDrawer({ cart, isOpen, onClose }) {
   const drawerRef = useRef(null);
   const previousFocusRef = useRef(null);
 import { useContext } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { CartContext } from '../context/CartContext.jsx';
 import './CartDrawer.css';
 
 export default function CartDrawer() {
   const { cart, isCartOpen, setIsCartOpen } = useContext(CartContext);
+  const navigate = useNavigate();
+  const total = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
+
+  const handleStartShopping = () => {
+    setIsCartOpen(false);
+    navigate('/');
+  };
  main
   const total = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
 
@@ -91,7 +99,14 @@ export default function CartDrawer() {
         
         <div className="cart-drawer-content">
           {!cart.length ? (
-            <p className="cart-drawer-empty">Your cart is empty.</p>
+            <div className="cart-drawer-empty">
+              <div className="cart-drawer-empty-icon">🛍️</div>
+              <h3>Your cart is empty</h3>
+              <p>Looks like you haven't added any books to your cart yet.</p>
+              <button className="cart-drawer-empty-btn" onClick={handleStartShopping}>
+                Start Shopping
+              </button>
+            </div>
           ) : (
             <ul className="cart-drawer-list">
               {cart.map((item) => (

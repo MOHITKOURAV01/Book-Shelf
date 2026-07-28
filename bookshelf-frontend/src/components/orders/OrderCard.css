@@ -1,0 +1,72 @@
+.order-card {
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  margin-bottom: 1rem;
+  background-color: var(--card-bg);
+  overflow: hidden;
+}
+
+.order-summary {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.5rem;
+  cursor: pointer;
+  background-color: var(--background);
+  transition: background-color 0.2s ease;
+}
+
+.order-summary:hover {
+  background-color: var(--hover);
+}
+
+.order-info h3 {
+  margin: 0 0 0.5rem 0;
+  font-size: 1.1rem;
+}
+
+.order-date {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  margin: 0;
+}
+
+.order-status {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.status-badge {
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  font-size: 0.8rem;
+  font-weight: 500;
+}
+
+.status-badge.paid {
+  background-color: #dcfce7;
+  color: #166534;
+}
+
+.status-badge.shipped {
+  background-color: #dbeafe;
+  color: #1e40af;
+}
+
+.status-badge.delivered {
+  background-color: #f3e8ff;
+  color: #6b21a8;
+}
+
+.order-total p {
+  font-weight: 600;
+  margin: 0;
+}
+
+.expand-btn {
+  background: none;
+  border: none;
+  color: var(--primary);
+  font-weight: 500;
+  cursor: pointer;
+}
