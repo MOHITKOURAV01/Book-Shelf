@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import OrderCard from '../components/orders/OrderCard.jsx';
 import EmptyOrders from '../components/orders/EmptyOrders.jsx';
+import SkeletonLoader from '../components/SkeletonLoader.jsx';
 import { mockOrders } from '../data/mockOrders.js';
 import './OrderHistory.css';
 
@@ -23,7 +24,9 @@ export default function OrderHistory() {
       <h2>Your Order History</h2>
       
       {loading ? (
-        <div className="orders-loading">Loading orders...</div>
+        <div className="orders-list">
+          <SkeletonLoader variant="order" count={3} />
+        </div>
       ) : orders.length > 0 ? (
         <div className="orders-list">
           {orders.map(order => (
