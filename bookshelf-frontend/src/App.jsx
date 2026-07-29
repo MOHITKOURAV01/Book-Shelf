@@ -13,6 +13,7 @@ import Hero from './components/Hero.jsx';
 import GenreFilter from './components/GenreFilter.jsx';
 import BookCard from './components/BookCard.jsx';
 import Footer from './components/Footer.jsx';
+import RecentlyViewed from './components/RecentlyViewed.jsx';
 import { books, genres } from './data/books.js';
 import './App.css';
 
@@ -60,6 +61,7 @@ export default function App() {
         </div>
       </main>
 
+      <RecentlyViewed />
       <Footer />
     </div>
   );
