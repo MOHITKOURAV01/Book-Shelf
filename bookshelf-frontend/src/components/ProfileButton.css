@@ -1,0 +1,38 @@
+.profile-button{
+display:inline-flex;
+align-items:center;
+gap:.6rem;
+padding:.75rem 1rem;
+border:1px solid var(--line,#ddd);
+border-radius:8px;
+background:var(--paper,#fff);
+color:var(--ink,#222);
+font-weight:600;
+cursor:pointer;
+transition:all .2s ease;
+}
+.profile-button:hover:not(:disabled){
+transform:translateY(-2px);
+box-shadow:0 4px 10px rgba(0,0,0,.12);
+border-color:#4f46e5;
+}
+.profile-button:active:not(:disabled){
+transform:translateY(0);
+}
+.profile-button--disabled,
+.profile-button:disabled{
+opacity:.6;
+cursor:not-allowed;
+}
+.profile-button__icon{
+font-size:1.2rem;
+}
+.profile-button__label{
+font-size:.95rem;
+}
+@media(max-width:600px){
+.profile-button{
+width:100%;
+justify-content:center;
+}
+}

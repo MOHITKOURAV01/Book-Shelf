@@ -1,0 +1,32 @@
+/* Reusable hover & active wrapper */
+
+.hover-active{
+  transition:
+    transform .25s ease,
+    box-shadow .25s ease,
+    background-color .25s ease,
+    border-color .25s ease,
+    color .25s ease;
+  will-change: transform;
+}
+
+.hover-active:hover{
+  transform: translateY(-4px) scale(1.02);
+  box-shadow:0 10px 24px rgba(0,0,0,.15);
+  cursor:pointer;
+}
+
+.hover-active:active{
+  transform: translateY(0) scale(.98);
+  transition-duration:.12s;
+}
+
+
+@media (prefers-reduced-motion: reduce){
+  .hover-active,
+  .hover-active:hover,
+  .hover-active:active{
+    transition:none;
+    transform:none;
+  }
+}

@@ -2,26 +2,22 @@ import "./WishlistButton.css";
 import { useState } from "react";
 
 export default function WishlistButton({ active=false, onToggle=()=>{} }) {
-  const [isActive,setIsActive]=useState(active);
-
   const handleClick=()=>{
-    const next=!isActive;
-    setIsActive(next);
-    onToggle(next);
+    onToggle(!active);
   };
 
   return (
     <button
-      className={`wishlist-button ${isActive ? "wishlist-button--active" : ""}`}
+      className={`wishlist-button ${active ? "wishlist-button--active" : ""}`}
       onClick={handleClick}
       aria-label="Toggle Wishlist"
-      title={isActive ? "Remove from Wishlist" : "Add to Wishlist"}
+      title={active ? "Remove from Wishlist" : "Add to Wishlist"}
     >
       <span className="wishlist-button__icon">
-        {isActive ? "♥" : "♡"}
+        {active ? "♥" : "♡"}
       </span>
       <span className="wishlist-button__text">
-        {isActive ? "Wishlisted" : "Wishlist"}
+        {active ? "Wishlisted" : "Wishlist"}
       </span>
     </button>
   );
