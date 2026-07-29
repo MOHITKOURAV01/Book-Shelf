@@ -1,0 +1,31 @@
+.checkout-page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.checkout-main {
+  flex: 1;
+  padding: 40px 20px;
+}
+
+.checkout-success {
+  text-align: center;
+  margin-top: 100px;
+}
+
+.checkout-success h2 {
+  font-family: var(--font-display);
+  font-size: 32px;
+  margin-bottom: 16px;
+  color: var(--ink);
+}
+
+.checkout-success p {
+  color: var(--ink-soft);
+  margin-bottom: 32px;
+}
+
+.checkout-success .btn-primary {
+  display: inline-block;
+}

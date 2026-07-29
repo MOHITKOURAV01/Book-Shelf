@@ -1,13 +1,9 @@
 import { useMemo, useState } from 'react';
-
+import { useNavigate } from 'react-router-dom';
 
 import ThemeToggle from './components/ThemeToggle.jsx';
-
 import ScrollToTop from './components/ScrollToTop.jsx';
-
-
 import CustomCursor from './components/CustomCursor.jsx';
-
 import Navbar from './components/Navbar.jsx';
 import Hero from './components/Hero.jsx';
 import GenreFilter from './components/GenreFilter.jsx';
@@ -19,6 +15,7 @@ import './App.css';
 export default function App() {
   const [activeGenre, setActiveGenre] = useState('All');
   const [cart, setCart] = useState([]);
+  const navigate = useNavigate();
 
   const visibleBooks = useMemo(() => {
     if (activeGenre === 'All') return books;
@@ -31,15 +28,11 @@ export default function App() {
 
   return (
     <div className="app">
-
-
       <ThemeToggle />
-
       <ScrollToTop />
-
       <CustomCursor />
 
-      <Navbar cartCount={cart.length} onCartClick={() => {}} />
+      <Navbar cartCount={cart.length} onCartClick={() => navigate('/checkout')} />
       <div className="nav-spacer" />
       <Hero />
 
