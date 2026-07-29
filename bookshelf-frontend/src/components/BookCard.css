@@ -40,6 +40,8 @@
   background: rgba(0, 0, 0, 0.2);
   padding: 4px 8px;
   border-radius: 999px;
+  position: relative;
+  z-index: 1;
 }
 
 .book-card__cover-title {
@@ -48,6 +50,17 @@
   font-weight: 600;
   color: var(--paper);
   line-height: 1.15;
+  position: relative;
+  z-index: 1;
+}
+
+.book-card__cover-image {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 0;
 }
 
 .book-card__body {
@@ -78,13 +91,20 @@
   color: var(--gold);
 }
 
+
 .book-card__price {
   color: var(--ink);
   font-weight: 500;
 }
 
+.book-card__actions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
 .book-card__add {
-  width: 100%;
+  flex: 1;
   background: transparent;
   border: 1px solid var(--ink);
   color: var(--ink);
@@ -99,3 +119,5 @@
   background: var(--ink);
   color: var(--paper);
 }
+
+.book-card__link { text-decoration: none; color: inherit; }
