@@ -8,8 +8,8 @@ import TermsOfService from './pages/TermsOfService.jsx'
 import BookDetail from './pages/BookDetail.jsx'
 import './index.css'
 
-ReactDOM.createRoot(document.getElementById('root')).render(
-  <React.StrictMode>
+createRoot(document.getElementById('root')).render(
+  <StrictMode>
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<App />} />
@@ -18,6 +18,11 @@ ReactDOM.createRoot(document.getElementById('root')).render(
         <Route path="/terms" element={<TermsOfService />} />
         <Route path="/books/:id" element={<BookDetail />} />
       </Routes>
+      <CartProvider>
+        <WishlistProvider>
+          <App />
+        </WishlistProvider>
+      </CartProvider>
     </BrowserRouter>
-  </React.StrictMode>,
-)
+  </StrictMode>
+);
