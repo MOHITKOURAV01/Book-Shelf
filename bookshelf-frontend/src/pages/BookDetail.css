@@ -187,7 +187,6 @@
 }
 
 .book-review-textarea:focus {
-  outline: none;
   border-color: var(--color-primary, #000);
 }
 
