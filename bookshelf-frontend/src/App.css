@@ -34,6 +34,36 @@
   gap: 20px;
 }
 
+.catalog__controls {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  margin: 14px 0 4px;
+}
+
+.catalog__sort-select {
+  appearance: none;
+  -webkit-appearance: none;
+  background-color: var(--surface, #fff);
+  border: 1px solid var(--line, #ddd);
+  border-radius: 8px;
+  padding: 6px 32px 6px 12px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--ink, #111);
+  cursor: pointer;
+  outline: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23666' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  transition: border-color 0.2s;
+}
+
+.catalog__sort-select:hover,
+.catalog__sort-select:focus {
+  border-color: var(--ink, #111);
+}
+
 @media (max-width: 960px) {
   .catalog__grid {
     grid-template-columns: repeat(2, 1fr);
