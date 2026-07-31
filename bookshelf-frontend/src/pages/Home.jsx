@@ -1,4 +1,5 @@
 import { useMemo, useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import Hero from '../components/Hero.jsx';
 import GenreFilter from '../components/GenreFilter.jsx';
 import BookCard from '../components/BookCard.jsx';
@@ -66,7 +67,7 @@ export default function Home({ searchQuery = '' }) {
         <div className="catalog__inner">
           <div className="catalog__header">
             <h2 className="catalog__title">{t('home.featuredTitle')}</h2>
-            <p className="catalog__count">{totalBooks} titles total</p>
+            <p className="catalog__count">{t('home.titlesTotal', { count: totalBooks })}</p>
           </div>
 
           <GenreFilter genres={genres} active={activeGenre} onSelect={setActiveGenre} />
@@ -77,13 +78,13 @@ export default function Home({ searchQuery = '' }) {
               className="catalog__sort-select"
               value={activeSort}
               onChange={(e) => setActiveSort(e.target.value)}
-              aria-label="Sort books"
+              aria-label={t('home.sortAriaLabel')}
             >
-              <option value="">Sort: Default</option>
-              <option value="price_asc">Price: Low → High</option>
-              <option value="price_desc">Price: High → Low</option>
-              <option value="rating_desc">Top Rated</option>
-              <option value="title_asc">Title: A → Z</option>
+              <option value="">{t('home.sortDefault')}</option>
+              <option value="price_asc">{t('home.sortPriceAsc')}</option>
+              <option value="price_desc">{t('home.sortPriceDesc')}</option>
+              <option value="rating_desc">{t('home.sortRatingDesc')}</option>
+              <option value="title_asc">{t('home.sortTitleAsc')}</option>
             </select>
           </div>
 
@@ -92,9 +93,9 @@ export default function Home({ searchQuery = '' }) {
               <SkeletonLoader variant="card" count={4} />
             </div>
           ) : error ? (
-            <p style={{ textAlign: 'center', padding: '2rem 0', color: 'var(--error)' }}>Unable to load books right now. Please try again later.</p>
+            <p style={{ textAlign: 'center', padding: '2rem 0', color: 'var(--error)' }}>{t('home.errorLoading')}</p>
           ) : books.length === 0 ? (
-            <p style={{ textAlign: 'center', padding: '2rem 0', color: 'var(--text-secondary)' }}>No books found.</p>
+            <p style={{ textAlign: 'center', padding: '2rem 0', color: 'var(--text-secondary)' }}>{t('home.noBooksFound')}</p>
           ) : (
             <>
               <div className="catalog__grid">
