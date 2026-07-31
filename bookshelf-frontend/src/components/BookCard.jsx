@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 import { useContext } from 'react';
 import { Link } from 'react-router-dom';
 import WishlistButton from './WishlistButton.jsx';
@@ -11,6 +12,15 @@ export default function BookCard({ book }) {
 
   return (
     <article className="book-card">
+      <Link to={`/books/${book.id}`} className="book-card__cover-link" style={{textDecoration: 'none', color: 'inherit'}}>
+        <div className="book-card__cover" style={{ '--cover-color': book.cover }}>
+          <span className="book-card__genre">{book.genre}</span>
+          <span className="book-card__cover-title">{book.title}</span>
+        </div>
+      </Link>
+
+      <div className="book-card__body">
+        <Link to={`/books/${book.id}`} style={{textDecoration: 'none', color: 'inherit'}}>
       <div className="book-card__cover" style={{ '--cover-color': book.cover }}>
         {book.coverImage && (
           <img

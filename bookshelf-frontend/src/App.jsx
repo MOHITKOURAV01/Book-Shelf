@@ -11,6 +11,8 @@ import Hero from './components/Hero.jsx';
 import FilterSidebar from './components/FilterSidebar.jsx';
 import BookCard from './components/BookCard.jsx';
 import Footer from './components/Footer.jsx';
+import RecentlyViewed from './components/RecentlyViewed.jsx';
+import { books, genres } from './data/books.js';
 import CartDrawer from './components/CartDrawer.jsx';
 
 import Home from './pages/Home.jsx';
@@ -133,6 +135,7 @@ export default function App() {
         </div>
       </main>
 
+      <Navbar cartCount={cart.length} onCartClick={() => navigate('/checkout')} />
       <Navbar 
         searchQuery={searchQuery}
         setSearchQuery={setSearchQuery}
@@ -154,6 +157,7 @@ export default function App() {
         <Route path="*" element={<NotFound />} />
       </Routes>
 
+      <RecentlyViewed />
       <Footer />
       
       <CartDrawer />
