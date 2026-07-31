@@ -28,8 +28,9 @@ app.get("/api/books", (req, res) => {
     let limit = parseInt(req.query.limit);
     let genre = req.query.genre;
     let search = req.query.search;
+    let sort = req.query.sort;
     
-    let filteredBooks = books;
+    let filteredBooks = [...books]; // shallow copy so we don't mutate the original array
     
     if (genre && genre !== 'All') {
         filteredBooks = filteredBooks.filter(b => b.genre === genre);
@@ -42,6 +43,12 @@ app.get("/api/books", (req, res) => {
             b.author.toLowerCase().includes(query)
         );
     }
+
+    // Sort after filtering, before paginating
+    if (sort === 'price_asc')    filteredBooks.sort((a, b) => a.price - b.price);
+    else if (sort === 'price_desc')   filteredBooks.sort((a, b) => b.price - a.price);
+    else if (sort === 'rating_desc')  filteredBooks.sort((a, b) => b.rating - a.rating);
+    else if (sort === 'title_asc')    filteredBooks.sort((a, b) => a.title.localeCompare(b.title));
     
     // If pagination is not requested, return all books
     if (isNaN(page) || isNaN(limit)) {
