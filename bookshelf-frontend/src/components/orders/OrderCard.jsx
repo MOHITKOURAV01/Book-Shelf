@@ -19,7 +19,7 @@ export default function OrderCard({ order }) {
           <span className={`status-badge ${order.shippingStatus.toLowerCase()}`}>{order.shippingStatus}</span>
         </div>
         <div className="order-total">
-          <p>Total: ${order.total.toFixed(2)}</p>
+          <p>Total: ₹{order.total}</p>
         </div>
         <div className="order-expand">
           <button className="expand-btn">

@@ -1,11 +1,14 @@
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import SkeletonLoader from '../components/SkeletonLoader.jsx';
+import OrderCard from '../components/orders/OrderCard.jsx';
+import { getOrders } from '../utils/orderStorage.js';
 import './Profile.css';
 
 export default function Profile() {
   const [activeTab, setActiveTab] = useState('details');
   const [loading, setLoading] = useState(true);
+  const [profileOrders, setProfileOrders] = useState([]);
   const navigate = useNavigate();
 
   // Mock initial states
@@ -41,7 +44,10 @@ export default function Profile() {
       navigate('/login');
       return;
     }
-    const timer = setTimeout(() => setLoading(false), 500);
+    const timer = setTimeout(() => {
+      setProfileOrders(getOrders());
+      setLoading(false);
+    }, 500);
     return () => clearTimeout(timer);
   }, [navigate]);
 
@@ -170,9 +176,20 @@ export default function Profile() {
           {activeTab === 'orders' && (
             <div className="profile-tab-pane">
               <h2>Order History</h2>
-              <div className="profile-empty-state">
-                <p>You have no previous orders.</p>
-              </div>
+              {profileOrders.length === 0 ? (
+                <div className="profile-empty-state">
+                  <p>You haven't placed any orders yet.</p>
+                  <Link to="/" className="profile-action-btn" style={{ display: 'inline-block', marginTop: '12px' }}>
+                    Browse Books
+                  </Link>
+                </div>
+              ) : (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', marginTop: '8px' }}>
+                  {profileOrders.map((order) => (
+                    <OrderCard key={order.id} order={order} />
+                  ))}
+                </div>
+              )}
             </div>
           )}
 
