@@ -16,6 +16,11 @@ export default function CartDrawer() {
     navigate('/');
   };
 
+  const handleCheckout = () => {
+    setIsCartOpen(false);
+    navigate('/checkout');
+  };
+
   useEffect(() => {
     if (isCartOpen) {
       previousFocusRef.current = document.activeElement;
