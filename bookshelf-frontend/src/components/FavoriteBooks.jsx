@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from "react";
-import "./FavoriteBooks.css";
+import "./FavoriteBooksEmpty.css";
 
 export default function FavoriteBooks({
 
@@ -7,55 +7,47 @@ export default function FavoriteBooks({
 
     loading = false,
 
-    onSelect = () => {},
+    onBrowse = () => {},
+
+    onView = () => {},
 
     onRemove = () => {},
 
     onShare = () => {},
 
-    onAddToCart = () => {},
-
-    onToggleFavorite = () => {}
+    onAddToCart = () => {}
 
 }) {
 
-    const [search, setSearch] = useState("");
+    const [search,setSearch]=useState("");
 
-    const [sort, setSort] = useState("asc");
+    const filteredBooks=useMemo(()=>{
 
-    const filteredBooks = useMemo(() => {
+        return books.filter(book=>
 
-        let list = books.filter(book =>
+            book.title
+                .toLowerCase()
+                .includes(search.toLowerCase())
 
-            book.title.toLowerCase().includes(search.toLowerCase()) ||
+            ||
 
-            book.author.toLowerCase().includes(search.toLowerCase())
+            book.author
+                .toLowerCase()
+                .includes(search.toLowerCase())
 
         );
 
-        list.sort((a,b)=>{
-
-            if(sort==="asc"){
-
-                return a.title.localeCompare(b.title);
-
-            }
-
-            return b.title.localeCompare(a.title);
-
-        });
-
-        return list;
-
-    },[books,search,sort]);
+    },[books,search]);
 
     if(loading){
 
         return(
 
-            <div className="favorite-books__loading">
+            <div className="favorite-empty">
 
-                Loading favorite books...
+                <div className="favorite-empty__spinner"/>
+
+                <h2>Loading Favorites...</h2>
 
             </div>
 
@@ -67,9 +59,41 @@ export default function FavoriteBooks({
 
         return(
 
-            <div className="favorite-books__empty">
+            <div className="favorite-empty">
 
-                ❤️ No favorite books found.
+                <div className="favorite-empty__icon">
+
+                    ❤️
+
+                </div>
+
+                <h2 className="favorite-empty__title">
+
+                    No Favorite Books Yet
+
+                </h2>
+
+                <p className="favorite-empty__description">
+
+                    You haven't added any books to your favorites.
+
+                    Browse the library and start building your
+
+                    personal collection.
+
+                </p>
+
+                <button
+
+                    className="favorite-empty__button"
+
+                    onClick={onBrowse}
+
+                >
+
+                    Browse Books
+
+                </button>
 
             </div>
 
@@ -79,65 +103,55 @@ export default function FavoriteBooks({
 
     return(
 
-        <section className="favorite-books">
+        <section className="favorite-list">
 
-            <div className="favorite-books__toolbar">
+            <div className="favorite-list__header">
 
-                <input
+                <h2>
 
-                    type="text"
+                    Favorite Books
 
-                    placeholder="Search favorites..."
+                </h2>
 
-                    value={search}
+                <span>
 
-                    onChange={(e)=>setSearch(e.target.value)}
+                    {filteredBooks.length} Books
 
-                />
-
-                <select
-
-                    value={sort}
-
-                    onChange={(e)=>setSort(e.target.value)}
-
-                >
-
-                    <option value="asc">
-
-                        A - Z
-
-                    </option>
-
-                    <option value="desc">
-
-                        Z - A
-
-                    </option>
-
-                </select>
+                </span>
 
             </div>
 
-            <p className="favorite-books__count">
+            <input
 
-                {filteredBooks.length} Favorite Books
+                className="favorite-list__search"
 
-            </p>
+                type="text"
+
+                placeholder="Search favorite books..."
+
+                value={search}
+
+                onChange={(e)=>
+
+                    setSearch(e.target.value)
+
+                }
+
+            />
 
             {filteredBooks.map(book=>(
 
                 <article
 
-                    className="favorite-book"
-
                     key={book.id}
+
+                    className="favorite-card"
 
                 >
 
                     <div
 
-                        className="favorite-book__cover"
+                        className="favorite-card__cover"
 
                         style={{
 
@@ -155,7 +169,11 @@ export default function FavoriteBooks({
 
                     </div>
 
-                    <div className="favorite-book__content">
+                    <div
+
+                        className="favorite-card__content"
+
+                    >
 
                         <h3>
 
@@ -169,13 +187,7 @@ export default function FavoriteBooks({
 
                         </p>
 
-                        <span className="favorite-book__genre">
-
-                            {book.genre || "General"}
-
-                        </span>
-
-                        <div className="favorite-book__meta">
+                        <div className="favorite-card__meta">
 
                             <span>
 
@@ -185,7 +197,7 @@ export default function FavoriteBooks({
 
                             <span>
 
-                                ₹{book.price || 0}
+                                ₹ {book.price || 0}
 
                             </span>
 
@@ -197,9 +209,16 @@ export default function FavoriteBooks({
 
                         </div>
 
+                        <span className="favorite-card__genre">
+
+                            {book.genre || "General"}
+
+                        </span>
+
                         <span
 
-                            className={`favorite-book__stock ${
+                            className={`favorite-card__stock ${
+
                                 book.inStock
 
                                 ? "in-stock"
@@ -224,11 +243,11 @@ export default function FavoriteBooks({
 
                     </div>
 
-                    <div className="favorite-book__actions">
+                    <div className="favorite-card__actions">
 
                         <button
 
-                            onClick={()=>onSelect(book)}
+                            onClick={()=>onView(book)}
 
                         >
 
@@ -264,27 +283,13 @@ export default function FavoriteBooks({
 
                             onClick={()=>
 
-                                onToggleFavorite(book)
-
-                            }
-
-                        >
-
-                            ❤️
-
-                        </button>
-
-                        <button
-
-                            onClick={()=>
-
                                 onRemove(book.id)
 
                             }
 
                         >
 
-                            🗑 Remove
+                            ❤️ Remove
 
                         </button>
 
