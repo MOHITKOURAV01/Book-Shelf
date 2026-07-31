@@ -1,5 +1,22 @@
 import './FilterSidebar.css';
 
+/**
+ * FilterSidebar — collapsible filter panel for the book catalogue.
+ *
+ * Props:
+ *   genres           string[]   full list of genre strings (including 'All')
+ *   selectedGenres   string[]   currently checked genres
+ *   onGenreChange    (genre: string, checked: boolean) => void
+ *   minPrice         string     minimum price input value (empty string = no filter)
+ *   onMinPriceChange (value: string) => void
+ *   maxPrice         string     maximum price input value (empty string = no filter)
+ *   onMaxPriceChange (value: string) => void
+ *   minRating        number|null  minimum star rating (null = no filter)
+ *   onMinRatingChange (rating: number|null) => void
+ *   onClearFilters   () => void  resets all filter state
+ *   isOpen           boolean    controls mobile open/close state
+ *   onToggle         () => void  toggles isOpen
+ */
 export default function FilterSidebar({
   genres,
   selectedGenres,
@@ -12,27 +29,47 @@ export default function FilterSidebar({
   onMinRatingChange,
   onClearFilters,
   isOpen,
-  onToggle
+  onToggle,
 }) {
+  const hasActiveFilters =
+    selectedGenres.length > 0 ||
+    minPrice !== '' ||
+    maxPrice !== '' ||
+    minRating !== null;
+
   return (
-    <aside className={`filter-sidebar ${isOpen ? 'is-open' : ''}`}>
+    <aside className={`filter-sidebar ${isOpen ? 'is-open' : ''}`} aria-label="Filter books">
+      {/* Mobile header — always visible, toggles the panel open */}
       <div className="filter-sidebar__header-mobile">
         <h3 className="filter-sidebar__title">Filters</h3>
-        <button className="filter-sidebar__toggle" onClick={onToggle}>
-          {isOpen ? 'Close' : 'Filter'}
+        <button
+          className="filter-sidebar__toggle"
+          onClick={onToggle}
+          aria-expanded={isOpen}
+          aria-controls="filter-sidebar-content"
+        >
+          {isOpen ? 'Close ✕' : 'Filter ▼'}
         </button>
       </div>
 
-      <div className="filter-sidebar__content">
+      {/* Collapsible content */}
+      <div
+        className="filter-sidebar__content"
+        id="filter-sidebar-content"
+      >
+        {/* Desktop header — always visible on large screens */}
         <div className="filter-sidebar__header-desktop">
           <h3 className="filter-sidebar__title">Filters</h3>
-          <button className="filter-sidebar__clear" onClick={onClearFilters}>
-            Clear All
-          </button>
+          {hasActiveFilters && (
+            <button className="filter-sidebar__clear" onClick={onClearFilters}>
+              Clear All
+            </button>
+          )}
         </div>
 
-        <div className="filter-group">
-          <h4 className="filter-group__title">Category</h4>
+        {/* ── Genre ──────────────────────────────────────── */}
+        <fieldset className="filter-group">
+          <legend className="filter-group__title">Category</legend>
           <div className="filter-group__checkboxes">
             {genres.filter(g => g !== 'All').map(genre => (
               <label key={genre} className="filter-checkbox">
@@ -45,36 +82,41 @@ export default function FilterSidebar({
               </label>
             ))}
           </div>
-        </div>
+        </fieldset>
 
-        <div className="filter-group">
-          <h4 className="filter-group__title">Price</h4>
+        {/* ── Price range ────────────────────────────────── */}
+        <fieldset className="filter-group">
+          <legend className="filter-group__title">Price (₹)</legend>
           <div className="filter-price-inputs">
             <label className="filter-price-input">
-              <span className="filter-price-input__prefix">Min: $</span>
+              {/* Fixed: was '$', corrected to '₹' to match app currency */}
+              <span className="filter-price-input__prefix">Min ₹</span>
               <input
                 type="number"
                 min="0"
                 value={minPrice}
                 onChange={(e) => onMinPriceChange(e.target.value)}
                 placeholder="0"
+                aria-label="Minimum price in rupees"
               />
             </label>
             <label className="filter-price-input">
-              <span className="filter-price-input__prefix">Max: $</span>
+              <span className="filter-price-input__prefix">Max ₹</span>
               <input
                 type="number"
                 min="0"
                 value={maxPrice}
                 onChange={(e) => onMaxPriceChange(e.target.value)}
                 placeholder="Any"
+                aria-label="Maximum price in rupees"
               />
             </label>
           </div>
-        </div>
+        </fieldset>
 
-        <div className="filter-group">
-          <h4 className="filter-group__title">Minimum Rating</h4>
+        {/* ── Minimum rating ─────────────────────────────── */}
+        <fieldset className="filter-group">
+          <legend className="filter-group__title">Minimum Rating</legend>
           <div className="filter-rating-radios">
             {[4, 3, 2, 1].map(rating => (
               <label key={rating} className="filter-radio">
@@ -89,11 +131,21 @@ export default function FilterSidebar({
                 </span>
               </label>
             ))}
+            {/* Allow clearing the rating filter */}
+            {minRating !== null && (
+              <button
+                className="filter-sidebar__clear filter-rating__clear"
+                onClick={() => onMinRatingChange(null)}
+              >
+                Any rating
+              </button>
+            )}
           </div>
-        </div>
-        
+        </fieldset>
+
+        {/* ── Mobile footer actions ──────────────────────── */}
         <div className="filter-sidebar__mobile-actions">
-           <button className="filter-sidebar__clear" onClick={onClearFilters}>
+          <button className="filter-sidebar__clear" onClick={onClearFilters}>
             Clear All
           </button>
           <button className="filter-sidebar__apply" onClick={onToggle}>
