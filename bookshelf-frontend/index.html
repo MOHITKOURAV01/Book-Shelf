@@ -14,6 +14,12 @@
       (function() {
         try {
           var savedTheme = localStorage.getItem('theme');
+          var systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+          var isDark = savedTheme === 'dark' || (!savedTheme && systemPrefersDark);
+          if (isDark) {
+            document.documentElement.setAttribute('data-theme', 'dark');
+          } else {
+            document.documentElement.setAttribute('data-theme', 'light');
           if (savedTheme === 'light' || savedTheme === 'dark') {
             document.documentElement.setAttribute('data-theme', savedTheme);
           } else {
