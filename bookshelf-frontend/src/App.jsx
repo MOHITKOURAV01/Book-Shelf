@@ -8,6 +8,8 @@ import ScrollToTop from './components/ScrollToTop.jsx';
 import CustomCursor from './components/CustomCursor.jsx';
 import Navbar from './components/Navbar.jsx';
 import Footer from './components/Footer.jsx';
+import RecentlyViewed from './components/RecentlyViewed.jsx';
+import { books, genres } from './data/books.js';
 import CartDrawer from './components/CartDrawer.jsx';
 
 import Home from './pages/Home.jsx';
@@ -69,6 +71,7 @@ export default function App() {
         <Route path="*" element={<NotFound />} />
       </Routes>
 
+      <RecentlyViewed />
       <Footer />
       
       <CartDrawer />
