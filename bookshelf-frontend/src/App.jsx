@@ -1,3 +1,5 @@
+import { useMemo, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import { Routes, Route } from 'react-router-dom';
 
@@ -25,6 +27,18 @@ import OrderHistory from './pages/OrderHistory.jsx';
 import './App.css';
 
 export default function App() {
+  const [activeGenre, setActiveGenre] = useState('All');
+  const [cart, setCart] = useState([]);
+  const navigate = useNavigate();
+
+  const visibleBooks = useMemo(() => {
+    if (activeGenre === 'All') return books;
+    return books.filter((book) => book.genre === activeGenre);
+  }, [activeGenre]);
+
+  function handleAddToCart(book) {
+    setCart((prev) => [...prev, book]);
+  }
   const [searchQuery, setSearchQuery] = useState('');
 
   return (
@@ -33,6 +47,7 @@ export default function App() {
       <ScrollToTop />
       <CustomCursor />
 
+      <Navbar cartCount={cart.length} onCartClick={() => navigate('/checkout')} />
       <Navbar 
         searchQuery={searchQuery}
         setSearchQuery={setSearchQuery}
