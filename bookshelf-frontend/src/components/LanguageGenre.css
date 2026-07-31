@@ -1,0 +1,504 @@
+/* ==========================================
+   LanguageGenre.css
+========================================== */
+
+/* Reset */
+
+*,
+*::before,
+*::after{
+    box-sizing:border-box;
+}
+
+/* ==========================================
+   Container
+========================================== */
+
+.language-genre{
+
+    display:flex;
+
+    flex-wrap:wrap;
+
+    align-items:center;
+
+    gap:14px;
+
+    width:100%;
+
+}
+
+/* ==========================================
+   Badge Base
+========================================== */
+
+.language-genre__badge{
+
+    display:inline-flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    gap:8px;
+
+    padding:10px 16px;
+
+    border-radius:999px;
+
+    font-size:14px;
+
+    font-weight:600;
+
+    cursor:pointer;
+
+    user-select:none;
+
+    transition:
+        transform .25s ease,
+        box-shadow .25s ease,
+        background-color .25s ease,
+        color .25s ease;
+
+    position:relative;
+
+    overflow:hidden;
+
+}
+
+/* ==========================================
+   Hover
+========================================== */
+
+.language-genre__badge:hover{
+
+    transform:translateY(-3px);
+
+    box-shadow:0 8px 18px rgba(0,0,0,.12);
+
+}
+
+/* ==========================================
+   Active
+========================================== */
+
+.language-genre__badge:active{
+
+    transform:scale(.97);
+
+}
+
+/* ==========================================
+   Focus
+========================================== */
+
+.language-genre__badge:focus-visible{
+
+    outline:3px solid rgba(37,99,235,.35);
+
+    outline-offset:3px;
+
+}
+
+/* ==========================================
+   Language Badge
+========================================== */
+
+.language{
+
+    background:#eff6ff;
+
+    color:#2563eb;
+
+}
+
+.language:hover{
+
+    background:#dbeafe;
+
+}
+
+/* ==========================================
+   Genre Badge
+========================================== */
+
+.genre{
+
+    background:#ecfdf5;
+
+    color:#15803d;
+
+}
+
+.genre:hover{
+
+    background:#d1fae5;
+
+}
+
+/* ==========================================
+   Additional Variants
+========================================== */
+
+.language--dark{
+
+    background:#1e3a8a;
+
+    color:#fff;
+
+}
+
+.genre--dark{
+
+    background:#166534;
+
+    color:#fff;
+
+}
+
+.language--outline{
+
+    background:transparent;
+
+    border:2px solid #2563eb;
+
+    color:#2563eb;
+
+}
+
+.genre--outline{
+
+    background:transparent;
+
+    border:2px solid #16a34a;
+
+    color:#16a34a;
+
+}
+
+/* ==========================================
+   Sizes
+========================================== */
+
+.language-genre__badge--sm{
+
+    padding:6px 12px;
+
+    font-size:12px;
+
+}
+
+.language-genre__badge--md{
+
+    padding:10px 16px;
+
+    font-size:14px;
+
+}
+
+.language-genre__badge--lg{
+
+    padding:14px 22px;
+
+    font-size:16px;
+
+}
+
+/* ==========================================
+   Rounded Styles
+========================================== */
+
+.language-genre__badge--rounded{
+
+    border-radius:999px;
+
+}
+
+.language-genre__badge--square{
+
+    border-radius:6px;
+
+}
+
+/* ==========================================
+   Shadow Utilities
+========================================== */
+
+.shadow-sm{
+
+    box-shadow:0 2px 6px rgba(0,0,0,.08);
+
+}
+
+.shadow-md{
+
+    box-shadow:0 6px 14px rgba(0,0,0,.12);
+
+}
+
+.shadow-lg{
+
+    box-shadow:0 10px 24px rgba(0,0,0,.18);
+
+}
+
+/* ==========================================
+   Icons
+========================================== */
+
+.language-genre__icon{
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    font-size:16px;
+
+}
+
+/* ==========================================
+   Ripple Animation
+========================================== */
+
+.language-genre__ripple{
+
+    position:absolute;
+
+    border-radius:50%;
+
+    background:rgba(255,255,255,.5);
+
+    transform:scale(0);
+
+    animation:ripple .6s linear;
+
+}
+
+@keyframes ripple{
+
+    to{
+
+        transform:scale(4);
+
+        opacity:0;
+
+    }
+
+}
+
+/* ==========================================
+   Floating Animation
+========================================== */
+
+.language-genre--floating{
+
+    animation:float 3s ease-in-out infinite;
+
+}
+
+@keyframes float{
+
+    0%,100%{
+
+        transform:translateY(0);
+
+    }
+
+    50%{
+
+        transform:translateY(-4px);
+
+    }
+
+}
+
+/* ==========================================
+   Pulse Animation
+========================================== */
+
+.language-genre--pulse{
+
+    animation:pulse 2s infinite;
+
+}
+
+@keyframes pulse{
+
+    0%{
+
+        box-shadow:0 0 0 0 rgba(37,99,235,.4);
+
+    }
+
+    70%{
+
+        box-shadow:0 0 0 12px rgba(37,99,235,0);
+
+    }
+
+    100%{
+
+        box-shadow:0 0 0 0 rgba(37,99,235,0);
+
+    }
+
+}
+
+/* ==========================================
+   Tooltip
+========================================== */
+
+.language-genre__badge[data-tooltip]{
+
+    position:relative;
+
+}
+
+.language-genre__badge[data-tooltip]::after{
+
+    content:attr(data-tooltip);
+
+    position:absolute;
+
+    bottom:125%;
+
+    left:50%;
+
+    transform:translateX(-50%);
+
+    background:#111827;
+
+    color:#fff;
+
+    padding:6px 10px;
+
+    border-radius:6px;
+
+    font-size:12px;
+
+    white-space:nowrap;
+
+    opacity:0;
+
+    visibility:hidden;
+
+    transition:.25s;
+
+}
+
+.language-genre__badge[data-tooltip]:hover::after{
+
+    opacity:1;
+
+    visibility:visible;
+
+}
+
+/* ==========================================
+   Disabled
+========================================== */
+
+.language-genre__badge--disabled{
+
+    opacity:.5;
+
+    cursor:not-allowed;
+
+    pointer-events:none;
+
+}
+
+/* ==========================================
+   Dark Theme
+========================================== */
+
+.dark .language{
+
+    background:#1e40af;
+
+    color:#fff;
+
+}
+
+.dark .genre{
+
+    background:#166534;
+
+    color:#fff;
+
+}
+
+/* ==========================================
+   Responsive
+========================================== */
+
+@media(max-width:768px){
+
+.language-genre{
+
+    justify-content:center;
+
+}
+
+}
+
+@media(max-width:600px){
+
+.language-genre{
+
+    flex-direction:column;
+
+    align-items:stretch;
+
+}
+
+.language-genre__badge{
+
+    width:100%;
+
+    justify-content:center;
+
+}
+
+}
+
+@media(max-width:480px){
+
+.language-genre__badge{
+
+    font-size:13px;
+
+    padding:10px;
+
+}
+
+}
+
+/* ==========================================
+   Accessibility
+========================================== */
+
+.language-genre__badge[aria-selected="true"]{
+
+    border:2px solid #2563eb;
+
+}
+
+/* ==========================================
+   Reduced Motion
+========================================== */
+
+@media(prefers-reduced-motion:reduce){
+
+.language-genre__badge,
+.language-genre__ripple{
+
+    transition:none;
+
+    animation:none;
+
+}
+
+}
