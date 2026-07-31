@@ -11,6 +11,14 @@
   transform: translateY(-4px);
 }
 
+/* Wrapper link around the cover — resets anchor defaults */
+.book-card__cover-link {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+}
+
+
 .book-card__cover {
   position: relative;
   height: 170px;
