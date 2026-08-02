@@ -1,0 +1,36 @@
+.recently-viewed {
+  padding: 40px 24px;
+  background: var(--paper-dim);
+  border-top: 1px solid var(--line);
+  margin-top: 40px;
+}
+
+.recently-viewed__inner {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.recently-viewed__title {
+  font-family: var(--font-display);
+  font-size: 24px;
+  color: var(--ink);
+  margin-bottom: 24px;
+}
+
+.recently-viewed__scroll {
+  display: flex;
+  gap: 20px;
+  overflow-x: auto;
+  padding-bottom: 16px;
+  /* Hide scrollbar for cleaner look */
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE/Edge */
+}
+
+.recently-viewed__scroll::-webkit-scrollbar {
+  display: none; /* Chrome/Safari */
+}
+
+.recently-viewed__item {
+  flex: 0 0 280px; /* Consistent card width */
+}

@@ -1,0 +1,603 @@
+/* ==========================================
+   ReusableComponent.css
+========================================== */
+
+/* Reset */
+
+*,
+*::before,
+*::after{
+    box-sizing:border-box;
+}
+
+/* ==========================================
+   Root Card
+========================================== */
+
+.reusable-card{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:18px;
+
+    position:relative;
+
+    overflow:hidden;
+
+    width:100%;
+
+    padding:20px;
+
+    border:1px solid #e5e7eb;
+
+    border-radius:16px;
+
+    background:#ffffff;
+
+    cursor:pointer;
+
+    user-select:none;
+
+    transition:
+        transform .25s ease,
+        box-shadow .25s ease,
+        border-color .25s ease,
+        background-color .25s ease;
+
+}
+
+/* ==========================================
+   Hover
+========================================== */
+
+.reusable-card:hover{
+
+    transform:translateY(-4px);
+
+    border-color:#2563eb;
+
+    box-shadow:0 12px 28px rgba(0,0,0,.12);
+
+}
+
+/* ==========================================
+   Active
+========================================== */
+
+.reusable-card:active{
+
+    transform:scale(.98);
+
+}
+
+/* ==========================================
+   Focus
+========================================== */
+
+.reusable-card:focus-visible{
+
+    outline:3px solid rgba(37,99,235,.35);
+
+    outline-offset:3px;
+
+}
+
+/* ==========================================
+   Disabled
+========================================== */
+
+.reusable-card--disabled{
+
+    opacity:.6;
+
+    pointer-events:none;
+
+    cursor:not-allowed;
+
+    filter:grayscale(20%);
+
+}
+
+/* ==========================================
+   Decorative Background
+========================================== */
+
+.reusable-card::before{
+
+    content:"";
+
+    position:absolute;
+
+    top:-60px;
+
+    right:-60px;
+
+    width:160px;
+
+    height:160px;
+
+    border-radius:50%;
+
+    background:rgba(37,99,235,.05);
+
+}
+
+.reusable-card::after{
+
+    content:"";
+
+    position:absolute;
+
+    bottom:-60px;
+
+    left:-60px;
+
+    width:120px;
+
+    height:120px;
+
+    border-radius:50%;
+
+    background:rgba(59,130,246,.05);
+
+}
+
+/* ==========================================
+   Icon
+========================================== */
+
+.reusable-card__icon{
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    width:64px;
+
+    height:64px;
+
+    border-radius:50%;
+
+    background:#eff6ff;
+
+    color:#2563eb;
+
+    font-size:32px;
+
+    flex-shrink:0;
+
+    transition:transform .3s ease;
+
+}
+
+.reusable-card:hover .reusable-card__icon{
+
+    transform:rotate(-8deg) scale(1.08);
+
+}
+
+/* ==========================================
+   Content
+========================================== */
+
+.reusable-card__content{
+
+    flex:1;
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:8px;
+
+}
+
+.reusable-card__content h3{
+
+    margin:0;
+
+    font-size:22px;
+
+    color:#111827;
+
+}
+
+.reusable-card__content p{
+
+    margin:0;
+
+    color:#6b7280;
+
+    line-height:1.6;
+
+}
+
+/* ==========================================
+   Footer
+========================================== */
+
+.reusable-card__footer{
+
+    display:flex;
+
+    gap:12px;
+
+    margin-top:16px;
+
+}
+
+/* ==========================================
+   Badge
+========================================== */
+
+.reusable-card__badge{
+
+    display:inline-flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    padding:6px 12px;
+
+    border-radius:999px;
+
+    background:#eff6ff;
+
+    color:#2563eb;
+
+    font-size:12px;
+
+    font-weight:600;
+
+}
+
+/* ==========================================
+   Sizes
+========================================== */
+
+.reusable-card--sm{
+
+    padding:14px;
+
+}
+
+.reusable-card--md{
+
+    padding:20px;
+
+}
+
+.reusable-card--lg{
+
+    padding:28px;
+
+}
+
+/* ==========================================
+   Variants
+========================================== */
+
+.reusable-card--primary{
+
+    border-color:#2563eb;
+
+}
+
+.reusable-card--success{
+
+    border-color:#16a34a;
+
+}
+
+.reusable-card--warning{
+
+    border-color:#f59e0b;
+
+}
+
+.reusable-card--danger{
+
+    border-color:#dc2626;
+
+}
+
+/* ==========================================
+   Rounded
+========================================== */
+
+.reusable-card--rounded{
+
+    border-radius:999px;
+
+}
+
+.reusable-card--square{
+
+    border-radius:0;
+
+}
+
+/* ==========================================
+   Shadows
+========================================== */
+
+.shadow-sm{
+
+    box-shadow:0 2px 8px rgba(0,0,0,.08);
+
+}
+
+.shadow-md{
+
+    box-shadow:0 8px 18px rgba(0,0,0,.12);
+
+}
+
+.shadow-lg{
+
+    box-shadow:0 12px 30px rgba(0,0,0,.18);
+
+}
+
+/* ==========================================
+   Animations
+========================================== */
+
+.reusable-card--lift:hover{
+
+    transform:translateY(-8px);
+
+}
+
+.reusable-card--scale:hover{
+
+    transform:scale(1.03);
+
+}
+
+.reusable-card--rotate:hover{
+
+    transform:rotate(-1deg);
+
+}
+
+.reusable-card--glow:hover{
+
+    box-shadow:
+        0 0 14px rgba(37,99,235,.4),
+        0 0 28px rgba(37,99,235,.2);
+
+}
+
+/* ==========================================
+   Loading
+========================================== */
+
+.reusable-card--loading{
+
+    cursor:progress;
+
+    pointer-events:none;
+
+}
+
+.reusable-card__spinner{
+
+    width:24px;
+
+    height:24px;
+
+    border:3px solid rgba(37,99,235,.25);
+
+    border-top:3px solid #2563eb;
+
+    border-radius:50%;
+
+    animation:spin .8s linear infinite;
+
+}
+
+@keyframes spin{
+
+    from{
+
+        transform:rotate(0);
+
+    }
+
+    to{
+
+        transform:rotate(360deg);
+
+    }
+
+}
+
+/* ==========================================
+   Ripple
+========================================== */
+
+.reusable-card__ripple{
+
+    position:absolute;
+
+    border-radius:50%;
+
+    background:rgba(255,255,255,.5);
+
+    transform:scale(0);
+
+    animation:ripple .6s linear;
+
+}
+
+@keyframes ripple{
+
+    to{
+
+        transform:scale(4);
+
+        opacity:0;
+
+    }
+
+}
+
+/* ==========================================
+   Tooltip
+========================================== */
+
+.reusable-card[data-tooltip]{
+
+    position:relative;
+
+}
+
+.reusable-card[data-tooltip]::after{
+
+    content:attr(data-tooltip);
+
+    position:absolute;
+
+    bottom:120%;
+
+    left:50%;
+
+    transform:translateX(-50%);
+
+    background:#111827;
+
+    color:#fff;
+
+    padding:6px 10px;
+
+    border-radius:6px;
+
+    font-size:12px;
+
+    white-space:nowrap;
+
+    opacity:0;
+
+    visibility:hidden;
+
+    transition:.25s;
+
+}
+
+.reusable-card[data-tooltip]:hover::after{
+
+    opacity:1;
+
+    visibility:visible;
+
+}
+
+/* ==========================================
+   Dark Theme
+========================================== */
+
+.dark .reusable-card{
+
+    background:#1f2937;
+
+    border-color:#374151;
+
+}
+
+.dark .reusable-card__content h3{
+
+    color:#fff;
+
+}
+
+.dark .reusable-card__content p{
+
+    color:#d1d5db;
+
+}
+
+.dark .reusable-card__icon{
+
+    background:#374151;
+
+    color:#60a5fa;
+
+}
+
+/* ==========================================
+   Responsive
+========================================== */
+
+@media(max-width:768px){
+
+.reusable-card{
+
+    flex-direction:column;
+
+    align-items:flex-start;
+
+}
+
+.reusable-card__icon{
+
+    width:56px;
+
+    height:56px;
+
+}
+
+.reusable-card__footer{
+
+    width:100%;
+
+    flex-direction:column;
+
+}
+
+}
+
+@media(max-width:480px){
+
+.reusable-card{
+
+    padding:16px;
+
+}
+
+.reusable-card__content h3{
+
+    font-size:18px;
+
+}
+
+.reusable-card__content p{
+
+    font-size:14px;
+
+}
+
+}
+
+/* ==========================================
+   Reduced Motion
+========================================== */
+
+@media(prefers-reduced-motion:reduce){
+
+.reusable-card,
+.reusable-card__icon,
+.reusable-card__spinner{
+
+    animation:none;
+
+    transition:none;
+
+}
+
+}
