@@ -1,0 +1,568 @@
+/* ==========================================
+   BookGenre.css
+========================================== */
+
+/* Reset */
+
+*,
+*::before,
+*::after{
+    box-sizing:border-box;
+}
+
+/* ==========================================
+   Root
+========================================== */
+
+.book-genre{
+
+    display:inline-flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    gap:8px;
+
+    position:relative;
+
+    overflow:hidden;
+
+    padding:10px 16px;
+
+    border-radius:999px;
+
+    font-weight:600;
+
+    font-size:14px;
+
+    line-height:1;
+
+    user-select:none;
+
+    white-space:nowrap;
+
+    transition:
+        background-color .25s ease,
+        color .25s ease,
+        transform .25s ease,
+        box-shadow .25s ease,
+        opacity .25s ease;
+
+}
+
+/* ==========================================
+   Icon
+========================================== */
+
+.book-genre__icon{
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    font-size:16px;
+
+    transition:transform .25s ease;
+
+}
+
+.book-genre:hover .book-genre__icon{
+
+    transform:rotate(-8deg) scale(1.1);
+
+}
+
+/* ==========================================
+   Text
+========================================== */
+
+.book-genre__text{
+
+    display:inline-flex;
+
+    align-items:center;
+
+}
+
+/* ==========================================
+   Variants
+========================================== */
+
+.book-genre--primary{
+
+    background:#eff6ff;
+
+    color:#2563eb;
+
+}
+
+.book-genre--secondary{
+
+    background:#f3f4f6;
+
+    color:#4b5563;
+
+}
+
+.book-genre--success{
+
+    background:#ecfdf5;
+
+    color:#15803d;
+
+}
+
+.book-genre--warning{
+
+    background:#fef3c7;
+
+    color:#b45309;
+
+}
+
+.book-genre--danger{
+
+    background:#fee2e2;
+
+    color:#dc2626;
+
+}
+
+.book-genre--purple{
+
+    background:#f3e8ff;
+
+    color:#7c3aed;
+
+}
+
+/* ==========================================
+   Outline
+========================================== */
+
+.book-genre--outline{
+
+    background:transparent;
+
+    border:2px solid currentColor;
+
+}
+
+/* ==========================================
+   Ghost
+========================================== */
+
+.book-genre--ghost{
+
+    background:transparent;
+
+}
+
+/* ==========================================
+   Gradient
+========================================== */
+
+.book-genre--gradient{
+
+    background:linear-gradient(135deg,#2563eb,#1d4ed8);
+
+    color:#fff;
+
+}
+
+/* ==========================================
+   Sizes
+========================================== */
+
+.book-genre--xs{
+
+    padding:5px 8px;
+
+    font-size:11px;
+
+}
+
+.book-genre--sm{
+
+    padding:6px 10px;
+
+    font-size:12px;
+
+}
+
+.book-genre--md{
+
+    padding:10px 16px;
+
+    font-size:14px;
+
+}
+
+.book-genre--lg{
+
+    padding:12px 20px;
+
+    font-size:16px;
+
+}
+
+.book-genre--xl{
+
+    padding:15px 24px;
+
+    font-size:18px;
+
+}
+
+/* ==========================================
+   Hover
+========================================== */
+
+.book-genre--clickable{
+
+    cursor:pointer;
+
+}
+
+.book-genre--clickable:hover{
+
+    transform:translateY(-3px);
+
+    box-shadow:0 8px 20px rgba(0,0,0,.15);
+
+}
+
+.book-genre--clickable:active{
+
+    transform:scale(.97);
+
+}
+
+/* ==========================================
+   Shadow Utilities
+========================================== */
+
+.book-genre--shadow-sm{
+
+    box-shadow:0 2px 6px rgba(0,0,0,.08);
+
+}
+
+.book-genre--shadow-md{
+
+    box-shadow:0 6px 14px rgba(0,0,0,.12);
+
+}
+
+.book-genre--shadow-lg{
+
+    box-shadow:0 12px 28px rgba(0,0,0,.18);
+
+}
+
+/* ==========================================
+   Rounded
+========================================== */
+
+.book-genre--rounded{
+
+    border-radius:999px;
+
+}
+
+.book-genre--square{
+
+    border-radius:6px;
+
+}
+
+/* ==========================================
+   Badge
+========================================== */
+
+.book-genre__badge{
+
+    min-width:18px;
+
+    height:18px;
+
+    padding:0 6px;
+
+    border-radius:999px;
+
+    background:#ef4444;
+
+    color:#fff;
+
+    font-size:10px;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+}
+
+/* ==========================================
+   Tooltip
+========================================== */
+
+.book-genre[data-tooltip]{
+
+    position:relative;
+
+}
+
+.book-genre[data-tooltip]::after{
+
+    content:attr(data-tooltip);
+
+    position:absolute;
+
+    left:50%;
+
+    bottom:125%;
+
+    transform:translateX(-50%);
+
+    background:#111827;
+
+    color:#fff;
+
+    padding:6px 10px;
+
+    border-radius:6px;
+
+    font-size:12px;
+
+    white-space:nowrap;
+
+    opacity:0;
+
+    visibility:hidden;
+
+    transition:.25s;
+
+}
+
+.book-genre[data-tooltip]:hover::after{
+
+    opacity:1;
+
+    visibility:visible;
+
+}
+
+/* ==========================================
+   Loading
+========================================== */
+
+.book-genre--loading{
+
+    cursor:progress;
+
+    pointer-events:none;
+
+}
+
+.book-genre__spinner{
+
+    width:14px;
+
+    height:14px;
+
+    border:2px solid rgba(255,255,255,.35);
+
+    border-top:2px solid #fff;
+
+    border-radius:50%;
+
+    animation:genre-spin .8s linear infinite;
+
+}
+
+@keyframes genre-spin{
+
+    from{
+
+        transform:rotate(0deg);
+
+    }
+
+    to{
+
+        transform:rotate(360deg);
+
+    }
+
+}
+
+/* ==========================================
+   Pulse
+========================================== */
+
+.book-genre--pulse{
+
+    animation:genre-pulse 2s infinite;
+
+}
+
+@keyframes genre-pulse{
+
+    0%{
+
+        box-shadow:0 0 0 0 rgba(37,99,235,.4);
+
+    }
+
+    70%{
+
+        box-shadow:0 0 0 12px rgba(37,99,235,0);
+
+    }
+
+    100%{
+
+        box-shadow:0 0 0 0 rgba(37,99,235,0);
+
+    }
+
+}
+
+/* ==========================================
+   Floating
+========================================== */
+
+.book-genre--floating{
+
+    animation:genre-floating 3s ease-in-out infinite;
+
+}
+
+@keyframes genre-floating{
+
+    0%,100%{
+
+        transform:translateY(0);
+
+    }
+
+    50%{
+
+        transform:translateY(-5px);
+
+    }
+
+}
+
+/* ==========================================
+   Disabled
+========================================== */
+
+.book-genre--disabled{
+
+    opacity:.5;
+
+    cursor:not-allowed;
+
+    pointer-events:none;
+
+}
+
+/* ==========================================
+   Focus
+========================================== */
+
+.book-genre:focus-visible{
+
+    outline:3px solid rgba(37,99,235,.35);
+
+    outline-offset:3px;
+
+}
+
+/* ==========================================
+   Dark Mode
+========================================== */
+
+.dark .book-genre{
+
+    background:#374151;
+
+    color:#f9fafb;
+
+}
+
+.dark .book-genre--primary{
+
+    background:#1d4ed8;
+
+    color:#fff;
+
+}
+
+.dark .book-genre--success{
+
+    background:#15803d;
+
+    color:#fff;
+
+}
+
+/* ==========================================
+   Responsive
+========================================== */
+
+@media(max-width:768px){
+
+.book-genre{
+
+    justify-content:center;
+
+}
+
+}
+
+@media(max-width:600px){
+
+.book-genre{
+
+    width:100%;
+
+}
+
+}
+
+@media(max-width:480px){
+
+.book-genre{
+
+    font-size:13px;
+
+    padding:10px 12px;
+
+}
+
+}
+
+/* ==========================================
+   Reduced Motion
+========================================== */
+
+@media(prefers-reduced-motion:reduce){
+
+.book-genre,
+.book-genre__icon,
+.book-genre__spinner{
+
+    animation:none;
+
+    transition:none;
+
+}
+
+}

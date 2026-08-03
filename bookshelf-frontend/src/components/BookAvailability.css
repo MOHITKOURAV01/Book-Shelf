@@ -1,0 +1,575 @@
+/* ==========================================
+   BookAvailability.css
+========================================== */
+
+/* Reset */
+
+*,
+*::before,
+*::after{
+    box-sizing:border-box;
+}
+
+/* ==========================================
+   Root Container
+========================================== */
+
+.book-availability{
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:space-between;
+
+    gap:20px;
+
+    position:relative;
+
+    overflow:hidden;
+
+    padding:20px;
+
+    background:#ffffff;
+
+    border:1px solid #e5e7eb;
+
+    border-radius:16px;
+
+    transition:
+        transform .25s ease,
+        box-shadow .25s ease,
+        border-color .25s ease,
+        background-color .25s ease;
+
+}
+
+/* ==========================================
+   Hover
+========================================== */
+
+.book-availability:hover{
+
+    transform:translateY(-4px);
+
+    border-color:#2563eb;
+
+    box-shadow:0 12px 28px rgba(0,0,0,.12);
+
+}
+
+/* ==========================================
+   Active
+========================================== */
+
+.book-availability:active{
+
+    transform:scale(.99);
+
+}
+
+/* ==========================================
+   Decorative Background
+========================================== */
+
+.book-availability::before{
+
+    content:"";
+
+    position:absolute;
+
+    width:180px;
+
+    height:180px;
+
+    border-radius:50%;
+
+    background:rgba(37,99,235,.05);
+
+    top:-80px;
+
+    right:-80px;
+
+}
+
+.book-availability::after{
+
+    content:"";
+
+    position:absolute;
+
+    width:120px;
+
+    height:120px;
+
+    border-radius:50%;
+
+    background:rgba(16,185,129,.05);
+
+    bottom:-60px;
+
+    left:-60px;
+
+}
+
+/* ==========================================
+   Status Dot
+========================================== */
+
+.book-availability__dot{
+
+    width:14px;
+
+    height:14px;
+
+    border-radius:50%;
+
+    flex-shrink:0;
+
+    background:#16a34a;
+
+    box-shadow:0 0 12px rgba(22,163,74,.5);
+
+    animation:pulse-dot 2s infinite;
+
+}
+
+.unavailable .book-availability__dot{
+
+    background:#dc2626;
+
+    box-shadow:0 0 12px rgba(220,38,38,.5);
+
+}
+
+.low-stock .book-availability__dot{
+
+    background:#f59e0b;
+
+    box-shadow:0 0 12px rgba(245,158,11,.5);
+
+}
+
+@keyframes pulse-dot{
+
+    0%{
+
+        transform:scale(1);
+
+    }
+
+    50%{
+
+        transform:scale(1.2);
+
+    }
+
+    100%{
+
+        transform:scale(1);
+
+    }
+
+}
+
+/* ==========================================
+   Content
+========================================== */
+
+.book-availability__content{
+
+    flex:1;
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:6px;
+
+    z-index:2;
+
+}
+
+.book-availability__content h4{
+
+    margin:0;
+
+    font-size:20px;
+
+    font-weight:700;
+
+    color:#111827;
+
+}
+
+.book-availability__content p{
+
+    margin:0;
+
+    color:#6b7280;
+
+    line-height:1.6;
+
+}
+
+/* ==========================================
+   Quantity Badge
+========================================== */
+
+.book-availability__quantity{
+
+    display:inline-flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    width:max-content;
+
+    padding:6px 12px;
+
+    border-radius:999px;
+
+    background:#eff6ff;
+
+    color:#2563eb;
+
+    font-size:13px;
+
+    font-weight:600;
+
+}
+
+/* ==========================================
+   Status Badge
+========================================== */
+
+.book-availability__status{
+
+    display:inline-flex;
+
+    align-items:center;
+
+    gap:6px;
+
+    padding:6px 12px;
+
+    border-radius:999px;
+
+    font-size:13px;
+
+    font-weight:600;
+
+}
+
+.book-availability__status--available{
+
+    background:#dcfce7;
+
+    color:#15803d;
+
+}
+
+.book-availability__status--low{
+
+    background:#fef3c7;
+
+    color:#b45309;
+
+}
+
+.book-availability__status--unavailable{
+
+    background:#fee2e2;
+
+    color:#b91c1c;
+
+}
+
+/* ==========================================
+   Button
+========================================== */
+
+.book-availability button{
+
+    display:inline-flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    gap:8px;
+
+    padding:12px 18px;
+
+    border:none;
+
+    border-radius:10px;
+
+    background:#2563eb;
+
+    color:#fff;
+
+    font-size:14px;
+
+    font-weight:600;
+
+    cursor:pointer;
+
+    transition:
+        transform .25s ease,
+        background .25s ease,
+        box-shadow .25s ease;
+
+    z-index:2;
+
+}
+
+.book-availability button:hover{
+
+    background:#1d4ed8;
+
+    transform:translateY(-2px);
+
+    box-shadow:0 8px 18px rgba(37,99,235,.25);
+
+}
+
+.book-availability button:active{
+
+    transform:scale(.97);
+
+}
+
+.book-availability button:focus-visible{
+
+    outline:3px solid rgba(37,99,235,.35);
+
+    outline-offset:3px;
+
+}
+
+.book-availability button:disabled{
+
+    opacity:.6;
+
+    cursor:not-allowed;
+
+    pointer-events:none;
+
+}
+
+/* ==========================================
+   Outline Button
+========================================== */
+
+.book-availability__button--outline{
+
+    background:transparent;
+
+    border:2px solid #2563eb;
+
+    color:#2563eb;
+
+}
+
+.book-availability__button--outline:hover{
+
+    background:#2563eb;
+
+    color:#fff;
+
+}
+
+/* ==========================================
+   Loading
+========================================== */
+
+.book-availability--loading{
+
+    pointer-events:none;
+
+    opacity:.7;
+
+}
+
+.book-availability__spinner{
+
+    width:20px;
+
+    height:20px;
+
+    border:3px solid rgba(37,99,235,.2);
+
+    border-top:3px solid #2563eb;
+
+    border-radius:50%;
+
+    animation:spin .8s linear infinite;
+
+}
+
+@keyframes spin{
+
+    from{
+
+        transform:rotate(0);
+
+    }
+
+    to{
+
+        transform:rotate(360deg);
+
+    }
+
+}
+
+/* ==========================================
+   Tooltip
+========================================== */
+
+.book-availability[data-tooltip]{
+
+    position:relative;
+
+}
+
+.book-availability[data-tooltip]::after{
+
+    content:attr(data-tooltip);
+
+    position:absolute;
+
+    bottom:125%;
+
+    left:50%;
+
+    transform:translateX(-50%);
+
+    background:#111827;
+
+    color:#fff;
+
+    padding:6px 10px;
+
+    border-radius:6px;
+
+    font-size:12px;
+
+    white-space:nowrap;
+
+    opacity:0;
+
+    visibility:hidden;
+
+    transition:.25s;
+
+}
+
+.book-availability[data-tooltip]:hover::after{
+
+    opacity:1;
+
+    visibility:visible;
+
+}
+
+/* ==========================================
+   Dark Mode
+========================================== */
+
+.dark .book-availability{
+
+    background:#1f2937;
+
+    border-color:#374151;
+
+}
+
+.dark .book-availability__content h4{
+
+    color:#fff;
+
+}
+
+.dark .book-availability__content p{
+
+    color:#d1d5db;
+
+}
+
+/* ==========================================
+   Responsive
+========================================== */
+
+@media(max-width:768px){
+
+.book-availability{
+
+    flex-direction:column;
+
+    align-items:flex-start;
+
+}
+
+.book-availability button{
+
+    width:100%;
+
+}
+
+}
+
+@media(max-width:480px){
+
+.book-availability{
+
+    padding:16px;
+
+}
+
+.book-availability__content h4{
+
+    font-size:18px;
+
+}
+
+.book-availability__content p{
+
+    font-size:14px;
+
+}
+
+}
+
+/* ==========================================
+   Accessibility
+========================================== */
+
+.book-availability[aria-disabled="true"]{
+
+    opacity:.6;
+
+    pointer-events:none;
+
+}
+
+/* ==========================================
+   Reduced Motion
+========================================== */
+
+@media(prefers-reduced-motion:reduce){
+
+.book-availability,
+.book-availability button,
+.book-availability__dot,
+.book-availability__spinner{
+
+    transition:none;
+
+    animation:none;
+
+}
+
+}

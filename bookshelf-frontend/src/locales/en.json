@@ -1,0 +1,40 @@
+{
+  "navbar": {
+    "logo": "BookShelf",
+    "home": "Home",
+    "catalog": "Catalog",
+    "about": "About Us",
+    "cart": "Cart",
+    "wishlist": "Wishlist",
+    "searchPlaceholder": "Search books...",
+    "orders": "Orders",
+    "profile": "Profile"
+  },
+  "home": {
+    "heroTitle": "Welcome to BookShelf",
+    "heroSubtitle": "Discover your next great read",
+    "featuredTitle": "Featured Books",
+    "titlesTotal": "{{count}} titles total",
+    "sortDefault": "Sort: Default",
+    "sortPriceAsc": "Price: Low → High",
+    "sortPriceDesc": "Price: High → Low",
+    "sortRatingDesc": "Top Rated",
+    "sortTitleAsc": "Title: A → Z",
+    "sortAriaLabel": "Sort books",
+    "errorLoading": "Unable to load books right now. Please try again later.",
+    "noBooksFound": "No books found."
+  },
+  "bookDetail": {
+    "notFound": "Book not found.",
+    "returnToCatalog": "Return to Catalog",
+    "by": "by",
+    "noDescription": "No description available for this book.",
+    "isbn": "ISBN:",
+    "publicationYear": "Publication Year:",
+    "addToCart": "Add to cart",
+    "writeReview": "Write a Review",
+    "reviewPlaceholder": "Share your thoughts about this book...",
+    "submitReview": "Submit Review",
+    "relatedBooks": "You Might Also Like"
+  }
+}

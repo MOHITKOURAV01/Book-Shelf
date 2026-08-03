@@ -1,0 +1,16 @@
+/* Reusable Pointer Cursor Wrapper */
+
+.pointer-hover{
+  display:inline-block;
+}
+
+.pointer-hover:hover{
+  cursor:pointer;
+}
+
+/* Optional disabled state */
+.pointer-hover--disabled,
+.pointer-hover--disabled:hover{
+  cursor:not-allowed;
+  opacity:0.6;
+}
