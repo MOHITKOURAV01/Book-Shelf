@@ -1,0 +1,487 @@
+*/* ==========================================
+   FavoriteBooks.css
+========================================== */
+
+/* Reset */
+
+*,
+*::before,
+*::after{
+    box-sizing:border-box;
+}
+
+/* ==========================================
+   Root Container
+========================================== */
+
+.favorite-books{
+
+    display:grid;
+
+    gap:20px;
+
+    width:100%;
+
+    margin:0 auto;
+
+    padding:10px;
+
+}
+
+/* ==========================================
+   Card
+========================================== */
+
+.favorite-book{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:18px;
+
+    padding:18px;
+
+    background:#ffffff;
+
+    border:1px solid #dcdcdc;
+
+    border-radius:14px;
+
+    transition:
+        transform .25s ease,
+        box-shadow .25s ease,
+        border-color .25s ease;
+
+    overflow:hidden;
+
+    position:relative;
+
+}
+
+/* ==========================================
+   Hover
+========================================== */
+
+.favorite-book:hover{
+
+    transform:translateY(-5px);
+
+    border-color:#2563eb;
+
+    box-shadow:0 12px 30px rgba(0,0,0,.12);
+
+}
+
+/* ==========================================
+   Active
+========================================== */
+
+.favorite-book:active{
+
+    transform:scale(.99);
+
+}
+
+/* ==========================================
+   Book Cover
+========================================== */
+
+.favorite-book__cover{
+
+    width:70px;
+
+    height:95px;
+
+    border-radius:10px;
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    color:#fff;
+
+    font-size:28px;
+
+    font-weight:700;
+
+    background:#2563eb;
+
+    flex-shrink:0;
+
+    transition:transform .3s ease;
+
+}
+
+.favorite-book:hover .favorite-book__cover{
+
+    transform:rotate(-3deg) scale(1.05);
+
+}
+
+/* ==========================================
+   Content
+========================================== */
+
+.favorite-book__content{
+
+    flex:1;
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:6px;
+
+}
+
+.favorite-book__content h3{
+
+    margin:0;
+
+    font-size:20px;
+
+    color:#111827;
+
+}
+
+.favorite-book__content p{
+
+    margin:0;
+
+    color:#6b7280;
+
+    font-size:15px;
+
+    line-height:1.5;
+
+}
+
+/* ==========================================
+   Rating
+========================================== */
+
+.favorite-book__rating{
+
+    color:#f59e0b;
+
+    font-weight:600;
+
+}
+
+/* ==========================================
+   Price
+========================================== */
+
+.favorite-book__price{
+
+    color:#16a34a;
+
+    font-weight:bold;
+
+    font-size:16px;
+
+}
+
+/* ==========================================
+   Genre Badge
+========================================== */
+
+.favorite-book__genre{
+
+    display:inline-flex;
+
+    align-items:center;
+
+    width:max-content;
+
+    padding:5px 12px;
+
+    border-radius:999px;
+
+    background:#eff6ff;
+
+    color:#2563eb;
+
+    font-size:12px;
+
+    font-weight:600;
+
+}
+
+/* ==========================================
+   Actions
+========================================== */
+
+.favorite-book__actions{
+
+    display:flex;
+
+    flex-wrap:wrap;
+
+    gap:10px;
+
+}
+
+/* ==========================================
+   Buttons
+========================================== */
+
+.favorite-book__actions button{
+
+    padding:10px 16px;
+
+    border:none;
+
+    border-radius:8px;
+
+    cursor:pointer;
+
+    font-weight:600;
+
+    transition:
+        transform .2s ease,
+        box-shadow .2s ease,
+        background .2s ease;
+
+}
+
+/* View Button */
+
+.favorite-book__actions button:first-child{
+
+    background:#2563eb;
+
+    color:#fff;
+
+}
+
+.favorite-book__actions button:first-child:hover{
+
+    background:#1d4ed8;
+
+}
+
+/* Remove Button */
+
+.favorite-book__actions button:last-child{
+
+    background:#dc2626;
+
+    color:#fff;
+
+}
+
+.favorite-book__actions button:last-child:hover{
+
+    background:#b91c1c;
+
+}
+
+/* ==========================================
+   Button Hover
+========================================== */
+
+.favorite-book__actions button:hover{
+
+    transform:translateY(-2px);
+
+    box-shadow:0 5px 12px rgba(0,0,0,.15);
+
+}
+
+/* ==========================================
+   Disabled
+========================================== */
+
+.favorite-book__actions button:disabled{
+
+    cursor:not-allowed;
+
+    opacity:.6;
+
+}
+
+/* ==========================================
+   Favorite Badge
+========================================== */
+
+.favorite-book__badge{
+
+    position:absolute;
+
+    top:14px;
+
+    right:14px;
+
+    width:34px;
+
+    height:34px;
+
+    border-radius:50%;
+
+    background:#ef4444;
+
+    color:#fff;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    font-size:16px;
+
+}
+
+/* ==========================================
+   Empty State
+========================================== */
+
+.favorite-books__empty{
+
+    text-align:center;
+
+    padding:60px 20px;
+
+    border:2px dashed #d1d5db;
+
+    border-radius:16px;
+
+    color:#6b7280;
+
+    font-size:18px;
+
+}
+
+/* ==========================================
+   Loading State
+========================================== */
+
+.favorite-books--loading{
+
+    opacity:.6;
+
+    pointer-events:none;
+
+}
+
+/* ==========================================
+   Dark Mode
+========================================== */
+
+.dark .favorite-book{
+
+    background:#1f2937;
+
+    border-color:#374151;
+
+}
+
+.dark .favorite-book__content h3{
+
+    color:#fff;
+
+}
+
+.dark .favorite-book__content p{
+
+    color:#d1d5db;
+
+}
+
+/* ==========================================
+   Responsive
+========================================== */
+
+@media(max-width:992px){
+
+.favorite-book{
+
+    align-items:flex-start;
+
+}
+
+}
+
+@media(max-width:768px){
+
+.favorite-book{
+
+    flex-direction:column;
+
+}
+
+.favorite-book__actions{
+
+    width:100%;
+
+}
+
+.favorite-book__actions button{
+
+    flex:1;
+
+}
+
+.favorite-book__cover{
+
+    width:90px;
+
+    height:120px;
+
+}
+
+}
+
+@media(max-width:480px){
+
+.favorite-book{
+
+    padding:14px;
+
+}
+
+.favorite-book__content h3{
+
+    font-size:18px;
+
+}
+
+.favorite-book__content p{
+
+    font-size:14px;
+
+}
+
+.favorite-book__actions{
+
+    flex-direction:column;
+
+}
+
+.favorite-book__actions button{
+
+    width:100%;
+
+}
+
+}
+
+/* ==========================================
+   Reduced Motion
+========================================== */
+
+@media(prefers-reduced-motion:reduce){
+
+.favorite-book,
+.favorite-book__cover,
+.favorite-book__actions button{
+
+    transition:none;
+
+}
+
+}

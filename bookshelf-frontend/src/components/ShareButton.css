@@ -1,0 +1,423 @@
+*{box-sizing:border-box}
+.share-btn{
+display:inline-flex;
+align-items:center;
+justify-content:center;
+gap:8px;
+padding:12px 18px;
+border:none;
+border-radius:8px;
+cursor:pointer;
+background:#2563eb;
+color:#fff;
+font-weight:600;
+transition:.25s;
+}
+.share-btn:hover:not(:disabled){transform:translateY(-2px);}
+.share-btn:disabled{opacity:.6;cursor:not-allowed;}
+.share-btn--primary{background:#2563eb;}
+.share-btn--secondary{background:#6b7280;}
+.share-btn--sm{font-size:13px;padding:8px 12px;}
+.share-btn--md{font-size:15px;padding:12px 18px;}
+.share-btn--lg{font-size:17px;padding:14px 22px;}
+/* ==========================================
+   Reset
+========================================== */
+
+*,
+*::before,
+*::after{
+    box-sizing:border-box;
+}
+
+/* ==========================================
+   Base Button
+========================================== */
+
+.share-btn{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    gap:8px;
+
+    position:relative;
+    overflow:hidden;
+
+    padding:12px 18px;
+
+    border:none;
+    border-radius:8px;
+
+    cursor:pointer;
+
+    background:#2563eb;
+    color:#fff;
+
+    font-family:inherit;
+    font-size:15px;
+    font-weight:600;
+
+    text-decoration:none;
+    user-select:none;
+    white-space:nowrap;
+
+    transition:
+        background .25s ease,
+        color .25s ease,
+        transform .25s ease,
+        box-shadow .25s ease,
+        opacity .25s ease;
+}
+
+/* ==========================================
+   Hover
+========================================== */
+
+.share-btn:hover:not(:disabled){
+    transform:translateY(-2px);
+    box-shadow:0 8px 20px rgba(0,0,0,.15);
+}
+
+/* ==========================================
+   Active
+========================================== */
+
+.share-btn:active:not(:disabled){
+    transform:scale(.97);
+}
+
+/* ==========================================
+   Focus
+========================================== */
+
+.share-btn:focus-visible{
+    outline:3px solid rgba(37,99,235,.35);
+    outline-offset:3px;
+}
+
+/* ==========================================
+   Disabled
+========================================== */
+
+.share-btn:disabled{
+    opacity:.6;
+    cursor:not-allowed;
+    pointer-events:none;
+}
+
+/* ==========================================
+   Variants
+========================================== */
+
+.share-btn--primary{
+    background:#2563eb;
+    color:#fff;
+}
+
+.share-btn--secondary{
+    background:#6b7280;
+    color:#fff;
+}
+
+.share-btn--success{
+    background:#16a34a;
+    color:#fff;
+}
+
+.share-btn--danger{
+    background:#dc2626;
+    color:#fff;
+}
+
+.share-btn--warning{
+    background:#f59e0b;
+    color:#fff;
+}
+
+/* ==========================================
+   Outline
+========================================== */
+
+.share-btn--outline{
+    background:transparent;
+    color:#2563eb;
+    border:2px solid #2563eb;
+}
+
+.share-btn--outline:hover{
+    background:#2563eb;
+    color:#fff;
+}
+
+/* ==========================================
+   Ghost
+========================================== */
+
+.share-btn--ghost{
+    background:transparent;
+    color:#2563eb;
+}
+
+.share-btn--ghost:hover{
+    background:rgba(37,99,235,.08);
+}
+
+/* ==========================================
+   Gradient
+========================================== */
+
+.share-btn--gradient{
+    background:linear-gradient(135deg,#2563eb,#1d4ed8);
+    color:#fff;
+}
+
+/* ==========================================
+   Sizes
+========================================== */
+
+.share-btn--xs{
+    padding:6px 10px;
+    font-size:12px;
+}
+
+.share-btn--sm{
+    padding:8px 12px;
+    font-size:13px;
+}
+
+.share-btn--md{
+    padding:12px 18px;
+    font-size:15px;
+}
+
+.share-btn--lg{
+    padding:14px 22px;
+    font-size:17px;
+}
+
+.share-btn--xl{
+    padding:18px 28px;
+    font-size:19px;
+}
+
+/* ==========================================
+   Width
+========================================== */
+
+.share-btn--full{
+    width:100%;
+}
+
+/* ==========================================
+   Rounded
+========================================== */
+
+.share-btn--rounded{
+    border-radius:999px;
+}
+
+/* ==========================================
+   Circle
+========================================== */
+
+.share-btn--circle{
+    width:50px;
+    height:50px;
+    padding:0;
+    border-radius:50%;
+}
+
+/* ==========================================
+   Icons
+========================================== */
+
+.share-btn__icon{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    transition:transform .25s ease;
+}
+
+.share-btn:hover .share-btn__icon{
+    transform:rotate(-15deg) scale(1.1);
+}
+
+.share-btn__text{
+    overflow:hidden;
+    text-overflow:ellipsis;
+}
+
+/* ==========================================
+   Loading
+========================================== */
+
+.share-btn--loading{
+    cursor:progress;
+}
+
+.share-btn__spinner{
+    width:18px;
+    height:18px;
+    border:3px solid rgba(255,255,255,.35);
+    border-top:3px solid #fff;
+    border-radius:50%;
+    animation:share-spin .8s linear infinite;
+}
+
+@keyframes share-spin{
+    from{
+        transform:rotate(0);
+    }
+    to{
+        transform:rotate(360deg);
+    }
+}
+
+/* ==========================================
+   Ripple
+========================================== */
+
+.share-btn__ripple{
+    position:absolute;
+    border-radius:50%;
+    background:rgba(255,255,255,.45);
+    transform:scale(0);
+    animation:ripple .6s linear;
+}
+
+@keyframes ripple{
+    to{
+        transform:scale(4);
+        opacity:0;
+    }
+}
+
+/* ==========================================
+   Shadows
+========================================== */
+
+.share-btn--shadow-sm{
+    box-shadow:0 3px 8px rgba(0,0,0,.12);
+}
+
+.share-btn--shadow-md{
+    box-shadow:0 6px 16px rgba(0,0,0,.16);
+}
+
+.share-btn--shadow-lg{
+    box-shadow:0 10px 24px rgba(0,0,0,.22);
+}
+
+/* ==========================================
+   Hover Effects
+========================================== */
+
+.share-btn--lift:hover{
+    transform:translateY(-4px);
+}
+
+.share-btn--scale:hover{
+    transform:scale(1.05);
+}
+
+.share-btn--glow:hover{
+    box-shadow:
+        0 0 10px rgba(37,99,235,.5),
+        0 0 25px rgba(37,99,235,.3);
+}
+
+/* ==========================================
+   Tooltip
+========================================== */
+
+.share-btn[data-tooltip]{
+    position:relative;
+}
+
+.share-btn[data-tooltip]::after{
+    content:attr(data-tooltip);
+    position:absolute;
+    bottom:125%;
+    left:50%;
+    transform:translateX(-50%);
+    background:#111827;
+    color:#fff;
+    padding:6px 10px;
+    border-radius:6px;
+    opacity:0;
+    visibility:hidden;
+    white-space:nowrap;
+    transition:.25s;
+    font-size:12px;
+}
+
+.share-btn[data-tooltip]:hover::after{
+    opacity:1;
+    visibility:visible;
+}
+
+/* ==========================================
+   Success State
+========================================== */
+
+.share-btn--copied{
+    background:#16a34a;
+}
+
+/* ==========================================
+   Error State
+========================================== */
+
+.share-btn--error{
+    background:#dc2626;
+}
+
+/* ==========================================
+   Dark Mode
+========================================== */
+
+.dark .share-btn{
+    background:#1f2937;
+}
+
+.dark .share-btn--outline{
+    color:#fff;
+    border-color:#fff;
+}
+
+/* ==========================================
+   Responsive
+========================================== */
+
+@media (max-width:768px){
+
+    .share-btn{
+        width:100%;
+        justify-content:center;
+    }
+
+}
+
+@media (max-width:480px){
+
+    .share-btn{
+        font-size:14px;
+        padding:12px 16px;
+    }
+
+}
+
+/* ==========================================
+   Reduced Motion
+========================================== */
+
+@media (prefers-reduced-motion:reduce){
+
+    .share-btn,
+    .share-btn__icon,
+    .share-btn__spinner{
+        animation:none;
+        transition:none;
+    }
+
+}
