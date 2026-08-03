@@ -1,0 +1,745 @@
+/* ==========================================
+   BulkUpload.css
+========================================== */
+
+/* Reset */
+
+*,
+*::before,
+*::after{
+    box-sizing:border-box;
+}
+
+/* ==========================================
+   Root Container
+========================================== */
+
+.bulk-upload{
+
+    position:relative;
+
+    width:100%;
+
+    max-width:760px;
+
+    margin:32px auto;
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:20px;
+
+    padding:24px;
+
+    background:#ffffff;
+
+    border:1px solid #e5e7eb;
+
+    border-radius:18px;
+
+    box-shadow:0 8px 24px rgba(0,0,0,.08);
+
+    transition:
+        transform .3s ease,
+        box-shadow .3s ease,
+        border-color .3s ease;
+
+}
+
+.bulk-upload:hover{
+
+    transform:translateY(-4px);
+
+    border-color:#2563eb;
+
+    box-shadow:0 18px 32px rgba(0,0,0,.12);
+
+}
+
+/* ==========================================
+   Decorative Background
+========================================== */
+
+.bulk-upload::before{
+
+    content:"";
+
+    position:absolute;
+
+    top:-70px;
+
+    right:-70px;
+
+    width:160px;
+
+    height:160px;
+
+    border-radius:50%;
+
+    background:rgba(37,99,235,.05);
+
+}
+
+.bulk-upload::after{
+
+    content:"";
+
+    position:absolute;
+
+    bottom:-50px;
+
+    left:-50px;
+
+    width:120px;
+
+    height:120px;
+
+    border-radius:50%;
+
+    background:rgba(59,130,246,.05);
+
+}
+
+/* ==========================================
+   Header
+========================================== */
+
+.bulk-upload__header{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    gap:16px;
+
+}
+
+.bulk-upload__title{
+
+    margin:0;
+
+    font-size:28px;
+
+    font-weight:700;
+
+    color:#111827;
+
+}
+
+.bulk-upload__subtitle{
+
+    margin-top:6px;
+
+    color:#6b7280;
+
+}
+
+/* ==========================================
+   Dropzone
+========================================== */
+
+.bulk-upload__dropzone{
+
+    position:relative;
+
+    display:flex;
+
+    flex-direction:column;
+
+    align-items:center;
+
+    justify-content:center;
+
+    gap:12px;
+
+    padding:48px;
+
+    border:2px dashed #93c5fd;
+
+    border-radius:18px;
+
+    background:#f8fbff;
+
+    cursor:pointer;
+
+    transition:
+        background .25s ease,
+        border-color .25s ease,
+        transform .25s ease;
+
+}
+
+.bulk-upload__dropzone:hover{
+
+    background:#eff6ff;
+
+    border-color:#2563eb;
+
+    transform:scale(1.01);
+
+}
+
+.bulk-upload__dropzone--active{
+
+    background:#dbeafe;
+
+    border-color:#2563eb;
+
+}
+
+/* ==========================================
+   Upload Icon
+========================================== */
+
+.bulk-upload__icon{
+
+    font-size:56px;
+
+    transition:transform .25s ease;
+
+}
+
+.bulk-upload__dropzone:hover
+.bulk-upload__icon{
+
+    transform:translateY(-4px);
+
+}
+
+/* ==========================================
+   Browse Button
+========================================== */
+
+.bulk-upload__browse{
+
+    padding:10px 18px;
+
+    border:none;
+
+    border-radius:10px;
+
+    background:#2563eb;
+
+    color:#fff;
+
+    font-weight:600;
+
+    cursor:pointer;
+
+    transition:.25s;
+
+}
+
+.bulk-upload__browse:hover{
+
+    background:#1d4ed8;
+
+}
+
+/* ==========================================
+   File List
+========================================== */
+
+.bulk-upload__list{
+
+    list-style:none;
+
+    margin:0;
+
+    padding:0;
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:12px;
+
+}
+
+/* ==========================================
+   File Item
+========================================== */
+
+.bulk-upload__item{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    gap:16px;
+
+    padding:14px;
+
+    border:1px solid #e5e7eb;
+
+    border-radius:12px;
+
+    background:#fff;
+
+    transition:
+        transform .25s ease,
+        box-shadow .25s ease;
+
+}
+
+.bulk-upload__item:hover{
+
+    transform:translateY(-2px);
+
+    box-shadow:0 8px 20px rgba(0,0,0,.08);
+
+}
+
+.bulk-upload__file{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:12px;
+
+}
+
+.bulk-upload__file-icon{
+
+    font-size:24px;
+
+}
+
+.bulk-upload__file-name{
+
+    font-weight:600;
+
+    color:#111827;
+
+}
+
+.bulk-upload__file-size{
+
+    color:#6b7280;
+
+    font-size:14px;
+
+}
+
+/* ==========================================
+   Status
+========================================== */
+
+.bulk-upload__status{
+
+    padding:6px 12px;
+
+    border-radius:999px;
+
+    font-size:12px;
+
+    font-weight:600;
+
+}
+
+.bulk-upload__status--success{
+
+    background:#dcfce7;
+
+    color:#15803d;
+
+}
+
+.bulk-upload__status--uploading{
+
+    background:#dbeafe;
+
+    color:#2563eb;
+
+}
+
+.bulk-upload__status--error{
+
+    background:#fee2e2;
+
+    color:#dc2626;
+
+}
+
+/* ==========================================
+   Progress
+========================================== */
+
+.bulk-upload__progress{
+
+    width:100%;
+
+    height:8px;
+
+    background:#e5e7eb;
+
+    border-radius:999px;
+
+    overflow:hidden;
+
+}
+
+.bulk-upload__progress-fill{
+
+    height:100%;
+
+    width:0;
+
+    background:linear-gradient(
+        90deg,
+        #2563eb,
+        #60a5fa
+    );
+
+    transition:width .4s ease;
+
+}
+
+/* ==========================================
+   Spinner
+========================================== */
+
+.bulk-upload__spinner{
+
+    width:22px;
+
+    height:22px;
+
+    border:3px solid rgba(37,99,235,.2);
+
+    border-top:3px solid #2563eb;
+
+    border-radius:50%;
+
+    animation:uploadSpin .8s linear infinite;
+
+}
+
+@keyframes uploadSpin{
+
+    from{
+
+        transform:rotate(0);
+
+    }
+
+    to{
+
+        transform:rotate(360deg);
+
+    }
+
+}
+
+/* ==========================================
+   Remove Button
+========================================== */
+
+.bulk-upload__remove{
+
+    border:none;
+
+    background:none;
+
+    color:#dc2626;
+
+    cursor:pointer;
+
+    font-size:18px;
+
+    transition:.25s;
+
+}
+
+.bulk-upload__remove:hover{
+
+    transform:scale(1.15);
+
+}
+
+/* ==========================================
+   Empty State
+========================================== */
+
+.bulk-upload__empty{
+
+    padding:50px;
+
+    border:2px dashed #d1d5db;
+
+    border-radius:16px;
+
+    text-align:center;
+
+    color:#6b7280;
+
+}
+
+/* ==========================================
+   Success Message
+========================================== */
+
+.bulk-upload__success{
+
+    padding:14px;
+
+    border-radius:10px;
+
+    background:#dcfce7;
+
+    color:#15803d;
+
+}
+
+/* ==========================================
+   Error Message
+========================================== */
+
+.bulk-upload__error{
+
+    padding:14px;
+
+    border-radius:10px;
+
+    background:#fee2e2;
+
+    color:#dc2626;
+
+}
+
+/* ==========================================
+   Drag Overlay
+========================================== */
+
+.bulk-upload__overlay{
+
+    position:absolute;
+
+    inset:0;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    border-radius:18px;
+
+    background:rgba(37,99,235,.08);
+
+    color:#2563eb;
+
+    font-size:22px;
+
+    font-weight:700;
+
+}
+
+/* ==========================================
+   Tooltip
+========================================== */
+
+.bulk-upload [data-tooltip]{
+
+    position:relative;
+
+}
+
+.bulk-upload [data-tooltip]::after{
+
+    content:attr(data-tooltip);
+
+    position:absolute;
+
+    bottom:125%;
+
+    left:50%;
+
+    transform:translateX(-50%);
+
+    padding:6px 10px;
+
+    background:#111827;
+
+    color:#fff;
+
+    border-radius:6px;
+
+    white-space:nowrap;
+
+    font-size:12px;
+
+    opacity:0;
+
+    visibility:hidden;
+
+    transition:.25s;
+
+}
+
+.bulk-upload [data-tooltip]:hover::after{
+
+    opacity:1;
+
+    visibility:visible;
+
+}
+
+/* ==========================================
+   Dark Mode
+========================================== */
+
+.dark .bulk-upload{
+
+    background:#1f2937;
+
+    border-color:#374151;
+
+}
+
+.dark .bulk-upload__title{
+
+    color:#fff;
+
+}
+
+.dark .bulk-upload__subtitle{
+
+    color:#d1d5db;
+
+}
+
+.dark .bulk-upload__dropzone{
+
+    background:#374151;
+
+}
+
+.dark .bulk-upload__item{
+
+    background:#374151;
+
+    border-color:#4b5563;
+
+}
+
+.dark .bulk-upload__file-name{
+
+    color:#fff;
+
+}
+
+/* ==========================================
+   Responsive
+========================================== */
+
+@media(max-width:768px){
+
+.bulk-upload{
+
+    padding:20px;
+
+}
+
+.bulk-upload__header{
+
+    flex-direction:column;
+
+    align-items:flex-start;
+
+}
+
+.bulk-upload__dropzone{
+
+    padding:36px;
+
+}
+
+}
+
+@media(max-width:640px){
+
+.bulk-upload__dropzone{
+
+    padding:24px;
+
+}
+
+.bulk-upload__item{
+
+    flex-direction:column;
+
+    align-items:flex-start;
+
+    gap:8px;
+
+}
+
+.bulk-upload__browse{
+
+    width:100%;
+
+}
+
+}
+
+@media(max-width:480px){
+
+.bulk-upload{
+
+    padding:16px;
+
+}
+
+.bulk-upload__title{
+
+    font-size:22px;
+
+}
+
+.bulk-upload__icon{
+
+    font-size:44px;
+
+}
+
+}
+
+/* ==========================================
+   Accessibility
+========================================== */
+
+.bulk-upload__dropzone:focus-visible,
+.bulk-upload__browse:focus-visible{
+
+    outline:3px solid rgba(37,99,235,.35);
+
+    outline-offset:3px;
+
+}
+
+/* ==========================================
+   Reduced Motion
+========================================== */
+
+@media(prefers-reduced-motion:reduce){
+
+.bulk-upload,
+.bulk-upload__dropzone,
+.bulk-upload__item,
+.bulk-upload__progress-fill,
+.bulk-upload__spinner{
+
+    transition:none;
+
+    animation:none;
+
+}
+
+}
