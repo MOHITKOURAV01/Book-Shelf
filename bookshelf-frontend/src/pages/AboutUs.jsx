@@ -19,12 +19,15 @@ export default function AboutUs() {
         <div className="about-hero__inner">
           <p className="about-hero__eyebrow">Our Story</p>
           <h1 className="about-hero__title">
-            We believe reading<br />should feel <em>personal</em>.
+            We believe reading
+            <br />
+            should feel <em>personal</em>.
           </h1>
           <p className="about-hero__sub">
-            BookShelf started as a weekend project by a handful of book lovers frustrated with
-            algorithmic noise. We wanted a calm place where titles speak for themselves —
-            no recommendations engines, no "customers also bought" funnels. Just spines on a shelf.
+            BookShelf started as a weekend project by a handful of book lovers
+            frustrated with algorithmic noise. We wanted a calm place where
+            titles speak for themselves — no recommendations engines, no
+            "customers also bought" funnels. Just spines on a shelf.
           </p>
         </div>
       </section>
@@ -54,7 +57,16 @@ export default function AboutUs() {
             {[
               {
                 icon: (
-                  <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                  <svg
+                    width="28"
+                    height="28"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="1.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
                     <circle cx="12" cy="12" r="10" />
                     <line x1="12" y1="8" x2="12" y2="12" />
                     <line x1="12" y1="16" x2="12.01" y2="16" />
@@ -65,16 +77,34 @@ export default function AboutUs() {
               },
               {
                 icon: (
-                  <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                  <svg
+                    width="28"
+                    height="28"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="1.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
                     <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
                   </svg>
                 ),
                 title: 'Reader Privacy',
-                desc: 'We don\'t track your reading habits to sell ads. Your shelf, your business. Zero behavioural profiling, zero data brokering.',
+                desc: "We don't track your reading habits to sell ads. Your shelf, your business. Zero behavioural profiling, zero data brokering.",
               },
               {
                 icon: (
-                  <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                  <svg
+                    width="28"
+                    height="28"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="1.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
                     <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
                     <circle cx="9" cy="7" r="4" />
                     <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
@@ -86,7 +116,16 @@ export default function AboutUs() {
               },
               {
                 icon: (
-                  <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                  <svg
+                    width="28"
+                    height="28"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="1.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
                     <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
                     <circle cx="12" cy="10" r="3" />
                   </svg>
@@ -110,15 +149,23 @@ export default function AboutUs() {
         <div className="about-team__inner">
           <h2 className="about-section-title">The People Behind the Shelf</h2>
           <p className="about-team__intro">
-            A small crew of readers, designers, and developers who'd rather browse a bookstore
-            than scroll a feed.
+            A small crew of readers, designers, and developers who'd rather
+            browse a bookstore than scroll a feed.
           </p>
           <div className="about-team__grid">
             {[
-              { name: 'Chinmay Munj', role: 'Founder & Lead Developer', initials: 'CK', color: '#B85C2C' },
+              {
+                name: 'Chinmay Munj',
+                role: 'Founder & Lead Developer',
+                initials: 'CK',
+                color: '#B85C2C',
+              },
             ].map((m) => (
               <div className="about-team__member" key={m.name}>
-                <div className="about-team__avatar" style={{ background: m.color }}>
+                <div
+                  className="about-team__avatar"
+                  style={{ background: m.color }}
+                >
                   {m.initials}
                 </div>
                 <h4 className="about-team__name">{m.name}</h4>
@@ -135,10 +182,21 @@ export default function AboutUs() {
           <h2 className="about-section-title">Our Journey</h2>
           <div className="about-timeline__track">
             {[
-              { year: '2024', event: 'Launched reading circles & monthly author Q&A sessions.' },
-              { year: '2025', event: 'Reached 5k happy readers and 48 genre categories.' },
+              {
+                year: '2024',
+                event:
+                  'Launched reading circles & monthly author Q&A sessions.',
+              },
+              {
+                year: '2025',
+                event: 'Reached 5k happy readers and 48 genre categories.',
+              },
             ].map((t, i) => (
-              <div className="about-timeline__item" key={t.year} style={{ '--delay': `${i * 0.12}s` }}>
+              <div
+                className="about-timeline__item"
+                key={t.year}
+                style={{ '--delay': `${i * 0.12}s` }}
+              >
                 <div className="about-timeline__dot" />
                 <div className="about-timeline__content">
                   <span className="about-timeline__year">{t.year}</span>
@@ -153,11 +211,16 @@ export default function AboutUs() {
       {/* ── CTA section ── */}
       <section className="about-cta">
         <div className="about-cta__inner">
-          <h2 className="about-cta__title">Ready to find your next great read?</h2>
+          <h2 className="about-cta__title">
+            Ready to find your next great read?
+          </h2>
           <p className="about-cta__sub">
-            Browse our curated catalog — no algorithms, no noise. Just great books.
+            Browse our curated catalog — no algorithms, no noise. Just great
+            books.
           </p>
-          <Link to="/" className="about-cta__btn">Browse the Catalog →</Link>
+          <Link to="/" className="about-cta__btn">
+            Browse the Catalog →
+          </Link>
         </div>
       </section>
 

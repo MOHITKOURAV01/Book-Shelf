@@ -1,66 +1,73 @@
-.shimmer{
-  position:relative;
-  overflow:hidden;
-  background:#e5e7eb;
+.shimmer {
+  position: relative;
+  overflow: hidden;
+  background: #e5e7eb;
 }
-.shimmer::after{
-  content:"";
-  position:absolute;
-  inset:0;
-  transform:translateX(-100%);
-  background:linear-gradient(90deg,transparent,rgba(255,255,255,.6),transparent);
-  animation:shimmer 1.4s infinite;
+.shimmer::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  transform: translateX(-100%);
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.6),
+    transparent
+  );
+  animation: shimmer 1.4s infinite;
 }
-@keyframes shimmer{
-  100%{transform:translateX(100%);}
-}
-
-.skeleton--card{
-  width:260px;
-  border:1px solid var(--line,#ddd);
-  border-radius:12px;
-  overflow:hidden;
-  background:var(--paper,#fff);
-  margin:12px;
-}
-.skeleton__cover{
-  height:170px;
-}
-.skeleton__body{
-  padding:16px;
-}
-.skeleton__title{
-  height:20px;
-  border-radius:6px;
-  margin-bottom:12px;
-}
-.skeleton__text{
-  height:14px;
-  border-radius:6px;
-  margin-bottom:10px;
-}
-.skeleton__text--short{
-  width:60%;
-}
-.skeleton__button{
-  height:38px;
-  border-radius:6px;
-  margin-top:16px;
+@keyframes shimmer {
+  100% {
+    transform: translateX(100%);
+  }
 }
 
-.skeleton__avatar{
-  width:64px;
-  height:64px;
-  border-radius:50%;
+.skeleton--card {
+  width: 260px;
+  border: 1px solid var(--line, #ddd);
+  border-radius: 12px;
+  overflow: hidden;
+  background: var(--paper, #fff);
+  margin: 12px;
+}
+.skeleton__cover {
+  height: 170px;
+}
+.skeleton__body {
+  padding: 16px;
+}
+.skeleton__title {
+  height: 20px;
+  border-radius: 6px;
+  margin-bottom: 12px;
+}
+.skeleton__text {
+  height: 14px;
+  border-radius: 6px;
+  margin-bottom: 10px;
+}
+.skeleton__text--short {
+  width: 60%;
+}
+.skeleton__button {
+  height: 38px;
+  border-radius: 6px;
+  margin-top: 16px;
 }
 
-.skeleton__text-block{
-  width:100%;
-  margin:12px 0;
+.skeleton__avatar {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
 }
 
-@media(max-width:768px){
-  .skeleton--card{
-    width:100%;
+.skeleton__text-block {
+  width: 100%;
+  margin: 12px 0;
+}
+
+@media (max-width: 768px) {
+  .skeleton--card {
+    width: 100%;
   }
 }

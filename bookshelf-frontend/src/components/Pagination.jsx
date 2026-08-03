@@ -1,4 +1,4 @@
-import "./Pagination.css";
+import './Pagination.css';
 
 export default function Pagination({
   currentPage = 1,
@@ -25,7 +25,7 @@ export default function Pagination({
           <button
             key={page}
             className={`pagination__page ${
-              currentPage === page ? "pagination__page--active" : ""
+              currentPage === page ? 'pagination__page--active' : ''
             }`}
             onClick={() => onPageChange(page)}
           >

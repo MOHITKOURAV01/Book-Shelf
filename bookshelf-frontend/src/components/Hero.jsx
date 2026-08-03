@@ -13,10 +13,12 @@ export default function Hero() {
             See where it takes you.
           </h1>
           <p className="hero__sub">
-            BookShelf is a small, honest storefront — no algorithms deciding what you
-            should read next. Browse by spine, not by suggestion.
+            BookShelf is a small, honest storefront — no algorithms deciding
+            what you should read next. Browse by spine, not by suggestion.
           </p>
-          <a className="hero__cta" href="#catalog">Browse the catalog →</a>
+          <a className="hero__cta" href="#catalog">
+            Browse the catalog →
+          </a>
         </div>
 
         <div className="shelf" role="list" aria-label="Featured books">
@@ -26,7 +28,10 @@ export default function Hero() {
               role="listitem"
               tabIndex={0}
               key={book.id}
-              style={{ '--spine-color': book.color, '--spine-height': `${book.height}px` }}
+              style={{
+                '--spine-color': book.color,
+                '--spine-height': `${book.height}px`,
+              }}
             >
               <div className="shelf__spine-face">
                 <span className="shelf__spine-title">{book.title}</span>

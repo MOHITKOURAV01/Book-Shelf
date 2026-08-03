@@ -15,7 +15,9 @@
   justify-content: center;
   box-shadow: var(--shadow-card);
   cursor: pointer;
-  transition: background 0.2s ease, transform 0.2s ease;
+  transition:
+    background 0.2s ease,
+    transform 0.2s ease;
   z-index: 900;
 }
 

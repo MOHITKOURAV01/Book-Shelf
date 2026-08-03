@@ -8,7 +8,9 @@
   min-height: 100vh;
   font-family: 'Inter', sans-serif;
   overflow-x: hidden;
-  transition: background-color 0.25s ease, color 0.25s ease;
+  transition:
+    background-color 0.25s ease,
+    color 0.25s ease;
 }
 
 /* ── Hero ── */
@@ -26,7 +28,11 @@
   transform: translateX(-50%);
   width: 600px;
   height: 600px;
-  background: radial-gradient(circle, rgba(184, 92, 44, 0.06) 0%, transparent 70%);
+  background: radial-gradient(
+    circle,
+    rgba(184, 92, 44, 0.06) 0%,
+    transparent 70%
+  );
   pointer-events: none;
 }
 
@@ -139,7 +145,9 @@
   border: 1px solid var(--line);
   border-radius: 14px;
   padding: 36px 32px;
-  transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.3s ease;
+  transition:
+    transform 0.3s cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 0.3s ease;
 }
 
 .about-values__card:hover {
@@ -212,11 +220,13 @@
   font-family: 'Fraunces', serif;
   font-size: 22px;
   font-weight: 700;
-  color: #FFFFFF;
+  color: #ffffff;
   margin: 0 auto 16px;
   letter-spacing: 0.02em;
   box-shadow: 0 8px 24px -8px rgba(0, 0, 0, 0.2);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
 }
 
 .about-team__member:hover .about-team__avatar {
@@ -324,7 +334,7 @@
   max-width: 680px;
   margin: 0 auto;
   text-align: center;
-  background: linear-gradient(145deg, #221E19, #3A3128);
+  background: linear-gradient(145deg, #221e19, #3a3128);
   border-radius: 20px;
   padding: 64px 48px;
   position: relative;
@@ -338,7 +348,11 @@
   right: -60px;
   width: 200px;
   height: 200px;
-  background: radial-gradient(circle, rgba(184, 92, 44, 0.3) 0%, transparent 70%);
+  background: radial-gradient(
+    circle,
+    rgba(184, 92, 44, 0.3) 0%,
+    transparent 70%
+  );
   pointer-events: none;
 }
 
@@ -349,7 +363,11 @@
   left: -40px;
   width: 160px;
   height: 160px;
-  background: radial-gradient(circle, rgba(198, 154, 42, 0.2) 0%, transparent 70%);
+  background: radial-gradient(
+    circle,
+    rgba(198, 154, 42, 0.2) 0%,
+    transparent 70%
+  );
   pointer-events: none;
 }
 
@@ -357,7 +375,7 @@
   font-family: 'Fraunces', serif;
   font-size: 30px;
   font-weight: 600;
-  color: #F5F0E5;
+  color: #f5f0e5;
   margin: 0 0 14px;
   position: relative;
   z-index: 1;
@@ -376,18 +394,20 @@
   display: inline-block;
   font-size: 14px;
   font-weight: 600;
-  color: #221E19;
+  color: #221e19;
   background: var(--gold);
   padding: 14px 28px;
   border-radius: 8px;
   text-decoration: none;
-  transition: background 0.2s ease, transform 0.2s ease;
+  transition:
+    background 0.2s ease,
+    transform 0.2s ease;
   position: relative;
   z-index: 1;
 }
 
 .about-cta__btn:hover {
-  background: #D4A72E;
+  background: #d4a72e;
   transform: translateY(-2px);
 }
 
@@ -399,33 +419,37 @@
 /* ═══════════════════════════════════════════════════
    Dark mode overrides
    ═══════════════════════════════════════════════════ */
-[data-theme="dark"] .about-values__card:hover {
+[data-theme='dark'] .about-values__card:hover {
   box-shadow: 0 20px 44px -16px rgba(0, 0, 0, 0.35);
 }
 
-[data-theme="dark"] .about-values__card-icon {
+[data-theme='dark'] .about-values__card-icon {
   background: rgba(217, 121, 61, 0.12);
 }
 
-[data-theme="dark"] .about-team__avatar {
+[data-theme='dark'] .about-team__avatar {
   box-shadow: 0 8px 24px -8px rgba(0, 0, 0, 0.4);
 }
 
-[data-theme="dark"] .about-team__member:hover .about-team__avatar {
+[data-theme='dark'] .about-team__member:hover .about-team__avatar {
   box-shadow: 0 14px 32px -10px rgba(0, 0, 0, 0.5);
 }
 
-[data-theme="dark"] .about-timeline__content:hover {
+[data-theme='dark'] .about-timeline__content:hover {
   box-shadow: 0 8px 24px -10px rgba(0, 0, 0, 0.35);
 }
 
-[data-theme="dark"] .about-cta__inner {
-  background: linear-gradient(145deg, #0F0D0A, #1A1611);
+[data-theme='dark'] .about-cta__inner {
+  background: linear-gradient(145deg, #0f0d0a, #1a1611);
   border: 1px solid rgba(243, 236, 221, 0.06);
 }
 
-[data-theme="dark"] .about-hero::before {
-  background: radial-gradient(circle, rgba(217, 121, 61, 0.08) 0%, transparent 70%);
+[data-theme='dark'] .about-hero::before {
+  background: radial-gradient(
+    circle,
+    rgba(217, 121, 61, 0.08) 0%,
+    transparent 70%
+  );
 }
 
 /* ── Animations ── */

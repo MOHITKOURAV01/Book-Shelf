@@ -1,10 +1,8 @@
 import { useMemo, useState } from 'react';
 
-
 import ThemeToggle from './components/ThemeToggle.jsx';
 
 import ScrollToTop from './components/ScrollToTop.jsx';
-
 
 import CustomCursor from './components/CustomCursor.jsx';
 
@@ -31,8 +29,6 @@ export default function App() {
 
   return (
     <div className="app">
-
-
       <ThemeToggle />
 
       <ScrollToTop />
@@ -50,11 +46,19 @@ export default function App() {
             <p className="catalog__count">{visibleBooks.length} titles</p>
           </div>
 
-          <GenreFilter genres={genres} active={activeGenre} onSelect={setActiveGenre} />
+          <GenreFilter
+            genres={genres}
+            active={activeGenre}
+            onSelect={setActiveGenre}
+          />
 
           <div className="catalog__grid">
             {visibleBooks.map((book) => (
-              <BookCard key={book.id} book={book} onAddToCart={handleAddToCart} />
+              <BookCard
+                key={book.id}
+                book={book}
+                onAddToCart={handleAddToCart}
+              />
             ))}
           </div>
         </div>
