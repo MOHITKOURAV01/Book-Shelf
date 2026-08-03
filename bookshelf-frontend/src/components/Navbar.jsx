@@ -1,3 +1,23 @@
+import { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
+import useDebounce from '../hooks/useDebounce';
+import './Navbar.css';
+
+export default function Navbar({ cartCount, onCartClick, onSearch }) {
+  const [mobileOpen, setMobileOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+  
+  const debouncedQuery = useDebounce(searchQuery, 300);
+
+  useEffect(() => {
+    if (onSearch) {
+      onSearch(debouncedQuery);
+    }
+  }, [debouncedQuery, onSearch]);
+
+  const handleSearchChange = (e) => {
+    setSearchQuery(e.target.value);
+  };
 import { useState, useContext } from 'react';
 import { Link } from 'react-router-dom';
 import { useTheme } from '../hooks/useTheme';
@@ -39,6 +59,13 @@ export default function Navbar({ searchQuery, setSearchQuery }) {
 
           {/* Desktop actions */}
           <div className="nav__actions">
+            <input 
+              className="nav__search" 
+              type="search" 
+              placeholder="Search titles, authors…" 
+              value={searchQuery}
+              onChange={handleSearchChange}
+            />
             <input className="nav__search" type="search" placeholder="Search titles, authors…" />
             <button 
               className="nav__theme-toggle" 
@@ -107,6 +134,15 @@ export default function Navbar({ searchQuery, setSearchQuery }) {
         {/* Mobile dropdown menu */}
         {mobileOpen && (
           <div className="nav__mobile-menu">
+            <a href="#shelf" onClick={() => setMobileOpen(false)}>The Shelf</a>
+            <a href="#catalog" onClick={() => setMobileOpen(false)}>Browse</a>
+            <Link to="/about" onClick={() => setMobileOpen(false)}>About</Link>
+            <input 
+              className="nav__search nav__search--mobile" 
+              type="search" 
+              placeholder="Search titles, authors…" 
+              value={searchQuery}
+              onChange={handleSearchChange}
             <a href="/#shelf" onClick={() => setMobileOpen(false)}>The Shelf</a>
             <a href="/#catalog" onClick={() => setMobileOpen(false)}>{t('navbar.catalog')}</a>
             <Link to="/wishlist" onClick={() => setMobileOpen(false)}>{t('navbar.wishlist')}</Link>
