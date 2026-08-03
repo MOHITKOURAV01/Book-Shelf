@@ -1,9 +1,23 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import useDebounce from '../hooks/useDebounce';
 import './Navbar.css';
 
-export default function Navbar({ cartCount, onCartClick }) {
+export default function Navbar({ cartCount, onCartClick, onSearch }) {
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+  
+  const debouncedQuery = useDebounce(searchQuery, 300);
+
+  useEffect(() => {
+    if (onSearch) {
+      onSearch(debouncedQuery);
+    }
+  }, [debouncedQuery, onSearch]);
+
+  const handleSearchChange = (e) => {
+    setSearchQuery(e.target.value);
+  };
 
   return (
     <div className="nav-wrapper">
@@ -30,7 +44,13 @@ export default function Navbar({ cartCount, onCartClick }) {
 
           {/* Desktop actions */}
           <div className="nav__actions">
-            <input className="nav__search" type="search" placeholder="Search titles, authors…" />
+            <input 
+              className="nav__search" 
+              type="search" 
+              placeholder="Search titles, authors…" 
+              value={searchQuery}
+              onChange={handleSearchChange}
+            />
             <button className="nav__cart" onClick={onCartClick} aria-label="Open cart">
               Cart
               <span className="nav__cart-count">{cartCount}</span>
@@ -67,7 +87,13 @@ export default function Navbar({ cartCount, onCartClick }) {
             <a href="#shelf" onClick={() => setMobileOpen(false)}>The Shelf</a>
             <a href="#catalog" onClick={() => setMobileOpen(false)}>Browse</a>
             <Link to="/about" onClick={() => setMobileOpen(false)}>About</Link>
-            <input className="nav__search nav__search--mobile" type="search" placeholder="Search titles, authors…" />
+            <input 
+              className="nav__search nav__search--mobile" 
+              type="search" 
+              placeholder="Search titles, authors…" 
+              value={searchQuery}
+              onChange={handleSearchChange}
+            />
           </div>
         )}
       </header>
