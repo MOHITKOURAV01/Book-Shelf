@@ -14,9 +14,12 @@ import Footer from './components/Footer.jsx';
 import { books, genres } from './data/books.js';
 import './App.css';
 
+import { useNavigate } from 'react-router-dom';
+
 export default function App() {
   const [activeGenre, setActiveGenre] = useState('All');
   const [cart, setCart] = useState([]);
+  const navigate = useNavigate();
 
   const visibleBooks = useMemo(() => {
     if (activeGenre === 'All') return books;
@@ -35,7 +38,7 @@ export default function App() {
 
       <CustomCursor />
 
-      <Navbar cartCount={cart.length} onCartClick={() => {}} />
+      <Navbar cartCount={cart.length} onCartClick={() => navigate('/checkout')} />
       <div className="nav-spacer" />
       <Hero />
 
