@@ -271,6 +271,21 @@
   }
 }
 
+.nav__wishlist-link {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.nav__wishlist-count {
+  background-color: var(--highlight, #b85c2c);
+  color: white;
+  font-size: 10px;
+  font-weight: 700;
+  padding: 2px 6px;
+  border-radius: 12px;
+  display: inline-flex;
+  justify-content: center;
   align-items: center;
   filter: drop-shadow(0 1px 2px rgba(184, 92, 44, 0.3));
 }

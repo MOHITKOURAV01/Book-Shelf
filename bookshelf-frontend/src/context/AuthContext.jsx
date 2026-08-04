@@ -35,6 +35,7 @@ export const AuthProvider = ({ children }) => {
     if (data && data.user) {
       setUser(data.user);
       setIsAuthenticated(true);
+      await mergeWishlist();
     }
     return data;
   };
@@ -44,8 +45,26 @@ export const AuthProvider = ({ children }) => {
     if (data && data.user) {
       setUser(data.user);
       setIsAuthenticated(true);
+      await mergeWishlist();
     }
     return data;
+  };
+
+  const mergeWishlist = async () => {
+    try {
+      const local = localStorage.getItem('wishlist');
+      if (local) {
+        const localArray = JSON.parse(local);
+        if (localArray.length > 0) {
+          // Dynamic import to avoid circular dependencies if any, or just import at the top
+          const wishlistService = (await import('../services/wishlistService.js')).default;
+          await wishlistService.mergeWishlist(localArray);
+        }
+      }
+      localStorage.removeItem('wishlist');
+    } catch (error) {
+      console.error('Error merging wishlist during auth:', error);
+    }
   };
 
   const logout = async () => {
