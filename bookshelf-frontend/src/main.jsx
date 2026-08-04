@@ -14,6 +14,8 @@ import './index.css';
 
 import Checkout from './pages/Checkout.jsx';
 import OrderConfirmation from './pages/OrderConfirmation.jsx';
+import OrdersPage from './pages/OrdersPage.jsx';
+import OrderDetailsPage from './pages/OrderDetailsPage.jsx';
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
@@ -34,6 +36,16 @@ ReactDOM.createRoot(document.getElementById('root')).render(
           <Route path="/order-confirmation" element={
             <ProtectedRoute>
               <OrderConfirmation />
+            </ProtectedRoute>
+          } />
+          <Route path="/account/orders" element={
+            <ProtectedRoute>
+              <OrdersPage />
+            </ProtectedRoute>
+          } />
+          <Route path="/account/orders/:id" element={
+            <ProtectedRoute>
+              <OrderDetailsPage />
             </ProtectedRoute>
           } />
           <Route

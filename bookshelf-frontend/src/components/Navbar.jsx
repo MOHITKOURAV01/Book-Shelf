@@ -50,6 +50,7 @@ export default function Navbar({ cartCount, onCartClick }) {
             ) : (
               <>
                 <Link to="/profile">Profile</Link>
+                <Link to="/account/orders">My Orders</Link>
                 <button onClick={handleLogout} className="nav__logout">
                   Logout
                 </button>
@@ -137,6 +138,9 @@ export default function Navbar({ cartCount, onCartClick }) {
               <>
                 <Link to="/profile" onClick={() => setMobileOpen(false)}>
                   Profile
+                </Link>
+                <Link to="/account/orders" onClick={() => setMobileOpen(false)}>
+                  My Orders
                 </Link>
                 <button
                   onClick={() => {
