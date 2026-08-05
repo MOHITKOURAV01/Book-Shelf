@@ -225,7 +225,7 @@ export default function AboutUs() {
       </section>
 
       {/* ── Footer (same as landing page) ── */}
-      <Footer />
+      {/* <Footer /> */}
     </div>
   );
 }

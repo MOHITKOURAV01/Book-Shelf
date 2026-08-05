@@ -1,0 +1,631 @@
+/* ==========================================
+   VerifiedPurchaseBadge.css
+========================================== */
+
+/* Reset */
+
+*,
+*::before,
+*::after{
+    box-sizing:border-box;
+}
+
+/* ==========================================
+   Root Badge
+========================================== */
+
+.verified-badge{
+
+    position:relative;
+
+    overflow:hidden;
+
+    display:inline-flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    gap:10px;
+
+    padding:10px 16px;
+
+    border-radius:999px;
+
+    border:1px solid #bbf7d0;
+
+    background:#dcfce7;
+
+    color:#166534;
+
+    font-size:14px;
+
+    font-weight:600;
+
+    line-height:1;
+
+    white-space:nowrap;
+
+    user-select:none;
+
+    transition:
+        transform .25s ease,
+        box-shadow .25s ease,
+        background-color .25s ease,
+        color .25s ease,
+        border-color .25s ease;
+
+}
+
+/* ==========================================
+   Hover
+========================================== */
+
+.verified-badge:hover{
+
+    transform:translateY(-2px);
+
+    box-shadow:0 8px 20px rgba(0,0,0,.12);
+
+}
+
+/* ==========================================
+   Active
+========================================== */
+
+.verified-badge:active{
+
+    transform:scale(.97);
+
+}
+
+/* ==========================================
+   Focus
+========================================== */
+
+.verified-badge:focus-visible{
+
+    outline:3px solid rgba(37,99,235,.35);
+
+    outline-offset:3px;
+
+}
+
+/* ==========================================
+   Icon
+========================================== */
+
+.verified-badge__icon{
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    font-size:16px;
+
+    transition:transform .25s ease;
+
+}
+
+.verified-badge:hover .verified-badge__icon{
+
+    transform:rotate(-10deg) scale(1.1);
+
+}
+
+/* ==========================================
+   Text
+========================================== */
+
+.verified-badge__text{
+
+    display:flex;
+
+    align-items:center;
+
+}
+
+/* ==========================================
+   Variants
+========================================== */
+
+.verified-badge--success{
+
+    background:#dcfce7;
+
+    border-color:#bbf7d0;
+
+    color:#166534;
+
+}
+
+.verified-badge--primary{
+
+    background:#dbeafe;
+
+    border-color:#93c5fd;
+
+    color:#1d4ed8;
+
+}
+
+.verified-badge--warning{
+
+    background:#fef3c7;
+
+    border-color:#fde68a;
+
+    color:#b45309;
+
+}
+
+.verified-badge--danger{
+
+    background:#fee2e2;
+
+    border-color:#fecaca;
+
+    color:#b91c1c;
+
+}
+
+.verified-badge--purple{
+
+    background:#f3e8ff;
+
+    border-color:#ddd6fe;
+
+    color:#7c3aed;
+
+}
+
+.verified-badge--dark{
+
+    background:#1f2937;
+
+    border-color:#374151;
+
+    color:#fff;
+
+}
+
+/* ==========================================
+   Outline Variant
+========================================== */
+
+.verified-badge--outline{
+
+    background:transparent;
+
+    border:2px solid currentColor;
+
+}
+
+/* ==========================================
+   Gradient Variant
+========================================== */
+
+.verified-badge--gradient{
+
+    background:linear-gradient(
+        135deg,
+        #22c55e,
+        #16a34a
+    );
+
+    color:#fff;
+
+    border:none;
+
+}
+
+/* ==========================================
+   Sizes
+========================================== */
+
+.verified-badge--xs{
+
+    padding:4px 8px;
+
+    font-size:11px;
+
+}
+
+.verified-badge--sm{
+
+    padding:6px 12px;
+
+    font-size:12px;
+
+}
+
+.verified-badge--md{
+
+    padding:10px 16px;
+
+    font-size:14px;
+
+}
+
+.verified-badge--lg{
+
+    padding:12px 20px;
+
+    font-size:16px;
+
+}
+
+.verified-badge--xl{
+
+    padding:16px 26px;
+
+    font-size:18px;
+
+}
+
+/* ==========================================
+   Rounded Styles
+========================================== */
+
+.verified-badge--rounded{
+
+    border-radius:999px;
+
+}
+
+.verified-badge--square{
+
+    border-radius:6px;
+
+}
+
+/* ==========================================
+   Shadow Utilities
+========================================== */
+
+.verified-badge--shadow-sm{
+
+    box-shadow:0 2px 6px rgba(0,0,0,.08);
+
+}
+
+.verified-badge--shadow-md{
+
+    box-shadow:0 8px 18px rgba(0,0,0,.12);
+
+}
+
+.verified-badge--shadow-lg{
+
+    box-shadow:0 12px 28px rgba(0,0,0,.18);
+
+}
+
+/* ==========================================
+   Glow
+========================================== */
+
+.verified-badge--glow{
+
+    box-shadow:
+        0 0 10px rgba(22,163,74,.4),
+        0 0 22px rgba(22,163,74,.2);
+
+}
+
+/* ==========================================
+   Pulse Animation
+========================================== */
+
+.verified-badge--pulse{
+
+    animation:badgePulse 2s infinite;
+
+}
+
+@keyframes badgePulse{
+
+    0%{
+
+        box-shadow:0 0 0 0 rgba(22,163,74,.45);
+
+    }
+
+    70%{
+
+        box-shadow:0 0 0 14px rgba(22,163,74,0);
+
+    }
+
+    100%{
+
+        box-shadow:0 0 0 0 rgba(22,163,74,0);
+
+    }
+
+}
+
+/* ==========================================
+   Floating Animation
+========================================== */
+
+.verified-badge--floating{
+
+    animation:badgeFloat 3s ease-in-out infinite;
+
+}
+
+@keyframes badgeFloat{
+
+    0%,100%{
+
+        transform:translateY(0);
+
+    }
+
+    50%{
+
+        transform:translateY(-5px);
+
+    }
+
+}
+
+/* ==========================================
+   Shine Effect
+========================================== */
+
+.verified-badge--shine{
+
+    position:relative;
+
+}
+
+.verified-badge--shine::before{
+
+    content:"";
+
+    position:absolute;
+
+    top:0;
+
+    left:-120%;
+
+    width:60%;
+
+    height:100%;
+
+    background:linear-gradient(
+        120deg,
+        transparent,
+        rgba(255,255,255,.5),
+        transparent
+    );
+
+    transition:left .7s;
+
+}
+
+.verified-badge--shine:hover::before{
+
+    left:130%;
+
+}
+
+/* ==========================================
+   Badge Counter
+========================================== */
+
+.verified-badge__count{
+
+    display:inline-flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    min-width:18px;
+
+    height:18px;
+
+    padding:0 6px;
+
+    border-radius:999px;
+
+    background:#ef4444;
+
+    color:#fff;
+
+    font-size:10px;
+
+}
+
+/* ==========================================
+   Tooltip
+========================================== */
+
+.verified-badge[data-tooltip]{
+
+    position:relative;
+
+}
+
+.verified-badge[data-tooltip]::after{
+
+    content:attr(data-tooltip);
+
+    position:absolute;
+
+    bottom:125%;
+
+    left:50%;
+
+    transform:translateX(-50%);
+
+    background:#111827;
+
+    color:#fff;
+
+    padding:6px 10px;
+
+    border-radius:6px;
+
+    font-size:12px;
+
+    white-space:nowrap;
+
+    opacity:0;
+
+    visibility:hidden;
+
+    transition:.25s;
+
+}
+
+.verified-badge[data-tooltip]:hover::after{
+
+    opacity:1;
+
+    visibility:visible;
+
+}
+
+/* ==========================================
+   Loading State
+========================================== */
+
+.verified-badge--loading{
+
+    pointer-events:none;
+
+    opacity:.7;
+
+}
+
+.verified-badge__spinner{
+
+    width:16px;
+
+    height:16px;
+
+    border:2px solid rgba(255,255,255,.35);
+
+    border-top:2px solid #fff;
+
+    border-radius:50%;
+
+    animation:badgeSpin .8s linear infinite;
+
+}
+
+@keyframes badgeSpin{
+
+    from{
+
+        transform:rotate(0deg);
+
+    }
+
+    to{
+
+        transform:rotate(360deg);
+
+    }
+
+}
+
+/* ==========================================
+   Disabled
+========================================== */
+
+.verified-badge--disabled{
+
+    opacity:.5;
+
+    pointer-events:none;
+
+    cursor:not-allowed;
+
+}
+
+/* ==========================================
+   Dark Theme
+========================================== */
+
+.dark .verified-badge{
+
+    background:#374151;
+
+    border-color:#4b5563;
+
+    color:#f9fafb;
+
+}
+
+/* ==========================================
+   Responsive
+========================================== */
+
+@media(max-width:768px){
+
+.verified-badge{
+
+    font-size:13px;
+
+}
+
+}
+
+@media(max-width:600px){
+
+.verified-badge{
+
+    width:100%;
+
+    justify-content:center;
+
+}
+
+}
+
+@media(max-width:480px){
+
+.verified-badge{
+
+    padding:10px 12px;
+
+}
+
+}
+
+/* ==========================================
+   Accessibility
+========================================== */
+
+.verified-badge[aria-disabled="true"]{
+
+    opacity:.6;
+
+    pointer-events:none;
+
+}
+
+/* ==========================================
+   Reduced Motion
+========================================== */
+
+@media(prefers-reduced-motion:reduce){
+
+.verified-badge,
+.verified-badge__icon,
+.verified-badge__spinner{
+
+    transition:none;
+
+    animation:none;
+
+}
+
+}
