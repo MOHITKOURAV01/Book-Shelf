@@ -1,0 +1,626 @@
+/* ==========================================
+   DarkModeSupport.css
+========================================== */
+
+/* Reset */
+
+*,
+*::before,
+*::after{
+    box-sizing:border-box;
+}
+
+/* ==========================================
+   Theme Variables
+========================================== */
+
+:root{
+
+    --bg:#ffffff;
+    --surface:#f9fafb;
+    --surface-alt:#eff6ff;
+
+    --text:#111827;
+    --text-secondary:#6b7280;
+
+    --border:#e5e7eb;
+
+    --primary:#2563eb;
+    --primary-hover:#1d4ed8;
+
+    --success:#16a34a;
+    --warning:#f59e0b;
+    --danger:#dc2626;
+
+    --shadow:0 10px 28px rgba(0,0,0,.08);
+
+}
+
+[data-theme="dark"]{
+
+    --bg:#111827;
+    --surface:#1f2937;
+    --surface-alt:#374151;
+
+    --text:#f9fafb;
+    --text-secondary:#d1d5db;
+
+    --border:#374151;
+
+    --primary:#60a5fa;
+    --primary-hover:#3b82f6;
+
+    --shadow:0 12px 32px rgba(0,0,0,.45);
+
+}
+
+/* ==========================================
+   Wrapper
+========================================== */
+
+.dark-mode-support{
+
+    position:relative;
+
+    overflow:hidden;
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    gap:18px;
+
+    width:100%;
+
+    max-width:700px;
+
+    margin:30px auto;
+
+    padding:22px;
+
+    border:1px solid var(--border);
+
+    border-radius:18px;
+
+    background:var(--surface);
+
+    color:var(--text);
+
+    box-shadow:var(--shadow);
+
+    transition:
+        background .3s ease,
+        color .3s ease,
+        border-color .3s ease,
+        box-shadow .3s ease,
+        transform .3s ease;
+
+}
+
+.dark-mode-support:hover{
+
+    transform:translateY(-4px);
+
+}
+
+/* ==========================================
+   Decorative Background
+========================================== */
+
+.dark-mode-support::before{
+
+    content:"";
+
+    position:absolute;
+
+    top:-60px;
+
+    right:-60px;
+
+    width:140px;
+
+    height:140px;
+
+    border-radius:50%;
+
+    background:rgba(37,99,235,.06);
+
+}
+
+.dark-mode-support::after{
+
+    content:"";
+
+    position:absolute;
+
+    bottom:-50px;
+
+    left:-50px;
+
+    width:100px;
+
+    height:100px;
+
+    border-radius:50%;
+
+    background:rgba(96,165,250,.06);
+
+}
+
+/* ==========================================
+   Left Section
+========================================== */
+
+.dark-mode-support__content{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:14px;
+
+    z-index:2;
+
+}
+
+.dark-mode-support__icon{
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    width:54px;
+
+    height:54px;
+
+    border-radius:50%;
+
+    background:var(--surface-alt);
+
+    font-size:26px;
+
+    transition:.3s;
+
+}
+
+.dark-mode-support:hover
+.dark-mode-support__icon{
+
+    transform:rotate(-15deg) scale(1.08);
+
+}
+
+/* ==========================================
+   Text
+========================================== */
+
+.dark-mode-support__label{
+
+    font-size:18px;
+
+    font-weight:700;
+
+    color:var(--text);
+
+}
+
+.dark-mode-support__description{
+
+    margin-top:4px;
+
+    color:var(--text-secondary);
+
+    font-size:14px;
+
+}
+
+/* ==========================================
+   Button
+========================================== */
+
+.dark-mode-support__button{
+
+    display:inline-flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    gap:8px;
+
+    padding:12px 20px;
+
+    border:none;
+
+    border-radius:10px;
+
+    background:var(--primary);
+
+    color:#fff;
+
+    font-size:15px;
+
+    font-weight:600;
+
+    cursor:pointer;
+
+    transition:
+        background .25s ease,
+        transform .25s ease,
+        box-shadow .25s ease;
+
+}
+
+.dark-mode-support__button:hover{
+
+    background:var(--primary-hover);
+
+    transform:translateY(-2px);
+
+    box-shadow:0 10px 20px rgba(37,99,235,.25);
+
+}
+
+.dark-mode-support__button:active{
+
+    transform:scale(.97);
+
+}
+
+/* ==========================================
+   Secondary Button
+========================================== */
+
+.dark-mode-support__button--outline{
+
+    background:transparent;
+
+    border:2px solid var(--primary);
+
+    color:var(--primary);
+
+}
+
+.dark-mode-support__button--ghost{
+
+    background:transparent;
+
+    color:var(--primary);
+
+}
+
+/* ==========================================
+   Theme Badge
+========================================== */
+
+.dark-mode-support__badge{
+
+    display:inline-flex;
+
+    align-items:center;
+
+    gap:6px;
+
+    padding:6px 12px;
+
+    border-radius:999px;
+
+    background:var(--surface-alt);
+
+    color:var(--primary);
+
+    font-size:12px;
+
+    font-weight:700;
+
+}
+
+/* ==========================================
+   Toggle Switch
+========================================== */
+
+.dark-mode-support__switch{
+
+    position:relative;
+
+    width:60px;
+
+    height:32px;
+
+    border-radius:999px;
+
+    background:#d1d5db;
+
+    cursor:pointer;
+
+    transition:.3s;
+
+}
+
+.dark-mode-support__switch::after{
+
+    content:"";
+
+    position:absolute;
+
+    top:3px;
+
+    left:3px;
+
+    width:26px;
+
+    height:26px;
+
+    border-radius:50%;
+
+    background:#fff;
+
+    transition:.3s;
+
+}
+
+[data-theme="dark"] .dark-mode-support__switch{
+
+    background:var(--primary);
+
+}
+
+[data-theme="dark"] .dark-mode-support__switch::after{
+
+    transform:translateX(28px);
+
+}
+
+/* ==========================================
+   Status
+========================================== */
+
+.dark-mode-support__status{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:6px;
+
+    color:var(--text-secondary);
+
+    font-size:13px;
+
+}
+
+/* ==========================================
+   Loading
+========================================== */
+
+.dark-mode-support--loading{
+
+    pointer-events:none;
+
+    opacity:.7;
+
+}
+
+.dark-mode-support__spinner{
+
+    width:20px;
+
+    height:20px;
+
+    border:3px solid rgba(37,99,235,.2);
+
+    border-top:3px solid var(--primary);
+
+    border-radius:50%;
+
+    animation:themeSpin .8s linear infinite;
+
+}
+
+@keyframes themeSpin{
+
+    from{
+
+        transform:rotate(0);
+
+    }
+
+    to{
+
+        transform:rotate(360deg);
+
+    }
+
+}
+
+/* ==========================================
+   Pulse Animation
+========================================== */
+
+.dark-mode-support--pulse{
+
+    animation:themePulse 2s infinite;
+
+}
+
+@keyframes themePulse{
+
+    0%{
+
+        box-shadow:0 0 0 0 rgba(37,99,235,.35);
+
+    }
+
+    70%{
+
+        box-shadow:0 0 0 16px rgba(37,99,235,0);
+
+    }
+
+    100%{
+
+        box-shadow:0 0 0 0 rgba(37,99,235,0);
+
+    }
+
+}
+
+/* ==========================================
+   Floating Animation
+========================================== */
+
+.dark-mode-support--floating{
+
+    animation:themeFloat 3s ease-in-out infinite;
+
+}
+
+@keyframes themeFloat{
+
+    0%,100%{
+
+        transform:translateY(0);
+
+    }
+
+    50%{
+
+        transform:translateY(-6px);
+
+    }
+
+}
+
+/* ==========================================
+   Tooltip
+========================================== */
+
+.dark-mode-support[data-tooltip]{
+
+    position:relative;
+
+}
+
+.dark-mode-support[data-tooltip]::after{
+
+    content:attr(data-tooltip);
+
+    position:absolute;
+
+    left:50%;
+
+    bottom:120%;
+
+    transform:translateX(-50%);
+
+    padding:6px 10px;
+
+    border-radius:6px;
+
+    background:#111827;
+
+    color:#fff;
+
+    white-space:nowrap;
+
+    font-size:12px;
+
+    opacity:0;
+
+    visibility:hidden;
+
+    transition:.25s;
+
+}
+
+.dark-mode-support[data-tooltip]:hover::after{
+
+    opacity:1;
+
+    visibility:visible;
+
+}
+
+/* ==========================================
+   Responsive
+========================================== */
+
+@media(max-width:768px){
+
+.dark-mode-support{
+
+    flex-direction:column;
+
+    align-items:flex-start;
+
+}
+
+.dark-mode-support__button{
+
+    width:100%;
+
+}
+
+}
+
+@media(max-width:480px){
+
+.dark-mode-support{
+
+    padding:18px;
+
+}
+
+.dark-mode-support__label{
+
+    font-size:16px;
+
+}
+
+.dark-mode-support__icon{
+
+    width:46px;
+
+    height:46px;
+
+    font-size:22px;
+
+}
+
+}
+
+/* ==========================================
+   Accessibility
+========================================== */
+
+.dark-mode-support__button:focus-visible,
+.dark-mode-support__switch:focus-visible{
+
+    outline:3px solid rgba(37,99,235,.35);
+
+    outline-offset:3px;
+
+}
+
+/* ==========================================
+   Reduced Motion
+========================================== */
+
+@media(prefers-reduced-motion:reduce){
+
+.dark-mode-support,
+.dark-mode-support__button,
+.dark-mode-support__icon,
+.dark-mode-support__spinner{
+
+    animation:none;
+
+    transition:none;
+
+}
+
+}

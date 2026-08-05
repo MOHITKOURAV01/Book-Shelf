@@ -1,0 +1,600 @@
+/* ==========================================
+   LoadingSpinner.css
+========================================== */
+
+/* Reset */
+
+*,
+*::before,
+*::after{
+    box-sizing:border-box;
+}
+
+/* ==========================================
+   Theme Variables
+========================================== */
+
+:root{
+
+    --spinner-primary:#2563eb;
+    --spinner-success:#16a34a;
+    --spinner-warning:#f59e0b;
+    --spinner-danger:#dc2626;
+
+    --spinner-bg:#ffffff;
+    --spinner-overlay:rgba(255,255,255,.75);
+
+    --spinner-text:#374151;
+
+}
+
+/* ==========================================
+   Wrapper
+========================================== */
+
+.loading-spinner{
+
+    display:inline-flex;
+
+    flex-direction:column;
+
+    align-items:center;
+
+    justify-content:center;
+
+    gap:14px;
+
+    position:relative;
+
+}
+
+/* ==========================================
+   Fullscreen Overlay
+========================================== */
+
+.loading-spinner--fullscreen{
+
+    position:fixed;
+
+    inset:0;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    background:var(--spinner-overlay);
+
+    backdrop-filter:blur(4px);
+
+    z-index:9999;
+
+}
+
+/* ==========================================
+   Spinner Base
+========================================== */
+
+.loading-spinner__circle{
+
+    border-radius:50%;
+
+    border-style:solid;
+
+    border-width:4px;
+
+    border-color:rgba(37,99,235,.15);
+
+    border-top-color:var(--spinner-primary);
+
+    animation:spinnerRotate .8s linear infinite;
+
+}
+
+/* ==========================================
+   Sizes
+========================================== */
+
+.loading-spinner__circle--xs{
+
+    width:18px;
+
+    height:18px;
+
+}
+
+.loading-spinner__circle--sm{
+
+    width:24px;
+
+    height:24px;
+
+}
+
+.loading-spinner__circle--md{
+
+    width:40px;
+
+    height:40px;
+
+}
+
+.loading-spinner__circle--lg{
+
+    width:64px;
+
+    height:64px;
+
+}
+
+.loading-spinner__circle--xl{
+
+    width:90px;
+
+    height:90px;
+
+    border-width:6px;
+
+}
+
+/* ==========================================
+   Color Variants
+========================================== */
+
+.loading-spinner__circle--primary{
+
+    border-top-color:var(--spinner-primary);
+
+}
+
+.loading-spinner__circle--success{
+
+    border-top-color:var(--spinner-success);
+
+}
+
+.loading-spinner__circle--warning{
+
+    border-top-color:var(--spinner-warning);
+
+}
+
+.loading-spinner__circle--danger{
+
+    border-top-color:var(--spinner-danger);
+
+}
+
+.loading-spinner__circle--white{
+
+    border-color:rgba(255,255,255,.2);
+
+    border-top-color:#ffffff;
+
+}
+
+/* ==========================================
+   Label
+========================================== */
+
+.loading-spinner__label{
+
+    font-size:14px;
+
+    font-weight:600;
+
+    color:var(--spinner-text);
+
+    text-align:center;
+
+}
+
+/* ==========================================
+   Description
+========================================== */
+
+.loading-spinner__description{
+
+    font-size:13px;
+
+    color:#6b7280;
+
+    text-align:center;
+
+}
+
+/* ==========================================
+   Card Container
+========================================== */
+
+.loading-spinner--card{
+
+    padding:24px;
+
+    border:1px solid #e5e7eb;
+
+    border-radius:16px;
+
+    background:#ffffff;
+
+    box-shadow:0 10px 26px rgba(0,0,0,.08);
+
+}
+
+/* ==========================================
+   Inline
+========================================== */
+
+.loading-spinner--inline{
+
+    flex-direction:row;
+
+    gap:10px;
+
+}
+
+/* ==========================================
+   Center Utility
+========================================== */
+
+.loading-spinner--center{
+
+    width:100%;
+
+    display:flex;
+
+    justify-content:center;
+
+}
+
+/* ==========================================
+   Pulse Animation
+========================================== */
+
+.loading-spinner--pulse{
+
+    animation:spinnerPulse 2s infinite;
+
+}
+
+@keyframes spinnerPulse{
+
+    0%{
+
+        transform:scale(1);
+
+    }
+
+    50%{
+
+        transform:scale(1.05);
+
+    }
+
+    100%{
+
+        transform:scale(1);
+
+    }
+
+}
+
+/* ==========================================
+   Bounce Animation
+========================================== */
+
+.loading-spinner--bounce{
+
+    animation:spinnerBounce 1.2s infinite;
+
+}
+
+@keyframes spinnerBounce{
+
+    0%,100%{
+
+        transform:translateY(0);
+
+    }
+
+    50%{
+
+        transform:translateY(-6px);
+
+    }
+
+}
+
+/* ==========================================
+   Fade Animation
+========================================== */
+
+.loading-spinner--fade{
+
+    animation:spinnerFade 1.5s infinite;
+
+}
+
+@keyframes spinnerFade{
+
+    0%,100%{
+
+        opacity:1;
+
+    }
+
+    50%{
+
+        opacity:.4;
+
+    }
+
+}
+
+/* ==========================================
+   Glow Effect
+========================================== */
+
+.loading-spinner--glow .loading-spinner__circle{
+
+    box-shadow:
+        0 0 12px rgba(37,99,235,.4),
+        0 0 24px rgba(37,99,235,.15);
+
+}
+
+/* ==========================================
+   Shadow
+========================================== */
+
+.loading-spinner--shadow{
+
+    filter:drop-shadow(0 8px 16px rgba(37,99,235,.25));
+
+}
+
+/* ==========================================
+   Loading Dots
+========================================== */
+
+.loading-spinner__dots{
+
+    display:flex;
+
+    gap:6px;
+
+}
+
+.loading-spinner__dot{
+
+    width:8px;
+
+    height:8px;
+
+    border-radius:50%;
+
+    background:var(--spinner-primary);
+
+    animation:dotBounce 1s infinite ease-in-out;
+
+}
+
+.loading-spinner__dot:nth-child(2){
+
+    animation-delay:.15s;
+
+}
+
+.loading-spinner__dot:nth-child(3){
+
+    animation-delay:.3s;
+
+}
+
+@keyframes dotBounce{
+
+    0%,80%,100%{
+
+        transform:scale(.8);
+
+        opacity:.4;
+
+    }
+
+    40%{
+
+        transform:scale(1.3);
+
+        opacity:1;
+
+    }
+
+}
+
+/* ==========================================
+   Progress Bar
+========================================== */
+
+.loading-spinner__progress{
+
+    width:180px;
+
+    height:6px;
+
+    border-radius:999px;
+
+    overflow:hidden;
+
+    background:#e5e7eb;
+
+}
+
+.loading-spinner__progress-fill{
+
+    width:40%;
+
+    height:100%;
+
+    background:linear-gradient(
+        90deg,
+        var(--spinner-primary),
+        #60a5fa
+    );
+
+    animation:progressMove 1.4s infinite;
+
+}
+
+@keyframes progressMove{
+
+    0%{
+
+        transform:translateX(-100%);
+
+    }
+
+    100%{
+
+        transform:translateX(300%);
+
+    }
+
+}
+
+/* ==========================================
+   Spinner Animation
+========================================== */
+
+@keyframes spinnerRotate{
+
+    from{
+
+        transform:rotate(0deg);
+
+    }
+
+    to{
+
+        transform:rotate(360deg);
+
+    }
+
+}
+
+/* ==========================================
+   Dark Theme
+========================================== */
+
+[data-theme="dark"]{
+
+    --spinner-bg:#1f2937;
+
+    --spinner-overlay:rgba(17,24,39,.8);
+
+    --spinner-text:#f3f4f6;
+
+}
+
+[data-theme="dark"] .loading-spinner--card{
+
+    background:var(--spinner-bg);
+
+    border-color:#374151;
+
+}
+
+/* ==========================================
+   Accessibility
+========================================== */
+
+.loading-spinner[role="status"]{
+
+    outline:none;
+
+}
+
+.loading-spinner__label::selection{
+
+    background:#2563eb;
+
+    color:#ffffff;
+
+}
+
+/* ==========================================
+   Responsive
+========================================== */
+
+@media(max-width:768px){
+
+.loading-spinner__circle--xl{
+
+    width:72px;
+
+    height:72px;
+
+}
+
+}
+
+@media(max-width:600px){
+
+.loading-spinner__circle--lg{
+
+    width:52px;
+
+    height:52px;
+
+}
+
+.loading-spinner__circle--xl{
+
+    width:60px;
+
+    height:60px;
+
+}
+
+.loading-spinner--card{
+
+    width:100%;
+
+}
+
+}
+
+@media(max-width:480px){
+
+.loading-spinner__label{
+
+    font-size:13px;
+
+}
+
+.loading-spinner__progress{
+
+    width:140px;
+
+}
+
+}
+
+/* ==========================================
+   Reduced Motion
+========================================== */
+
+@media(prefers-reduced-motion:reduce){
+
+.loading-spinner,
+.loading-spinner__circle,
+.loading-spinner__dot,
+.loading-spinner__progress-fill{
+
+    animation:none;
+
+    transition:none;
+
+}
+
+}

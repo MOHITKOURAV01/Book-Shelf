@@ -833,9 +833,6 @@ export default function TermsOfService() {
           </div>
         </div>
       </article>
-
-      {/* ── Footer ── */}
-      <Footer />
     </div>
   );
 }

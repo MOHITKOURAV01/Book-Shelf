@@ -1,0 +1,681 @@
+/* ==========================================
+   FavoriteCategories.css
+========================================== */
+
+/* Reset */
+
+*,
+*::before,
+*::after{
+    box-sizing:border-box;
+}
+
+/* ==========================================
+   Container
+========================================== */
+
+.favorite-categories{
+
+    display:flex;
+
+    flex-wrap:wrap;
+
+    gap:12px;
+
+    align-items:center;
+
+    justify-content:flex-start;
+
+    width:100%;
+
+    padding:8px 0;
+
+}
+
+/* ==========================================
+   Base Category
+========================================== */
+
+.favorite-category{
+
+    position:relative;
+
+    overflow:hidden;
+
+    display:inline-flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    gap:8px;
+
+    padding:10px 18px;
+
+    border:none;
+
+    border-radius:999px;
+
+    background:#eff6ff;
+
+    color:#2563eb;
+
+    font-size:14px;
+
+    font-weight:600;
+
+    line-height:1;
+
+    cursor:pointer;
+
+    user-select:none;
+
+    white-space:nowrap;
+
+    transition:
+        transform .25s ease,
+        background-color .25s ease,
+        color .25s ease,
+        box-shadow .25s ease,
+        border-color .25s ease;
+
+}
+
+/* ==========================================
+   Hover
+========================================== */
+
+.favorite-category:hover{
+
+    transform:translateY(-3px);
+
+    background:#2563eb;
+
+    color:#fff;
+
+    box-shadow:0 8px 18px rgba(37,99,235,.25);
+
+}
+
+/* ==========================================
+   Active
+========================================== */
+
+.favorite-category:active{
+
+    transform:scale(.97);
+
+}
+
+/* ==========================================
+   Focus
+========================================== */
+
+.favorite-category:focus-visible{
+
+    outline:3px solid rgba(37,99,235,.35);
+
+    outline-offset:3px;
+
+}
+
+/* ==========================================
+   Selected
+========================================== */
+
+.favorite-category--active{
+
+    background:#2563eb;
+
+    color:#fff;
+
+    box-shadow:0 6px 16px rgba(37,99,235,.35);
+
+}
+
+/* ==========================================
+   Disabled
+========================================== */
+
+.favorite-category--disabled{
+
+    opacity:.55;
+
+    cursor:not-allowed;
+
+    pointer-events:none;
+
+}
+
+/* ==========================================
+   Sizes
+========================================== */
+
+.favorite-category--xs{
+
+    padding:4px 10px;
+
+    font-size:11px;
+
+}
+
+.favorite-category--sm{
+
+    padding:8px 14px;
+
+    font-size:13px;
+
+}
+
+.favorite-category--md{
+
+    padding:10px 18px;
+
+    font-size:14px;
+
+}
+
+.favorite-category--lg{
+
+    padding:14px 24px;
+
+    font-size:16px;
+
+}
+
+.favorite-category--xl{
+
+    padding:18px 30px;
+
+    font-size:18px;
+
+}
+
+/* ==========================================
+   Color Variants
+========================================== */
+
+.favorite-category--primary{
+
+    background:#eff6ff;
+
+    color:#2563eb;
+
+}
+
+.favorite-category--success{
+
+    background:#ecfdf5;
+
+    color:#15803d;
+
+}
+
+.favorite-category--warning{
+
+    background:#fef3c7;
+
+    color:#b45309;
+
+}
+
+.favorite-category--danger{
+
+    background:#fee2e2;
+
+    color:#dc2626;
+
+}
+
+.favorite-category--purple{
+
+    background:#f3e8ff;
+
+    color:#7c3aed;
+
+}
+
+.favorite-category--dark{
+
+    background:#1f2937;
+
+    color:#fff;
+
+}
+
+/* ==========================================
+   Outline
+========================================== */
+
+.favorite-category--outline{
+
+    background:transparent;
+
+    border:2px solid currentColor;
+
+}
+
+/* ==========================================
+   Gradient
+========================================== */
+
+.favorite-category--gradient{
+
+    background:linear-gradient(
+        135deg,
+        #2563eb,
+        #3b82f6
+    );
+
+    color:#fff;
+
+}
+
+/* ==========================================
+   Rounded Styles
+========================================== */
+
+.favorite-category--rounded{
+
+    border-radius:999px;
+
+}
+
+.favorite-category--square{
+
+    border-radius:8px;
+
+}
+
+/* ==========================================
+   Shadows
+========================================== */
+
+.favorite-category--shadow-sm{
+
+    box-shadow:0 2px 6px rgba(0,0,0,.08);
+
+}
+
+.favorite-category--shadow-md{
+
+    box-shadow:0 6px 16px rgba(0,0,0,.12);
+
+}
+
+.favorite-category--shadow-lg{
+
+    box-shadow:0 12px 28px rgba(0,0,0,.18);
+
+}
+
+/* ==========================================
+   Glow
+========================================== */
+
+.favorite-category--glow{
+
+    box-shadow:
+        0 0 12px rgba(37,99,235,.35),
+        0 0 24px rgba(37,99,235,.15);
+
+}
+
+/* ==========================================
+   Icon
+========================================== */
+
+.favorite-category__icon{
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    font-size:16px;
+
+    transition:transform .25s ease;
+
+}
+
+.favorite-category:hover
+.favorite-category__icon{
+
+    transform:rotate(-10deg) scale(1.1);
+
+}
+
+/* ==========================================
+   Badge Count
+========================================== */
+
+.favorite-category__count{
+
+    display:inline-flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    min-width:20px;
+
+    height:20px;
+
+    padding:0 6px;
+
+    border-radius:999px;
+
+    background:#ef4444;
+
+    color:#fff;
+
+    font-size:11px;
+
+    font-weight:700;
+
+}
+
+/* ==========================================
+   Pulse Animation
+========================================== */
+
+.favorite-category--pulse{
+
+    animation:categoryPulse 2s infinite;
+
+}
+
+@keyframes categoryPulse{
+
+    0%{
+
+        box-shadow:0 0 0 0 rgba(37,99,235,.4);
+
+    }
+
+    70%{
+
+        box-shadow:0 0 0 16px rgba(37,99,235,0);
+
+    }
+
+    100%{
+
+        box-shadow:0 0 0 0 rgba(37,99,235,0);
+
+    }
+
+}
+
+/* ==========================================
+   Floating Animation
+========================================== */
+
+.favorite-category--floating{
+
+    animation:categoryFloat 3s ease-in-out infinite;
+
+}
+
+@keyframes categoryFloat{
+
+    0%,100%{
+
+        transform:translateY(0);
+
+    }
+
+    50%{
+
+        transform:translateY(-5px);
+
+    }
+
+}
+
+/* ==========================================
+   Shine Effect
+========================================== */
+
+.favorite-category--shine{
+
+    position:relative;
+
+}
+
+.favorite-category--shine::before{
+
+    content:"";
+
+    position:absolute;
+
+    top:0;
+
+    left:-120%;
+
+    width:60%;
+
+    height:100%;
+
+    background:linear-gradient(
+        120deg,
+        transparent,
+        rgba(255,255,255,.45),
+        transparent
+    );
+
+    transition:left .7s;
+
+}
+
+.favorite-category--shine:hover::before{
+
+    left:130%;
+
+}
+
+/* ==========================================
+   Tooltip
+========================================== */
+
+.favorite-category[data-tooltip]{
+
+    position:relative;
+
+}
+
+.favorite-category[data-tooltip]::after{
+
+    content:attr(data-tooltip);
+
+    position:absolute;
+
+    bottom:125%;
+
+    left:50%;
+
+    transform:translateX(-50%);
+
+    padding:6px 10px;
+
+    border-radius:6px;
+
+    background:#111827;
+
+    color:#fff;
+
+    font-size:12px;
+
+    white-space:nowrap;
+
+    opacity:0;
+
+    visibility:hidden;
+
+    transition:.25s;
+
+}
+
+.favorite-category[data-tooltip]:hover::after{
+
+    opacity:1;
+
+    visibility:visible;
+
+}
+
+/* ==========================================
+   Empty State
+========================================== */
+
+.favorite-categories__empty{
+
+    display:flex;
+
+    flex-direction:column;
+
+    align-items:center;
+
+    justify-content:center;
+
+    gap:14px;
+
+    width:100%;
+
+    padding:48px 24px;
+
+    border:2px dashed #d1d5db;
+
+    border-radius:14px;
+
+    background:#fafafa;
+
+    text-align:center;
+
+    color:#6b7280;
+
+}
+
+.favorite-categories__empty-icon{
+
+    font-size:48px;
+
+}
+
+.favorite-categories__empty-title{
+
+    font-size:22px;
+
+    font-weight:700;
+
+    color:#111827;
+
+}
+
+.favorite-categories__empty-text{
+
+    max-width:420px;
+
+    line-height:1.6;
+
+}
+
+/* ==========================================
+   Dark Theme
+========================================== */
+
+.dark .favorite-categories__empty{
+
+    background:#1f2937;
+
+    border-color:#374151;
+
+    color:#d1d5db;
+
+}
+
+.dark .favorite-categories__empty-title{
+
+    color:#fff;
+
+}
+
+/* ==========================================
+   Responsive
+========================================== */
+
+@media(max-width:768px){
+
+.favorite-categories{
+
+    justify-content:center;
+
+}
+
+}
+
+@media(max-width:640px){
+
+.favorite-categories{
+
+    flex-direction:column;
+
+}
+
+.favorite-category{
+
+    width:100%;
+
+    justify-content:center;
+
+}
+
+}
+
+@media(max-width:480px){
+
+.favorite-category{
+
+    font-size:13px;
+
+    padding:12px 16px;
+
+}
+
+.favorite-categories__empty{
+
+    padding:36px 18px;
+
+}
+
+}
+
+/* ==========================================
+   Accessibility
+========================================== */
+
+.favorite-category[aria-disabled="true"]{
+
+    pointer-events:none;
+
+    opacity:.6;
+
+}
+
+/* ==========================================
+   Reduced Motion
+========================================== */
+
+@media(prefers-reduced-motion:reduce){
+
+.favorite-category,
+.favorite-category__icon{
+
+    transition:none;
+
+    animation:none;
+
+}
+
+}
