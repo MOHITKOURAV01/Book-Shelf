@@ -1,0 +1,663 @@
+/* ==========================================
+   AIBookSummaryCard.css
+========================================== */
+
+/* Reset */
+
+*,
+*::before,
+*::after{
+    box-sizing:border-box;
+}
+
+/* ==========================================
+   Root Card
+========================================== */
+
+.ai-summary-card{
+
+    position:relative;
+
+    overflow:hidden;
+
+    max-width:760px;
+
+    margin:32px auto;
+
+    padding:28px;
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:20px;
+
+    background:#ffffff;
+
+    border:1px solid #e5e7eb;
+
+    border-radius:18px;
+
+    box-shadow:0 10px 28px rgba(0,0,0,.08);
+
+    transition:
+        transform .3s ease,
+        box-shadow .3s ease,
+        border-color .3s ease;
+
+}
+
+.ai-summary-card:hover{
+
+    transform:translateY(-5px);
+
+    border-color:#2563eb;
+
+    box-shadow:0 18px 36px rgba(0,0,0,.12);
+
+}
+
+/* ==========================================
+   Decorative Background
+========================================== */
+
+.ai-summary-card::before{
+
+    content:"";
+
+    position:absolute;
+
+    top:-80px;
+
+    right:-80px;
+
+    width:180px;
+
+    height:180px;
+
+    border-radius:50%;
+
+    background:rgba(37,99,235,.05);
+
+}
+
+.ai-summary-card::after{
+
+    content:"";
+
+    position:absolute;
+
+    bottom:-60px;
+
+    left:-60px;
+
+    width:120px;
+
+    height:120px;
+
+    border-radius:50%;
+
+    background:rgba(59,130,246,.05);
+
+}
+
+/* ==========================================
+   Header
+========================================== */
+
+.ai-summary-card__header{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:flex-start;
+
+    gap:20px;
+
+    z-index:2;
+
+}
+
+.ai-summary-card__header h2{
+
+    margin:0;
+
+    font-size:28px;
+
+    color:#111827;
+
+}
+
+.ai-summary-card__header p{
+
+    margin:6px 0 0;
+
+    color:#6b7280;
+
+    font-size:15px;
+
+}
+
+/* ==========================================
+   Confidence Badge
+========================================== */
+
+.badge{
+
+    display:inline-flex;
+
+    align-items:center;
+
+    gap:6px;
+
+    padding:8px 14px;
+
+    border-radius:999px;
+
+    background:#eff6ff;
+
+    color:#2563eb;
+
+    font-size:13px;
+
+    font-weight:700;
+
+}
+
+.badge--high{
+
+    background:#dcfce7;
+
+    color:#15803d;
+
+}
+
+.badge--medium{
+
+    background:#fef3c7;
+
+    color:#b45309;
+
+}
+
+.badge--low{
+
+    background:#fee2e2;
+
+    color:#dc2626;
+
+}
+
+/* ==========================================
+   Metadata
+========================================== */
+
+.meta{
+
+    display:flex;
+
+    flex-wrap:wrap;
+
+    gap:14px;
+
+    color:#6b7280;
+
+    font-size:14px;
+
+}
+
+.meta span{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:6px;
+
+    padding:6px 10px;
+
+    border-radius:999px;
+
+    background:#f9fafb;
+
+}
+
+/* ==========================================
+   Summary
+========================================== */
+
+.summary{
+
+    line-height:1.8;
+
+    color:#374151;
+
+    font-size:15px;
+
+}
+
+/* ==========================================
+   Expand Button
+========================================== */
+
+.toggle{
+
+    width:max-content;
+
+    border:none;
+
+    background:none;
+
+    color:#2563eb;
+
+    font-weight:600;
+
+    cursor:pointer;
+
+    transition:.25s;
+
+}
+
+.toggle:hover{
+
+    color:#1d4ed8;
+
+    transform:translateX(4px);
+
+}
+
+/* ==========================================
+   Key Points
+========================================== */
+
+.points{
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:10px;
+
+    margin:0;
+
+    padding-left:20px;
+
+    color:#374151;
+
+}
+
+.points li{
+
+    line-height:1.6;
+
+}
+
+/* ==========================================
+   Highlight Box
+========================================== */
+
+.ai-summary-card__highlight{
+
+    padding:14px;
+
+    border-left:4px solid #2563eb;
+
+    background:#eff6ff;
+
+    border-radius:10px;
+
+    color:#1e3a8a;
+
+}
+
+/* ==========================================
+   Confidence Progress
+========================================== */
+
+.ai-summary-card__progress{
+
+    width:100%;
+
+    height:10px;
+
+    background:#e5e7eb;
+
+    border-radius:999px;
+
+    overflow:hidden;
+
+}
+
+.ai-summary-card__progress-fill{
+
+    height:100%;
+
+    background:linear-gradient(
+        90deg,
+        #2563eb,
+        #60a5fa
+    );
+
+    transition:width .4s ease;
+
+}
+
+/* ==========================================
+   Actions
+========================================== */
+
+.actions{
+
+    display:flex;
+
+    gap:12px;
+
+    flex-wrap:wrap;
+
+}
+
+.actions button{
+
+    display:inline-flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    gap:8px;
+
+    padding:12px 18px;
+
+    border:none;
+
+    border-radius:10px;
+
+    background:#2563eb;
+
+    color:#fff;
+
+    font-weight:600;
+
+    cursor:pointer;
+
+    transition:
+        transform .25s ease,
+        background .25s ease,
+        box-shadow .25s ease;
+
+}
+
+.actions button:hover{
+
+    background:#1d4ed8;
+
+    transform:translateY(-2px);
+
+    box-shadow:0 8px 20px rgba(37,99,235,.25);
+
+}
+
+.actions button:active{
+
+    transform:scale(.97);
+
+}
+
+/* ==========================================
+   Secondary Button
+========================================== */
+
+.actions .secondary{
+
+    background:#6b7280;
+
+}
+
+.actions .success{
+
+    background:#16a34a;
+
+}
+
+.actions .danger{
+
+    background:#dc2626;
+
+}
+
+.actions .outline{
+
+    background:#fff;
+
+    color:#2563eb;
+
+    border:2px solid #2563eb;
+
+}
+
+/* ==========================================
+   Loading
+========================================== */
+
+.ai-summary-card--loading{
+
+    pointer-events:none;
+
+    opacity:.7;
+
+}
+
+.ai-summary-card__spinner{
+
+    width:24px;
+
+    height:24px;
+
+    border:3px solid rgba(37,99,235,.2);
+
+    border-top:3px solid #2563eb;
+
+    border-radius:50%;
+
+    animation:aiSpin .8s linear infinite;
+
+}
+
+@keyframes aiSpin{
+
+    from{
+
+        transform:rotate(0);
+
+    }
+
+    to{
+
+        transform:rotate(360deg);
+
+    }
+
+}
+
+/* ==========================================
+   Tooltip
+========================================== */
+
+.ai-summary-card [data-tooltip]{
+
+    position:relative;
+
+}
+
+.ai-summary-card [data-tooltip]::after{
+
+    content:attr(data-tooltip);
+
+    position:absolute;
+
+    left:50%;
+
+    bottom:125%;
+
+    transform:translateX(-50%);
+
+    background:#111827;
+
+    color:#fff;
+
+    padding:6px 10px;
+
+    border-radius:6px;
+
+    font-size:12px;
+
+    white-space:nowrap;
+
+    opacity:0;
+
+    visibility:hidden;
+
+    transition:.25s;
+
+}
+
+.ai-summary-card [data-tooltip]:hover::after{
+
+    opacity:1;
+
+    visibility:visible;
+
+}
+
+/* ==========================================
+   Dark Theme
+========================================== */
+
+.dark .ai-summary-card{
+
+    background:#1f2937;
+
+    border-color:#374151;
+
+}
+
+.dark .ai-summary-card h2{
+
+    color:#fff;
+
+}
+
+.dark .summary{
+
+    color:#d1d5db;
+
+}
+
+.dark .meta span{
+
+    background:#374151;
+
+    color:#d1d5db;
+
+}
+
+.dark .badge{
+
+    background:#1d4ed8;
+
+    color:#fff;
+
+}
+
+/* ==========================================
+   Responsive
+========================================== */
+
+@media(max-width:768px){
+
+.ai-summary-card{
+
+    padding:20px;
+
+}
+
+.ai-summary-card__header{
+
+    flex-direction:column;
+
+}
+
+.actions button{
+
+    flex:1;
+
+}
+
+}
+
+@media(max-width:480px){
+
+.ai-summary-card{
+
+    padding:16px;
+
+}
+
+.ai-summary-card__header h2{
+
+    font-size:22px;
+
+}
+
+.meta{
+
+    flex-direction:column;
+
+}
+
+.actions{
+
+    flex-direction:column;
+
+}
+
+.actions button{
+
+    width:100%;
+
+}
+
+}
+
+/* ==========================================
+   Accessibility
+========================================== */
+
+.actions button:focus-visible,
+.toggle:focus-visible{
+
+    outline:3px solid rgba(37,99,235,.35);
+
+    outline-offset:3px;
+
+}
+
+/* ==========================================
+   Reduced Motion
+========================================== */
+
+@media(prefers-reduced-motion:reduce){
+
+.ai-summary-card,
+.actions button,
+.toggle,
+.ai-summary-card__spinner{
+
+    animation:none;
+
+    transition:none;
+
+}
+
+}

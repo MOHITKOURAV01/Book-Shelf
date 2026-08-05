@@ -1,0 +1,700 @@
+/* ==========================================
+   PointerCursor.css
+========================================== */
+
+*,
+*::before,
+*::after{
+    box-sizing:border-box;
+}
+
+/* ==========================================
+   Base Element
+========================================== */
+
+.pointer-element{
+    position:relative;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    overflow:hidden;
+
+    cursor:pointer;
+
+    transition:
+        transform .25s ease,
+        box-shadow .25s ease,
+        opacity .25s ease,
+        background-color .25s ease,
+        color .25s ease;
+
+    user-select:none;
+}
+
+/* ==========================================
+   Hover
+========================================== */
+
+.pointer-element:hover{
+    transform:translateY(-3px);
+    box-shadow:0 8px 20px rgba(0,0,0,.15);
+}
+
+/* ==========================================
+   Active
+========================================== */
+
+.pointer-element:active{
+    transform:scale(.97);
+}
+
+/* ==========================================
+   Focus
+========================================== */
+
+.pointer-element:focus-visible{
+    outline:3px solid #2563eb;
+    outline-offset:3px;
+}
+
+/* ==========================================
+   Disabled
+========================================== */
+
+.pointer-element--disabled{
+    cursor:not-allowed;
+    pointer-events:none;
+    opacity:.55;
+    transform:none;
+    box-shadow:none;
+    filter:grayscale(20%);
+}
+
+/* ==========================================
+   Loading
+========================================== */
+
+.pointer-element--loading{
+    cursor:wait;
+}
+
+.pointer-element__loading{
+    display:flex;
+    align-items:center;
+    gap:8px;
+}
+
+.pointer-element__spinner{
+    width:18px;
+    height:18px;
+
+    border:3px solid rgba(255,255,255,.35);
+    border-top:3px solid #fff;
+
+    border-radius:50%;
+
+    animation:pointer-spin .8s linear infinite;
+}
+
+@keyframes pointer-spin{
+    from{
+        transform:rotate(0deg);
+    }
+    to{
+        transform:rotate(360deg);
+    }
+}
+
+/* ==========================================
+   Ripple Animation
+========================================== */
+
+.pointer-element__ripple{
+    position:absolute;
+
+    border-radius:50%;
+
+    background:rgba(255,255,255,.45);
+
+    transform:scale(0);
+
+    animation:ripple .6s linear;
+
+    pointer-events:none;
+}
+
+@keyframes ripple{
+
+    to{
+
+        transform:scale(4);
+
+        opacity:0;
+
+    }
+
+}
+
+/* ==========================================
+   Width Utilities
+========================================== */
+
+.pointer-element--full{
+    width:100%;
+}
+
+.pointer-element--inline{
+    width:auto;
+}
+
+/* ==========================================
+   Border Radius
+========================================== */
+
+.pointer-rounded-sm{
+    border-radius:6px;
+}
+
+.pointer-rounded-md{
+    border-radius:12px;
+}
+
+.pointer-rounded-lg{
+    border-radius:20px;
+}
+
+.pointer-rounded-full{
+    border-radius:999px;
+}
+
+/* ==========================================
+   Elevation
+========================================== */
+
+.pointer-shadow-sm{
+    box-shadow:0 2px 6px rgba(0,0,0,.08);
+}
+
+.pointer-shadow-md{
+    box-shadow:0 6px 14px rgba(0,0,0,.12);
+}
+
+.pointer-shadow-lg{
+    box-shadow:0 10px 28px rgba(0,0,0,.18);
+}
+
+/* ==========================================
+   Animation Utilities
+========================================== */
+
+.pointer-scale:hover{
+    transform:scale(1.04);
+}
+
+.pointer-lift:hover{
+    transform:translateY(-5px);
+}
+
+.pointer-rotate:hover{
+    transform:rotate(2deg);
+}
+
+.pointer-glow:hover{
+    box-shadow:0 0 18px rgba(37,99,235,.4);
+}
+
+/* ==========================================
+   Cursor Utilities
+========================================== */
+
+.cursor-pointer{
+    cursor:pointer;
+}
+
+.cursor-default{
+    cursor:default;
+}
+
+.cursor-help{
+    cursor:help;
+}
+
+.cursor-wait{
+    cursor:wait;
+}
+
+.cursor-progress{
+    cursor:progress;
+}
+
+.cursor-text{
+    cursor:text;
+}
+
+.cursor-move{
+    cursor:move;
+}
+
+.cursor-crosshair{
+    cursor:crosshair;
+}
+
+.cursor-copy{
+    cursor:copy;
+}
+
+.cursor-alias{
+    cursor:alias;
+}
+
+.cursor-cell{
+    cursor:cell;
+}
+
+.cursor-zoom-in{
+    cursor:zoom-in;
+}
+
+.cursor-zoom-out{
+    cursor:zoom-out;
+}
+
+.cursor-grab{
+    cursor:grab;
+}
+
+.cursor-grabbing{
+    cursor:grabbing;
+}
+
+.cursor-not-allowed{
+    cursor:not-allowed;
+}
+
+/* ==========================================
+   Interaction States
+========================================== */
+
+.pointer-hover-opacity:hover{
+    opacity:.9;
+}
+
+.pointer-hover-brightness:hover{
+    filter:brightness(1.05);
+}
+
+.pointer-hover-shadow:hover{
+    box-shadow:0 8px 20px rgba(0,0,0,.18);
+}
+
+/* ==========================================
+   Accessibility
+========================================== */
+
+.pointer-element[aria-disabled="true"]{
+    cursor:not-allowed;
+}
+
+.pointer-element[aria-busy="true"]{
+    cursor:wait;
+}
+
+/* ==========================================
+   Responsive
+========================================== */
+
+@media (max-width:768px){
+
+    .pointer-element{
+
+        width:100%;
+
+    }
+
+}
+
+@media (max-width:480px){
+
+    .pointer-element{
+
+        font-size:14px;
+
+    }
+
+}
+
+/* ==========================================
+   Reduced Motion
+========================================== */
+
+@media (prefers-reduced-motion:reduce){
+
+    .pointer-element,
+    .pointer-element__ripple{
+
+        animation:none;
+
+        transition:none;
+
+    }
+
+}
+/* ==========================================
+   Color Variants
+========================================== */
+
+.pointer-primary{
+    background:#2563eb;
+    color:#fff;
+}
+
+.pointer-secondary{
+    background:#6b7280;
+    color:#fff;
+}
+
+.pointer-success{
+    background:#16a34a;
+    color:#fff;
+}
+
+.pointer-danger{
+    background:#dc2626;
+    color:#fff;
+}
+
+.pointer-warning{
+    background:#f59e0b;
+    color:#fff;
+}
+
+.pointer-dark{
+    background:#111827;
+    color:#fff;
+}
+
+.pointer-light{
+    background:#f8fafc;
+    color:#111827;
+}
+
+/* ==========================================
+   Outline Variants
+========================================== */
+
+.pointer-outline-primary{
+    border:2px solid #2563eb;
+    color:#2563eb;
+    background:transparent;
+}
+
+.pointer-outline-success{
+    border:2px solid #16a34a;
+    color:#16a34a;
+    background:transparent;
+}
+
+.pointer-outline-danger{
+    border:2px solid #dc2626;
+    color:#dc2626;
+    background:transparent;
+}
+
+/* ==========================================
+   Gradient Buttons
+========================================== */
+
+.pointer-gradient-blue{
+    background:linear-gradient(135deg,#2563eb,#1d4ed8);
+    color:#fff;
+}
+
+.pointer-gradient-green{
+    background:linear-gradient(135deg,#22c55e,#16a34a);
+    color:#fff;
+}
+
+.pointer-gradient-red{
+    background:linear-gradient(135deg,#ef4444,#dc2626);
+    color:#fff;
+}
+
+/* ==========================================
+   Sizes
+========================================== */
+
+.pointer-xs{
+    padding:4px 10px;
+    font-size:11px;
+}
+
+.pointer-sm{
+    padding:8px 14px;
+    font-size:13px;
+}
+
+.pointer-md{
+    padding:12px 20px;
+    font-size:15px;
+}
+
+.pointer-lg{
+    padding:16px 28px;
+    font-size:17px;
+}
+
+.pointer-xl{
+    padding:20px 36px;
+    font-size:20px;
+}
+
+/* ==========================================
+   Icon Utilities
+========================================== */
+
+.pointer-icon{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:8px;
+}
+
+.pointer-icon-left svg,
+.pointer-icon-right svg{
+    width:18px;
+    height:18px;
+}
+
+/* ==========================================
+   Glass Effect
+========================================== */
+
+.pointer-glass{
+    backdrop-filter:blur(12px);
+    background:rgba(255,255,255,.18);
+    border:1px solid rgba(255,255,255,.25);
+}
+
+/* ==========================================
+   Neon Glow
+========================================== */
+
+.pointer-neon:hover{
+    box-shadow:
+        0 0 10px #2563eb,
+        0 0 20px #2563eb,
+        0 0 35px #2563eb;
+}
+
+/* ==========================================
+   Floating Animation
+========================================== */
+
+.pointer-float{
+    animation:pointerFloat 3s ease-in-out infinite;
+}
+
+@keyframes pointerFloat{
+
+    0%,100%{
+        transform:translateY(0);
+    }
+
+    50%{
+        transform:translateY(-6px);
+    }
+
+}
+
+/* ==========================================
+   Shake Animation
+========================================== */
+
+.pointer-shake:hover{
+    animation:pointerShake .4s;
+}
+
+@keyframes pointerShake{
+
+    0%{transform:translateX(0);}
+    25%{transform:translateX(-4px);}
+    50%{transform:translateX(4px);}
+    75%{transform:translateX(-4px);}
+    100%{transform:translateX(0);}
+
+}
+
+/* ==========================================
+   Pulse Animation
+========================================== */
+
+.pointer-pulse{
+    animation:pointerPulse 2s infinite;
+}
+
+@keyframes pointerPulse{
+
+    0%{
+        box-shadow:0 0 0 0 rgba(37,99,235,.5);
+    }
+
+    70%{
+        box-shadow:0 0 0 15px rgba(37,99,235,0);
+    }
+
+    100%{
+        box-shadow:0 0 0 0 rgba(37,99,235,0);
+    }
+
+}
+
+/* ==========================================
+   Tooltip
+========================================== */
+
+.pointer-tooltip{
+    position:relative;
+}
+
+.pointer-tooltip::after{
+
+    content:attr(data-tooltip);
+
+    position:absolute;
+
+    left:50%;
+    bottom:120%;
+
+    transform:translateX(-50%);
+
+    background:#111827;
+    color:#fff;
+
+    padding:6px 10px;
+
+    border-radius:6px;
+
+    white-space:nowrap;
+
+    opacity:0;
+
+    visibility:hidden;
+
+    transition:.25s;
+
+    font-size:12px;
+
+}
+
+.pointer-tooltip:hover::after{
+
+    opacity:1;
+
+    visibility:visible;
+
+}
+
+/* ==========================================
+   Badge
+========================================== */
+
+.pointer-badge{
+    position:absolute;
+    top:-6px;
+    right:-6px;
+
+    width:18px;
+    height:18px;
+
+    border-radius:50%;
+
+    background:#ef4444;
+    color:#fff;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    font-size:10px;
+}
+
+/* ==========================================
+   Dark Theme
+========================================== */
+
+.dark .pointer-element{
+
+    background:#1f2937;
+    color:#fff;
+
+}
+
+.dark .pointer-element:hover{
+
+    box-shadow:0 10px 24px rgba(255,255,255,.08);
+
+}
+
+/* ==========================================
+   Print Support
+========================================== */
+
+@media print{
+
+    .pointer-element{
+
+        box-shadow:none !important;
+        transform:none !important;
+        animation:none !important;
+
+    }
+
+}
+
+/* ==========================================
+   High Contrast Mode
+========================================== */
+
+@media (prefers-contrast:more){
+
+    .pointer-element{
+
+        border:2px solid currentColor;
+
+    }
+
+}
+
+/* ==========================================
+   Selection
+========================================== */
+
+.pointer-element::selection{
+
+    background:#2563eb;
+    color:#fff;
+
+}
+
+/* ==========================================
+   Scrollbar (Optional)
+========================================== */
+
+.pointer-scroll::-webkit-scrollbar{
+
+    width:8px;
+
+}
+
+.pointer-scroll::-webkit-scrollbar-thumb{
+
+    background:#2563eb;
+    border-radius:20px;
+
+}
+
+.pointer-scroll::-webkit-scrollbar-track{
+
+    background:#f3f4f6;
+
+}

@@ -1,0 +1,531 @@
+/* ==========================================
+   QRCodeGenerator.css
+========================================== */
+
+/* Reset */
+
+*,
+*::before,
+*::after{
+    box-sizing:border-box;
+}
+
+/* ==========================================
+   Root Container
+========================================== */
+
+.qr-generator{
+
+    position:relative;
+
+    overflow:hidden;
+
+    max-width:380px;
+
+    margin:40px auto;
+
+    padding:24px;
+
+    display:flex;
+
+    flex-direction:column;
+
+    align-items:center;
+
+    gap:18px;
+
+    text-align:center;
+
+    background:#ffffff;
+
+    border:1px solid #e5e7eb;
+
+    border-radius:18px;
+
+    box-shadow:0 8px 24px rgba(0,0,0,.08);
+
+    transition:
+        transform .3s ease,
+        box-shadow .3s ease,
+        border-color .3s ease;
+
+}
+
+.qr-generator:hover{
+
+    transform:translateY(-5px);
+
+    border-color:#2563eb;
+
+    box-shadow:0 14px 30px rgba(0,0,0,.12);
+
+}
+
+/* ==========================================
+   Decorative Background
+========================================== */
+
+.qr-generator::before{
+
+    content:"";
+
+    position:absolute;
+
+    top:-80px;
+
+    right:-80px;
+
+    width:180px;
+
+    height:180px;
+
+    border-radius:50%;
+
+    background:rgba(37,99,235,.05);
+
+}
+
+.qr-generator::after{
+
+    content:"";
+
+    position:absolute;
+
+    bottom:-60px;
+
+    left:-60px;
+
+    width:120px;
+
+    height:120px;
+
+    border-radius:50%;
+
+    background:rgba(16,185,129,.05);
+
+}
+
+/* ==========================================
+   Title
+========================================== */
+
+.qr-generator h3{
+
+    margin:0;
+
+    color:#111827;
+
+    font-size:24px;
+
+    font-weight:700;
+
+}
+
+/* ==========================================
+   QR Wrapper
+========================================== */
+
+.qr-generator__code{
+
+    padding:16px;
+
+    background:#fff;
+
+    border-radius:12px;
+
+    border:1px solid #e5e7eb;
+
+    transition:.25s;
+
+}
+
+.qr-generator__code:hover{
+
+    transform:scale(1.03);
+
+}
+
+/* ==========================================
+   Description
+========================================== */
+
+.qr-generator p{
+
+    margin:0;
+
+    color:#6b7280;
+
+    line-height:1.6;
+
+    word-break:break-all;
+
+    font-size:14px;
+
+}
+
+/* ==========================================
+   Button Base
+========================================== */
+
+.qr-generator button{
+
+    display:inline-flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    gap:8px;
+
+    padding:12px 18px;
+
+    border:none;
+
+    border-radius:10px;
+
+    background:#2563eb;
+
+    color:#fff;
+
+    font-size:15px;
+
+    font-weight:600;
+
+    cursor:pointer;
+
+    transition:
+        transform .25s ease,
+        background .25s ease,
+        box-shadow .25s ease;
+
+}
+
+.qr-generator button:hover{
+
+    background:#1d4ed8;
+
+    transform:translateY(-2px);
+
+    box-shadow:0 8px 20px rgba(37,99,235,.25);
+
+}
+
+.qr-generator button:active{
+
+    transform:scale(.97);
+
+}
+
+.qr-generator button:focus-visible{
+
+    outline:3px solid rgba(37,99,235,.35);
+
+    outline-offset:3px;
+
+}
+
+/* ==========================================
+   Button Variants
+========================================== */
+
+.qr-generator__button--secondary{
+
+    background:#6b7280;
+
+}
+
+.qr-generator__button--success{
+
+    background:#16a34a;
+
+}
+
+.qr-generator__button--danger{
+
+    background:#dc2626;
+
+}
+
+.qr-generator__button--outline{
+
+    background:#fff;
+
+    color:#2563eb;
+
+    border:2px solid #2563eb;
+
+}
+
+.qr-generator__button--outline:hover{
+
+    background:#2563eb;
+
+    color:#fff;
+
+}
+
+/* ==========================================
+   Icon
+========================================== */
+
+.qr-generator__icon{
+
+    font-size:18px;
+
+    display:flex;
+
+    align-items:center;
+
+}
+
+/* ==========================================
+   Badge
+========================================== */
+
+.qr-generator__badge{
+
+    display:inline-flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    padding:6px 12px;
+
+    border-radius:999px;
+
+    background:#eff6ff;
+
+    color:#2563eb;
+
+    font-size:12px;
+
+    font-weight:600;
+
+}
+
+/* ==========================================
+   Loading
+========================================== */
+
+.qr-generator--loading{
+
+    pointer-events:none;
+
+    opacity:.7;
+
+}
+
+.qr-generator__spinner{
+
+    width:22px;
+
+    height:22px;
+
+    border:3px solid rgba(37,99,235,.2);
+
+    border-top:3px solid #2563eb;
+
+    border-radius:50%;
+
+    animation:qr-spin .8s linear infinite;
+
+}
+
+@keyframes qr-spin{
+
+    from{
+
+        transform:rotate(0);
+
+    }
+
+    to{
+
+        transform:rotate(360deg);
+
+    }
+
+}
+
+/* ==========================================
+   Tooltip
+========================================== */
+
+.qr-generator[data-tooltip]{
+
+    position:relative;
+
+}
+
+.qr-generator[data-tooltip]::after{
+
+    content:attr(data-tooltip);
+
+    position:absolute;
+
+    bottom:120%;
+
+    left:50%;
+
+    transform:translateX(-50%);
+
+    background:#111827;
+
+    color:#fff;
+
+    padding:6px 10px;
+
+    border-radius:6px;
+
+    font-size:12px;
+
+    white-space:nowrap;
+
+    opacity:0;
+
+    visibility:hidden;
+
+    transition:.25s;
+
+}
+
+.qr-generator[data-tooltip]:hover::after{
+
+    opacity:1;
+
+    visibility:visible;
+
+}
+
+/* ==========================================
+   Success State
+========================================== */
+
+.qr-generator--success{
+
+    border-color:#16a34a;
+
+}
+
+.qr-generator--success button{
+
+    background:#16a34a;
+
+}
+
+/* ==========================================
+   Error State
+========================================== */
+
+.qr-generator--error{
+
+    border-color:#dc2626;
+
+}
+
+.qr-generator--error button{
+
+    background:#dc2626;
+
+}
+
+/* ==========================================
+   Dark Theme
+========================================== */
+
+.dark .qr-generator{
+
+    background:#1f2937;
+
+    border-color:#374151;
+
+}
+
+.dark .qr-generator h3{
+
+    color:#fff;
+
+}
+
+.dark .qr-generator p{
+
+    color:#d1d5db;
+
+}
+
+.dark .qr-generator__code{
+
+    background:#374151;
+
+}
+
+/* ==========================================
+   Responsive
+========================================== */
+
+@media(max-width:768px){
+
+.qr-generator{
+
+    max-width:100%;
+
+    margin:20px;
+
+}
+
+}
+
+@media(max-width:480px){
+
+.qr-generator{
+
+    padding:18px;
+
+}
+
+.qr-generator button{
+
+    width:100%;
+
+}
+
+.qr-generator h3{
+
+    font-size:20px;
+
+}
+
+}
+
+/* ==========================================
+   Accessibility
+========================================== */
+
+.qr-generator button[disabled]{
+
+    opacity:.6;
+
+    cursor:not-allowed;
+
+    pointer-events:none;
+
+}
+
+/* ==========================================
+   Reduced Motion
+========================================== */
+
+@media(prefers-reduced-motion:reduce){
+
+.qr-generator,
+.qr-generator button,
+.qr-generator__spinner{
+
+    transition:none;
+
+    animation:none;
+
+}
+
+}

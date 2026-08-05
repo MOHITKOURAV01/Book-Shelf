@@ -1,0 +1,687 @@
+/* ==========================================
+   BookWeight.css
+========================================== */
+
+/* Reset */
+
+*,
+*::before,
+*::after{
+    box-sizing:border-box;
+}
+
+/* ==========================================
+   Root Container
+========================================== */
+
+.book-weight{
+
+    position:relative;
+
+    overflow:hidden;
+
+    display:inline-flex;
+
+    align-items:center;
+
+    gap:14px;
+
+    padding:14px 20px;
+
+    border:1px solid #e5e7eb;
+
+    border-radius:16px;
+
+    background:#ffffff;
+
+    color:#111827;
+
+    user-select:none;
+
+    transition:
+        transform .25s ease,
+        box-shadow .25s ease,
+        border-color .25s ease,
+        background-color .25s ease;
+
+}
+
+/* ==========================================
+   Hover
+========================================== */
+
+.book-weight:hover{
+
+    transform:translateY(-3px);
+
+    box-shadow:0 12px 24px rgba(0,0,0,.12);
+
+    border-color:#2563eb;
+
+}
+
+/* ==========================================
+   Active
+========================================== */
+
+.book-weight:active{
+
+    transform:scale(.98);
+
+}
+
+/* ==========================================
+   Focus
+========================================== */
+
+.book-weight:focus-visible{
+
+    outline:3px solid rgba(37,99,235,.35);
+
+    outline-offset:3px;
+
+}
+
+/* ==========================================
+   Decorative Background
+========================================== */
+
+.book-weight::before{
+
+    content:"";
+
+    position:absolute;
+
+    top:-40px;
+
+    right:-40px;
+
+    width:90px;
+
+    height:90px;
+
+    border-radius:50%;
+
+    background:rgba(37,99,235,.05);
+
+}
+
+.book-weight::after{
+
+    content:"";
+
+    position:absolute;
+
+    bottom:-25px;
+
+    left:-25px;
+
+    width:60px;
+
+    height:60px;
+
+    border-radius:50%;
+
+    background:rgba(16,185,129,.05);
+
+}
+
+/* ==========================================
+   Icon
+========================================== */
+
+.book-weight__icon{
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    width:50px;
+
+    height:50px;
+
+    border-radius:50%;
+
+    background:#eff6ff;
+
+    font-size:26px;
+
+    transition:
+        transform .25s ease,
+        background-color .25s ease;
+
+}
+
+.book-weight:hover
+.book-weight__icon{
+
+    transform:rotate(-8deg) scale(1.08);
+
+}
+
+/* ==========================================
+   Content
+========================================== */
+
+.book-weight__content{
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:4px;
+
+}
+
+/* ==========================================
+   Label
+========================================== */
+
+.book-weight__label{
+
+    font-size:12px;
+
+    font-weight:600;
+
+    text-transform:uppercase;
+
+    letter-spacing:.08em;
+
+    color:#6b7280;
+
+}
+
+/* ==========================================
+   Value
+========================================== */
+
+.book-weight__value{
+
+    font-size:20px;
+
+    font-weight:700;
+
+    color:#111827;
+
+}
+
+/* ==========================================
+   Description
+========================================== */
+
+.book-weight__description{
+
+    font-size:13px;
+
+    color:#6b7280;
+
+}
+
+/* ==========================================
+   Sizes
+========================================== */
+
+.book-weight--xs{
+
+    padding:8px 12px;
+
+    font-size:12px;
+
+}
+
+.book-weight--sm{
+
+    padding:10px 16px;
+
+}
+
+.book-weight--md{
+
+    padding:14px 20px;
+
+}
+
+.book-weight--lg{
+
+    padding:18px 24px;
+
+}
+
+.book-weight--xl{
+
+    padding:22px 28px;
+
+}
+
+/* ==========================================
+   Variants
+========================================== */
+
+.book-weight--primary{
+
+    background:#eff6ff;
+
+    border-color:#bfdbfe;
+
+}
+
+.book-weight--success{
+
+    background:#ecfdf5;
+
+    border-color:#bbf7d0;
+
+}
+
+.book-weight--warning{
+
+    background:#fef3c7;
+
+    border-color:#fde68a;
+
+}
+
+.book-weight--danger{
+
+    background:#fee2e2;
+
+    border-color:#fecaca;
+
+}
+
+.book-weight--purple{
+
+    background:#f3e8ff;
+
+    border-color:#ddd6fe;
+
+}
+
+.book-weight--dark{
+
+    background:#1f2937;
+
+    border-color:#374151;
+
+    color:#fff;
+
+}
+
+/* ==========================================
+   Outline
+========================================== */
+
+.book-weight--outline{
+
+    background:transparent;
+
+    border:2px solid currentColor;
+
+}
+
+/* ==========================================
+   Gradient
+========================================== */
+
+.book-weight--gradient{
+
+    background:linear-gradient(
+        135deg,
+        #2563eb,
+        #3b82f6
+    );
+
+    color:#fff;
+
+    border:none;
+
+}
+
+/* ==========================================
+   Shadow Utilities
+========================================== */
+
+.book-weight--shadow-sm{
+
+    box-shadow:0 2px 6px rgba(0,0,0,.08);
+
+}
+
+.book-weight--shadow-md{
+
+    box-shadow:0 8px 18px rgba(0,0,0,.12);
+
+}
+
+.book-weight--shadow-lg{
+
+    box-shadow:0 12px 28px rgba(0,0,0,.18);
+
+}
+
+/* ==========================================
+   Glow Effect
+========================================== */
+
+.book-weight--glow{
+
+    box-shadow:
+        0 0 12px rgba(37,99,235,.35),
+        0 0 24px rgba(37,99,235,.15);
+
+}
+
+/* ==========================================
+   Pulse Animation
+========================================== */
+
+.book-weight--pulse{
+
+    animation:weightPulse 2s infinite;
+
+}
+
+@keyframes weightPulse{
+
+    0%{
+
+        box-shadow:0 0 0 0 rgba(37,99,235,.35);
+
+    }
+
+    70%{
+
+        box-shadow:0 0 0 16px rgba(37,99,235,0);
+
+    }
+
+    100%{
+
+        box-shadow:0 0 0 0 rgba(37,99,235,0);
+
+    }
+
+}
+
+/* ==========================================
+   Floating Animation
+========================================== */
+
+.book-weight--floating{
+
+    animation:weightFloat 3s ease-in-out infinite;
+
+}
+
+@keyframes weightFloat{
+
+    0%,100%{
+
+        transform:translateY(0);
+
+    }
+
+    50%{
+
+        transform:translateY(-5px);
+
+    }
+
+}
+
+/* ==========================================
+   Shine Effect
+========================================== */
+
+.book-weight--shine{
+
+    position:relative;
+
+}
+
+.book-weight--shine::before{
+
+    content:"";
+
+    position:absolute;
+
+    top:0;
+
+    left:-120%;
+
+    width:60%;
+
+    height:100%;
+
+    background:linear-gradient(
+        120deg,
+        transparent,
+        rgba(255,255,255,.45),
+        transparent
+    );
+
+    transition:left .7s;
+
+}
+
+.book-weight--shine:hover::before{
+
+    left:130%;
+
+}
+
+/* ==========================================
+   Tooltip
+========================================== */
+
+.book-weight[data-tooltip]{
+
+    position:relative;
+
+}
+
+.book-weight[data-tooltip]::after{
+
+    content:attr(data-tooltip);
+
+    position:absolute;
+
+    bottom:125%;
+
+    left:50%;
+
+    transform:translateX(-50%);
+
+    padding:6px 10px;
+
+    border-radius:6px;
+
+    background:#111827;
+
+    color:#fff;
+
+    font-size:12px;
+
+    white-space:nowrap;
+
+    opacity:0;
+
+    visibility:hidden;
+
+    transition:.25s;
+
+}
+
+.book-weight[data-tooltip]:hover::after{
+
+    opacity:1;
+
+    visibility:visible;
+
+}
+
+/* ==========================================
+   Loading State
+========================================== */
+
+.book-weight--loading{
+
+    opacity:.7;
+
+    pointer-events:none;
+
+}
+
+.book-weight__spinner{
+
+    width:18px;
+
+    height:18px;
+
+    border:2px solid rgba(37,99,235,.2);
+
+    border-top:2px solid #2563eb;
+
+    border-radius:50%;
+
+    animation:weightSpin .8s linear infinite;
+
+}
+
+@keyframes weightSpin{
+
+    from{
+
+        transform:rotate(0deg);
+
+    }
+
+    to{
+
+        transform:rotate(360deg);
+
+    }
+
+}
+
+/* ==========================================
+   Dark Theme
+========================================== */
+
+.dark .book-weight{
+
+    background:#1f2937;
+
+    border-color:#374151;
+
+    color:#fff;
+
+}
+
+.dark .book-weight__label{
+
+    color:#d1d5db;
+
+}
+
+.dark .book-weight__value{
+
+    color:#fff;
+
+}
+
+.dark .book-weight__icon{
+
+    background:#374151;
+
+}
+
+/* ==========================================
+   Responsive
+========================================== */
+
+@media(max-width:768px){
+
+.book-weight{
+
+    width:100%;
+
+}
+
+}
+
+@media(max-width:600px){
+
+.book-weight{
+
+    justify-content:center;
+
+    text-align:center;
+
+}
+
+.book-weight__content{
+
+    align-items:center;
+
+}
+
+}
+
+@media(max-width:480px){
+
+.book-weight{
+
+    padding:12px 16px;
+
+}
+
+.book-weight__icon{
+
+    width:42px;
+
+    height:42px;
+
+    font-size:22px;
+
+}
+
+.book-weight__value{
+
+    font-size:18px;
+
+}
+
+}
+
+/* ==========================================
+   Accessibility
+========================================== */
+
+.book-weight[aria-disabled="true"]{
+
+    opacity:.6;
+
+    pointer-events:none;
+
+}
+
+/* ==========================================
+   Reduced Motion
+========================================== */
+
+@media(prefers-reduced-motion:reduce){
+
+.book-weight,
+.book-weight__icon,
+.book-weight__spinner{
+
+    transition:none;
+
+    animation:none;
+
+}
+
+}

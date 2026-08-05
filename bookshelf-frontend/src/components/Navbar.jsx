@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth.js';
 import './Navbar.css';
 
-export default function Navbar({ cartCount, onCartClick }) {
+export default function Navbar({ cartCount, onCartClick, onSearch }) {
   const [mobileOpen, setMobileOpen] = useState(false);
   const { isAuthenticated, logout, user } = useAuth();
   const navigate = useNavigate();
@@ -34,7 +34,7 @@ export default function Navbar({ cartCount, onCartClick }) {
                 <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" />
               </svg>
             </span>
-            BookShelf
+            {t('navbar.logo')}
           </a>
 
           {/* Desktop nav links */}
@@ -71,6 +71,16 @@ export default function Navbar({ cartCount, onCartClick }) {
             >
               Cart
               <span className="nav__cart-count">{cartCount}</span>
+            <input 
+              className="nav__search" 
+              type="search" 
+              placeholder={t('navbar.searchPlaceholder')} 
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+            />
+            <button className="nav__cart" onClick={() => setIsCartOpen(true)} aria-label="Open cart">
+              {t('navbar.cart')}
+              <span className="nav__cart-count">{cart.length}</span>
             </button>
           </div>
 
