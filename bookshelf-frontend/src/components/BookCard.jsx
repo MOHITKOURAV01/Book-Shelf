@@ -4,6 +4,9 @@ import WishlistButton from './WishlistButton.jsx';
 import { CartContext } from '../context/CartContext.jsx';
 import { WishlistContext } from '../context/WishlistContext.jsx';
 import './BookCard.css';
+import { useContext } from 'react';
+import { WishlistContext } from '../context/WishlistContext.jsx';
+import WishlistButton from './WishlistButton.jsx';
 
 /**
  * BookCard — displays a single book as a card.
@@ -16,35 +19,21 @@ import './BookCard.css';
  *                          (e.g. RecentlyViewed). Falls back to CartContext.addToCart.
  */
 export default function BookCard({ book, onAddToCart }) {
-  const { addToCart } = useContext(CartContext);
   const { wishlist, toggleWishlist } = useContext(WishlistContext);
-
-  // Allow callers to override the add-to-cart behaviour; default to global context.
-  const handleAddToCart = () => {
-    if (onAddToCart) {
-      onAddToCart(book);
-    } else {
-      addToCart(book);
-    }
-  };
+  const isWishlisted = wishlist.includes(book.id);
 
   return (
     <article className="book-card">
-      {/* Cover — clicking navigates to the detail page */}
-      <Link to={`/book/${book.id}`} className="book-card__cover-link">
-        <div className="book-card__cover" style={{ '--cover-color': book.cover }}>
-          {book.coverImage && (
-            <img
-              src={book.coverImage}
-              alt={book.title}
-              loading="lazy"
-              className="book-card__cover-image"
-            />
-          )}
-          <span className="book-card__genre">{book.genre}</span>
-          <span className="book-card__cover-title">{book.title}</span>
+      <div className="book-card__cover" style={{ '--cover-color': book.cover }}>
+        <span className="book-card__genre">{book.genre}</span>
+        <span className="book-card__cover-title">{book.title}</span>
+        <div className="book-card__wishlist-overlay">
+          <WishlistButton 
+            active={isWishlisted} 
+            onToggle={() => toggleWishlist(book.id)} 
+          />
         </div>
-      </Link>
+      </div>
 
       {/* Body — title, author, rating/price, actions */}
       <div className="book-card__body">

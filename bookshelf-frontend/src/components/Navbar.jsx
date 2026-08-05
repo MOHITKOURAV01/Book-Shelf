@@ -1,11 +1,13 @@
-import { useState } from 'react';
+import { useState, useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth.js';
+import { WishlistContext } from '../context/WishlistContext.jsx';
 import './Navbar.css';
 
 export default function Navbar({ cartCount, onCartClick, onSearch }) {
   const [mobileOpen, setMobileOpen] = useState(false);
   const { isAuthenticated, logout, user } = useAuth();
+  const { wishlist } = useContext(WishlistContext);
   const navigate = useNavigate();
 
   const handleLogout = async () => {
@@ -42,6 +44,9 @@ export default function Navbar({ cartCount, onCartClick, onSearch }) {
             <a href="/#shelf">The Shelf</a>
             <a href="/#catalog">Browse</a>
             <Link to="/about">About</Link>
+            <Link to="/wishlist" className="nav__wishlist-link">
+              Wishlist <span className="nav__wishlist-count">{wishlist.length}</span>
+            </Link>
             {!isAuthenticated ? (
               <>
                 <Link to="/login">Log In</Link>
@@ -50,6 +55,7 @@ export default function Navbar({ cartCount, onCartClick, onSearch }) {
             ) : (
               <>
                 <Link to="/profile">Profile</Link>
+                <Link to="/account/orders">My Orders</Link>
                 <button onClick={handleLogout} className="nav__logout">
                   Logout
                 </button>
@@ -134,6 +140,9 @@ export default function Navbar({ cartCount, onCartClick, onSearch }) {
             <Link to="/about" onClick={() => setMobileOpen(false)}>
               About
             </Link>
+            <Link to="/wishlist" onClick={() => setMobileOpen(false)}>
+              Wishlist ({wishlist.length})
+            </Link>
             {!isAuthenticated ? (
               <>
                 <Link to="/login" onClick={() => setMobileOpen(false)}>
@@ -147,6 +156,9 @@ export default function Navbar({ cartCount, onCartClick, onSearch }) {
               <>
                 <Link to="/profile" onClick={() => setMobileOpen(false)}>
                   Profile
+                </Link>
+                <Link to="/account/orders" onClick={() => setMobileOpen(false)}>
+                  My Orders
                 </Link>
                 <button
                   onClick={() => {

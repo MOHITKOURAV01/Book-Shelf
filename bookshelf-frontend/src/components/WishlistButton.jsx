@@ -7,7 +7,9 @@ export default function WishlistButton({
 }) {
   const [isActive, setIsActive] = useState(active);
 
-  const handleClick = () => {
+  const handleClick = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
     const next = !isActive;
     setIsActive(next);
     onToggle(next);

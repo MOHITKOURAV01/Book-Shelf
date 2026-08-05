@@ -10,16 +10,21 @@ import Register from './pages/Register.jsx';
 import Profile from './pages/Profile.jsx';
 import ProtectedRoute from './components/ProtectedRoute.jsx';
 import { AuthProvider } from './context/AuthContext.jsx';
+import { WishlistProvider } from './context/WishlistContext.jsx';
 import './index.css';
 
 import Checkout from './pages/Checkout.jsx';
 import OrderConfirmation from './pages/OrderConfirmation.jsx';
+import OrdersPage from './pages/OrdersPage.jsx';
+import OrderDetailsPage from './pages/OrderDetailsPage.jsx';
+import WishlistPage from './pages/WishlistPage.jsx';
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
     <AuthProvider>
-      <BrowserRouter>
-        <Routes>
+      <WishlistProvider>
+        <BrowserRouter>
+          <Routes>
           <Route path="/" element={<App />} />
           <Route path="/about" element={<AboutUs />} />
           <Route path="/privacy" element={<PrivacyPolicy />} />
@@ -36,6 +41,16 @@ ReactDOM.createRoot(document.getElementById('root')).render(
               <OrderConfirmation />
             </ProtectedRoute>
           } />
+          <Route path="/account/orders" element={
+            <ProtectedRoute>
+              <OrdersPage />
+            </ProtectedRoute>
+          } />
+          <Route path="/account/orders/:id" element={
+            <ProtectedRoute>
+              <OrderDetailsPage />
+            </ProtectedRoute>
+          } />
           <Route
             path="/profile"
             element={
@@ -44,8 +59,10 @@ ReactDOM.createRoot(document.getElementById('root')).render(
               </ProtectedRoute>
             }
           />
+          <Route path="/wishlist" element={<WishlistPage />} />
         </Routes>
       </BrowserRouter>
+      </WishlistProvider>
     </AuthProvider>
   </React.StrictMode>
 );
