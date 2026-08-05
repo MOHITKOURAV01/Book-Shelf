@@ -1,10 +1,8 @@
 import { useMemo, useState } from 'react';
-import { useSearchParams } from 'react-router-dom';
-import { useState } from 'react';
-import { Routes, Route } from 'react-router-dom';
 
 import ThemeToggle from './components/ThemeToggle.jsx';
 import ScrollToTop from './components/ScrollToTop.jsx';
+
 import CustomCursor from './components/CustomCursor.jsx';
 import Navbar from './components/Navbar.jsx';
 import Hero from './components/Hero.jsx';
@@ -140,36 +138,20 @@ export default function App() {
             <p className="catalog__count">{visibleBooks.length} titles</p>
           </div>
 
-          <div className="catalog__layout">
-            <FilterSidebar
-              genres={genres}
-              selectedGenres={selectedGenres}
-              onGenreChange={handleGenreChange}
-              minPrice={minPrice}
-              onMinPriceChange={(val) => updateParam('minPrice', val)}
-              maxPrice={maxPrice}
-              onMaxPriceChange={(val) => updateParam('maxPrice', val)}
-              minRating={minRating}
-              onMinRatingChange={(val) => updateParam('minRating', val)}
-              onClearFilters={handleClearFilters}
-              isOpen={isSidebarOpen}
-              onToggle={() => setIsSidebarOpen(!isSidebarOpen)}
-            />
+          <GenreFilter
+            genres={genres}
+            active={activeGenre}
+            onSelect={setActiveGenre}
+          />
 
-            <div className="catalog__grid-container">
-              {visibleBooks.length === 0 ? (
-                <div className="catalog__empty">
-                  <h3>No books found matching your filters.</h3>
-                  <button onClick={handleClearFilters} className="catalog__empty-btn">Clear Filters</button>
-                </div>
-              ) : (
-                <div className="catalog__grid">
-                  {visibleBooks.map((book) => (
-                    <BookCard key={book.id} book={book} onAddToCart={handleAddToCart} />
-                  ))}
-                </div>
-              )}
-            </div>
+          <div className="catalog__grid">
+            {visibleBooks.map((book) => (
+              <BookCard
+                key={book.id}
+                book={book}
+                onAddToCart={handleAddToCart}
+              />
+            ))}
           </div>
         </div>
       </main>

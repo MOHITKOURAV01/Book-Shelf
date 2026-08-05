@@ -26,8 +26,12 @@ body.custom-cursor-active .custom-cursor {
   border-radius: 50%;
   border: 1.5px solid var(--leather);
   background: rgba(184, 92, 44, 0.06);
-  transition: width 0.2s ease, height 0.2s ease, border-color 0.2s ease,
-    background 0.2s ease, opacity 0.2s ease;
+  transition:
+    width 0.2s ease,
+    height 0.2s ease,
+    border-color 0.2s ease,
+    background 0.2s ease,
+    opacity 0.2s ease;
 }
 
 .custom-cursor__ring--hover {

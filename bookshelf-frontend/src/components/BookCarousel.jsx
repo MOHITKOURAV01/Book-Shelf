@@ -1,11 +1,11 @@
-import "./BookCarousel.css";
-import { useRef } from "react";
-import BookCard from "../BookCard/BookCard";
+import './BookCarousel.css';
+import { useRef } from 'react';
+import BookCard from '../BookCard/BookCard';
 
 export default function BookCarousel({
   books = [],
   onAddToCart = () => {},
-  title = "Featured Books",
+  title = 'Featured Books',
 }) {
   const trackRef = useRef(null);
 
@@ -13,8 +13,8 @@ export default function BookCarousel({
     if (!trackRef.current) return;
     const amount = 320;
     trackRef.current.scrollBy({
-      left: direction === "left" ? -amount : amount,
-      behavior: "smooth",
+      left: direction === 'left' ? -amount : amount,
+      behavior: 'smooth',
     });
   };
 
@@ -26,7 +26,7 @@ export default function BookCarousel({
         <div className="book-carousel__controls">
           <button
             className="book-carousel__button"
-            onClick={() => scroll("left")}
+            onClick={() => scroll('left')}
             aria-label="Previous"
           >
             ←
@@ -34,7 +34,7 @@ export default function BookCarousel({
 
           <button
             className="book-carousel__button"
-            onClick={() => scroll("right")}
+            onClick={() => scroll('right')}
             aria-label="Next"
           >
             →
@@ -45,10 +45,7 @@ export default function BookCarousel({
       <div className="book-carousel__track" ref={trackRef}>
         {books.map((book) => (
           <div className="book-carousel__item" key={book.id}>
-            <BookCard
-              book={book}
-              onAddToCart={onAddToCart}
-            />
+            <BookCard book={book} onAddToCart={onAddToCart} />
           </div>
         ))}
       </div>

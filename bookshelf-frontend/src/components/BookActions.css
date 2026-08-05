@@ -1,61 +1,61 @@
 /* BookActions.css */
 
-.book-actions{
-  display:flex;
-  align-items:center;
-  gap:10px;
-  width:100%;
+.book-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
 }
 
-.book-actions__button{
-  flex:1;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  gap:8px;
-  padding:10px 14px;
-  border:1px solid var(--ink,#222);
-  border-radius:6px;
-  background:transparent;
-  color:var(--ink,#222);
-  cursor:pointer;
-  font-size:13px;
-  font-weight:600;
-  transition:all .2s ease;
+.book-actions__button {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 14px;
+  border: 1px solid var(--ink, #222);
+  border-radius: 6px;
+  background: transparent;
+  color: var(--ink, #222);
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 600;
+  transition: all 0.2s ease;
 }
 
-.book-actions__button:hover{
-  background:var(--ink,#222);
-  color:var(--paper,#fff);
+.book-actions__button:hover {
+  background: var(--ink, #222);
+  color: var(--paper, #fff);
 }
 
-.book-actions__icon{
-  width:40px;
-  height:40px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  border:1px solid var(--line,#d5d5d5);
-  background:var(--paper-dim,#fafafa);
-  border-radius:6px;
-  cursor:pointer;
-  font-size:16px;
-  transition:all .2s ease;
+.book-actions__icon {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--line, #d5d5d5);
+  background: var(--paper-dim, #fafafa);
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: all 0.2s ease;
 }
 
-.book-actions__icon:hover{
-  transform:translateY(-2px);
-  border-color:var(--ink,#222);
-  background:var(--paper,#fff);
+.book-actions__icon:hover {
+  transform: translateY(-2px);
+  border-color: var(--ink, #222);
+  background: var(--paper, #fff);
 }
 
-@media (max-width:600px){
-  .book-actions{
-    flex-wrap:wrap;
+@media (max-width: 600px) {
+  .book-actions {
+    flex-wrap: wrap;
   }
 
-  .book-actions__button{
-    width:100%;
-    flex-basis:100%;
+  .book-actions__button {
+    width: 100%;
+    flex-basis: 100%;
   }
 }

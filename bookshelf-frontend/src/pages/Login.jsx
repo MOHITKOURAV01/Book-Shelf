@@ -1,61 +1,70 @@
-import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import './Auth.css';
+import { useState, useEffect } from 'react';
+import { useNavigate, useLocation, Link } from 'react-router-dom';
+import { useAuth } from '../hooks/useAuth.js';
+import './Auth.css'; // We'll need some basic CSS for forms
 
-export default function Login() {
+const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+  const { login, isAuthenticated } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
 
-  const handleSubmit = (e) => {
+  const redirect = new URLSearchParams(location.search).get('redirect') || '/';
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate(redirect);
+    }
+  }, [isAuthenticated, navigate, redirect]);
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // TODO: Connect to backend for JWT authentication
-    console.log('Login attempt with:', { email, password });
-    localStorage.setItem('isAuthenticated', 'true');
-    navigate('/profile');
+    setError('');
+    try {
+      await login({ email, password });
+      navigate(redirect);
+    } catch (err) {
+      setError(err.response?.data?.message || 'Failed to login');
+    }
   };
 
   return (
-    <main className="auth-page">
-      <div className="auth-container">
-        <h1 className="auth-title">Welcome Back</h1>
-        <p className="auth-subtitle">Sign in to your BookShelf account</p>
-        
-        <form className="auth-form" onSubmit={handleSubmit}>
-          <div className="auth-form-group">
-            <label htmlFor="email">Email</label>
-            <input 
-              type="email" 
-              id="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="you@example.com"
-              required 
-            />
-          </div>
-          
-          <div className="auth-form-group">
-            <label htmlFor="password">Password</label>
-            <input 
-              type="password" 
-              id="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              placeholder="••••••••"
-              required 
-            />
-          </div>
-          
-          <button type="submit" className="auth-submit-btn">
-            Sign In
-          </button>
-        </form>
-        
-        <div className="auth-links">
-          Don't have an account? 
-          <Link to="/signup" className="auth-link">Sign up</Link>
+    <div className="auth-container">
+      <h2>Log In</h2>
+      {error && <div className="auth-error">{error}</div>}
+      <form onSubmit={handleSubmit} className="auth-form">
+        <div className="form-group">
+          <label htmlFor="email">Email</label>
+          <input
+            type="email"
+            id="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+          />
         </div>
-      </div>
-    </main>
+        <div className="form-group">
+          <label htmlFor="password">Password</label>
+          <input
+            type="password"
+            id="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+          />
+        </div>
+        <button type="submit" className="auth-button">
+          Login
+        </button>
+      </form>
+      <p>
+        Don't have an account?{' '}
+        <Link to={`/register?redirect=${redirect}`}>Register</Link>
+      </p>
+    </div>
   );
-}
+};
+
+export default Login;
