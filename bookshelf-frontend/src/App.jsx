@@ -15,10 +15,12 @@ import CartDrawer from './components/CartDrawer.jsx';
 import { books, genres } from './data/books.js';
 import './App.css';
 
+import { useNavigate } from 'react-router-dom';
+
 export default function App() {
   const [activeGenre, setActiveGenre] = useState('All');
   const [cart, setCart] = useState([]);
-  const [isCartOpen, setIsCartOpen] = useState(false);
+  const navigate = useNavigate();
 
   const visibleBooks = useMemo(() => {
     if (activeGenre === 'All') return books;
@@ -126,8 +128,8 @@ export default function App() {
       <ThemeToggle />
       <ScrollToTop />
       <CustomCursor />
-      
-      <Navbar cartCount={cart.length} onCartClick={() => {}} />
+
+      <Navbar cartCount={cart.length} onCartClick={() => navigate('/checkout')} />
       <div className="nav-spacer" />
       <Hero />
 
