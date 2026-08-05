@@ -1,23 +1,3 @@
-import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
-import useDebounce from '../hooks/useDebounce';
-import './Navbar.css';
-
-export default function Navbar({ cartCount, onCartClick, onSearch }) {
-  const [mobileOpen, setMobileOpen] = useState(false);
-  const [searchQuery, setSearchQuery] = useState('');
-  
-  const debouncedQuery = useDebounce(searchQuery, 300);
-
-  useEffect(() => {
-    if (onSearch) {
-      onSearch(debouncedQuery);
-    }
-  }, [debouncedQuery, onSearch]);
-
-  const handleSearchChange = (e) => {
-    setSearchQuery(e.target.value);
-  };
 import { useState, useContext } from 'react';
 import { Link } from 'react-router-dom';
 import { useTheme } from '../hooks/useTheme';
@@ -44,16 +24,16 @@ export default function Navbar({ searchQuery, setSearchQuery }) {
                 <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
               </svg>
             </span>
-            {t('navbar.logo')}
+            {t('navbar.logo') || 'BookShelf'}
           </a>
 
           {/* Desktop nav links */}
           <nav className="nav__links">
             <a href="/#shelf">The Shelf</a>
-            <a href="/#catalog">{t('navbar.catalog')}</a>
-            <Link to="/wishlist">{t('navbar.wishlist')}</Link>
-            <Link to="/orders">{t('navbar.orders')}</Link>
-            <Link to="/about">{t('navbar.about')}</Link>
+            <a href="/#catalog">{t('navbar.catalog') || 'Browse'}</a>
+            <Link to="/wishlist">{t('navbar.wishlist') || 'Wishlist'}</Link>
+            <Link to="/orders">{t('navbar.orders') || 'Orders'}</Link>
+            <Link to="/about">{t('navbar.about') || 'About'}</Link>
             <Link to="/login">Login</Link>
           </nav>
 
@@ -62,11 +42,10 @@ export default function Navbar({ searchQuery, setSearchQuery }) {
             <input 
               className="nav__search" 
               type="search" 
-              placeholder="Search titles, authors…" 
+              placeholder={t('navbar.searchPlaceholder') || "Search titles, authors..."} 
               value={searchQuery}
-              onChange={handleSearchChange}
+              onChange={(e) => setSearchQuery(e.target.value)}
             />
-            <input className="nav__search" type="search" placeholder="Search titles, authors…" />
             <button 
               className="nav__theme-toggle" 
               onClick={toggleTheme} 
@@ -91,18 +70,8 @@ export default function Navbar({ searchQuery, setSearchQuery }) {
                 </svg>
               )}
             </button>
-            <button className="nav__cart" onClick={onCartClick} aria-label="Open cart">
-              Cart
-              <span className="nav__cart-count">{cartCount}</span>
-            <input 
-              className="nav__search" 
-              type="search" 
-              placeholder={t('navbar.searchPlaceholder')} 
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-            />
             <button className="nav__cart" onClick={() => setIsCartOpen(true)} aria-label="Open cart">
-              {t('navbar.cart')}
+              {t('navbar.cart') || 'Cart'}
               <span className="nav__cart-count">{cart.length}</span>
             </button>
           </div>
@@ -134,28 +103,23 @@ export default function Navbar({ searchQuery, setSearchQuery }) {
         {/* Mobile dropdown menu */}
         {mobileOpen && (
           <div className="nav__mobile-menu">
-            <a href="#shelf" onClick={() => setMobileOpen(false)}>The Shelf</a>
-            <a href="#catalog" onClick={() => setMobileOpen(false)}>Browse</a>
-            <Link to="/about" onClick={() => setMobileOpen(false)}>About</Link>
-            <input 
-              className="nav__search nav__search--mobile" 
-              type="search" 
-              placeholder="Search titles, authors…" 
-              value={searchQuery}
-              onChange={handleSearchChange}
             <a href="/#shelf" onClick={() => setMobileOpen(false)}>The Shelf</a>
-            <a href="/#catalog" onClick={() => setMobileOpen(false)}>{t('navbar.catalog')}</a>
-            <Link to="/wishlist" onClick={() => setMobileOpen(false)}>{t('navbar.wishlist')}</Link>
-            <Link to="/orders" onClick={() => setMobileOpen(false)}>{t('navbar.orders')}</Link>
-            <Link to="/about" onClick={() => setMobileOpen(false)}>{t('navbar.about')}</Link>
+            <a href="/#catalog" onClick={() => setMobileOpen(false)}>{t('navbar.catalog') || 'Browse'}</a>
+            <Link to="/wishlist" onClick={() => setMobileOpen(false)}>{t('navbar.wishlist') || 'Wishlist'}</Link>
+            <Link to="/orders" onClick={() => setMobileOpen(false)}>{t('navbar.orders') || 'Orders'}</Link>
+            <Link to="/about" onClick={() => setMobileOpen(false)}>{t('navbar.about') || 'About'}</Link>
             <Link to="/login" onClick={() => setMobileOpen(false)}>Login</Link>
             <input 
               className="nav__search nav__search--mobile" 
               type="search" 
-              placeholder={t('navbar.searchPlaceholder')} 
+              placeholder={t('navbar.searchPlaceholder') || "Search titles, authors..."} 
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />
+            {/* Added cart button to mobile menu for completeness! */}
+            <button className="nav__mobile-cart-btn" onClick={() => { setIsCartOpen(true); setMobileOpen(false); }}>
+              {t('navbar.cart') || 'Cart'} ({cart.length})
+            </button>
           </div>
         )}
       </header>
