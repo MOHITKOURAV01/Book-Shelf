@@ -1,0 +1,651 @@
+/* ==========================================
+   GlassmorphismSupport.css
+========================================== */
+
+/* Reset */
+
+*,
+*::before,
+*::after{
+
+    box-sizing:border-box;
+
+}
+
+/* ==========================================
+   Root Variables
+========================================== */
+
+:root{
+
+    --glass-bg:rgba(255,255,255,.18);
+
+    --glass-border:rgba(255,255,255,.25);
+
+    --glass-shadow:0 12px 32px rgba(31,38,135,.25);
+
+    --glass-text:#ffffff;
+
+    --glass-blur:16px;
+
+    --primary:#2563eb;
+
+}
+
+/* ==========================================
+   Demo Background
+========================================== */
+
+body{
+
+    margin:0;
+
+    min-height:100vh;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    background:
+        linear-gradient(
+            135deg,
+            #2563eb,
+            #7c3aed,
+            #db2777
+        );
+
+    font-family:system-ui,sans-serif;
+
+}
+
+/* ==========================================
+   Glass Card
+========================================== */
+
+.glass-card{
+
+    position:relative;
+
+    overflow:hidden;
+
+    width:100%;
+
+    max-width:450px;
+
+    padding:28px;
+
+    border-radius:18px;
+
+    border:1px solid var(--glass-border);
+
+    background:var(--glass-bg);
+
+    backdrop-filter:blur(var(--glass-blur));
+
+    -webkit-backdrop-filter:blur(var(--glass-blur));
+
+    color:var(--glass-text);
+
+    box-shadow:var(--glass-shadow);
+
+    transition:
+        transform .3s ease,
+        box-shadow .3s ease,
+        background .3s ease;
+
+}
+
+/* ==========================================
+   Decorative Effects
+========================================== */
+
+.glass-card::before{
+
+    content:"";
+
+    position:absolute;
+
+    top:-70px;
+
+    right:-70px;
+
+    width:160px;
+
+    height:160px;
+
+    border-radius:50%;
+
+    background:rgba(255,255,255,.15);
+
+    filter:blur(30px);
+
+}
+
+.glass-card::after{
+
+    content:"";
+
+    position:absolute;
+
+    bottom:-60px;
+
+    left:-60px;
+
+    width:130px;
+
+    height:130px;
+
+    border-radius:50%;
+
+    background:rgba(255,255,255,.08);
+
+    filter:blur(25px);
+
+}
+
+/* ==========================================
+   Hover
+========================================== */
+
+.glass-card:hover{
+
+    transform:translateY(-6px);
+
+    box-shadow:
+        0 18px 45px rgba(31,38,135,.35);
+
+}
+
+/* ==========================================
+   Header
+========================================== */
+
+.glass-card__header{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:flex-start;
+
+    gap:16px;
+
+    margin-bottom:20px;
+
+}
+
+.glass-card__title{
+
+    margin:0;
+
+    font-size:28px;
+
+    font-weight:700;
+
+}
+
+.glass-card__subtitle{
+
+    margin-top:8px;
+
+    opacity:.85;
+
+    line-height:1.6;
+
+}
+
+/* ==========================================
+   Badge
+========================================== */
+
+.glass-card__badge{
+
+    padding:6px 12px;
+
+    border-radius:999px;
+
+    background:rgba(255,255,255,.15);
+
+    backdrop-filter:blur(10px);
+
+    font-size:12px;
+
+    font-weight:700;
+
+}
+
+/* ==========================================
+   Content
+========================================== */
+
+.glass-card__content{
+
+    line-height:1.8;
+
+    position:relative;
+
+    z-index:2;
+
+}
+
+/* ==========================================
+   Footer
+========================================== */
+
+.glass-card__footer{
+
+    display:flex;
+
+    justify-content:flex-end;
+
+    gap:12px;
+
+    margin-top:24px;
+
+}
+
+/* ==========================================
+   Buttons
+========================================== */
+
+.glass-card__button{
+
+    padding:10px 18px;
+
+    border:none;
+
+    border-radius:10px;
+
+    background:rgba(255,255,255,.18);
+
+    color:#ffffff;
+
+    cursor:pointer;
+
+    backdrop-filter:blur(12px);
+
+    transition:.25s;
+
+}
+
+.glass-card__button:hover{
+
+    background:rgba(255,255,255,.28);
+
+    transform:translateY(-2px);
+
+}
+
+/* ==========================================
+   Rounded Variants
+========================================== */
+
+.glass-card--rounded-none{
+
+    border-radius:0;
+
+}
+
+.glass-card--rounded-sm{
+
+    border-radius:8px;
+
+}
+
+.glass-card--rounded-md{
+
+    border-radius:16px;
+
+}
+
+.glass-card--rounded-lg{
+
+    border-radius:28px;
+
+}
+
+.glass-card--rounded-xl{
+
+    border-radius:36px;
+
+}
+
+/* ==========================================
+   Shadow Variants
+========================================== */
+
+.glass-card--shadow-sm{
+
+    box-shadow:0 6px 16px rgba(0,0,0,.15);
+
+}
+
+.glass-card--shadow-md{
+
+    box-shadow:0 12px 30px rgba(0,0,0,.20);
+
+}
+
+.glass-card--shadow-lg{
+
+    box-shadow:0 20px 50px rgba(0,0,0,.30);
+
+}
+
+/* ==========================================
+   Blur Variants
+========================================== */
+
+.glass-card--blur-sm{
+
+    backdrop-filter:blur(8px);
+
+}
+
+.glass-card--blur-md{
+
+    backdrop-filter:blur(16px);
+
+}
+
+.glass-card--blur-lg{
+
+    backdrop-filter:blur(24px);
+
+}
+
+.glass-card--blur-xl{
+
+    backdrop-filter:blur(32px);
+
+}
+
+/* ==========================================
+   Color Variants
+========================================== */
+
+.glass-card--blue{
+
+    background:rgba(37,99,235,.18);
+
+}
+
+.glass-card--purple{
+
+    background:rgba(124,58,237,.18);
+
+}
+
+.glass-card--green{
+
+    background:rgba(22,163,74,.18);
+
+}
+
+.glass-card--pink{
+
+    background:rgba(219,39,119,.18);
+
+}
+
+.glass-card--orange{
+
+    background:rgba(234,88,12,.18);
+
+}
+
+/* ==========================================
+   Border Variants
+========================================== */
+
+.glass-card--border-light{
+
+    border-color:rgba(255,255,255,.35);
+
+}
+
+.glass-card--border-primary{
+
+    border-color:rgba(37,99,235,.45);
+
+}
+
+/* ==========================================
+   Glow Effect
+========================================== */
+
+.glass-card--glow{
+
+    box-shadow:
+        0 0 20px rgba(255,255,255,.18),
+        0 0 50px rgba(37,99,235,.25);
+
+}
+
+/* ==========================================
+   Floating Animation
+========================================== */
+
+.glass-card--floating{
+
+    animation:glassFloat 3s ease-in-out infinite;
+
+}
+
+@keyframes glassFloat{
+
+    0%,100%{
+
+        transform:translateY(0);
+
+    }
+
+    50%{
+
+        transform:translateY(-8px);
+
+    }
+
+}
+
+/* ==========================================
+   Pulse Animation
+========================================== */
+
+.glass-card--pulse{
+
+    animation:glassPulse 2.5s infinite;
+
+}
+
+@keyframes glassPulse{
+
+    0%{
+
+        box-shadow:0 0 0 0 rgba(255,255,255,.25);
+
+    }
+
+    70%{
+
+        box-shadow:0 0 0 20px rgba(255,255,255,0);
+
+    }
+
+    100%{
+
+        box-shadow:0 0 0 0 rgba(255,255,255,0);
+
+    }
+
+}
+
+/* ==========================================
+   Shine Effect
+========================================== */
+
+.glass-card--shine{
+
+    position:relative;
+
+}
+
+.glass-card--shine::before{
+
+    content:"";
+
+    position:absolute;
+
+    top:0;
+
+    left:-120%;
+
+    width:60%;
+
+    height:100%;
+
+    background:
+        linear-gradient(
+            120deg,
+            transparent,
+            rgba(255,255,255,.45),
+            transparent
+        );
+
+    transition:left .8s;
+
+}
+
+.glass-card--shine:hover::before{
+
+    left:130%;
+
+}
+
+/* ==========================================
+   Loading
+========================================== */
+
+.glass-card--loading{
+
+    pointer-events:none;
+
+    opacity:.7;
+
+}
+
+.glass-card__spinner{
+
+    width:22px;
+
+    height:22px;
+
+    border:3px solid rgba(255,255,255,.3);
+
+    border-top:3px solid #ffffff;
+
+    border-radius:50%;
+
+    animation:glassSpin .8s linear infinite;
+
+}
+
+@keyframes glassSpin{
+
+    from{
+
+        transform:rotate(0);
+
+    }
+
+    to{
+
+        transform:rotate(360deg);
+
+    }
+
+}
+
+/* ==========================================
+   Responsive
+========================================== */
+
+@media(max-width:768px){
+
+.glass-card{
+
+    max-width:90%;
+
+}
+
+}
+
+@media(max-width:600px){
+
+.glass-card{
+
+    padding:20px;
+
+}
+
+.glass-card__header{
+
+    flex-direction:column;
+
+}
+
+.glass-card__footer{
+
+    flex-direction:column;
+
+}
+
+.glass-card__button{
+
+    width:100%;
+
+}
+
+}
+
+@media(max-width:480px){
+
+.glass-card__title{
+
+    font-size:22px;
+
+}
+
+}
+
+/* ==========================================
+   Accessibility
+========================================== */
+
+.glass-card__button:focus-visible{
+
+    outline:3px solid rgba(255,255,255,.45);
+
+    outline-offset:3px;
+
+}
+
+/* ==========================================
+   Reduced Motion
+========================================== */
+
+@media(prefers-reduced-motion:reduce){
+
+.glass-card,
+.glass-card__button,
+.glass-card__spinner{
+
+    animation:none;
+
+    transition:none;
+
+}
+
+}
