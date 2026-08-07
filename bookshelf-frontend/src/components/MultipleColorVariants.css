@@ -1,0 +1,667 @@
+/* ==========================================
+   MultipleColorVariants.css
+========================================== */
+
+/* Reset */
+
+*,
+*::before,
+*::after{
+
+    box-sizing:border-box;
+
+}
+
+/* ==========================================
+   Base Button
+========================================== */
+
+.color-variant{
+
+    display:inline-flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    gap:8px;
+
+    position:relative;
+
+    overflow:hidden;
+
+    padding:12px 20px;
+
+    border:none;
+
+    border-radius:10px;
+
+    font-size:15px;
+
+    font-weight:600;
+
+    font-family:inherit;
+
+    color:#ffffff;
+
+    cursor:pointer;
+
+    user-select:none;
+
+    transition:
+        background .25s ease,
+        transform .25s ease,
+        box-shadow .25s ease,
+        opacity .25s ease;
+
+}
+
+/* ==========================================
+   Hover / Active
+========================================== */
+
+.color-variant:hover{
+
+    transform:translateY(-2px);
+
+    box-shadow:0 10px 22px rgba(0,0,0,.15);
+
+}
+
+.color-variant:active{
+
+    transform:scale(.97);
+
+}
+
+/* ==========================================
+   Focus
+========================================== */
+
+.color-variant:focus-visible{
+
+    outline:3px solid rgba(37,99,235,.35);
+
+    outline-offset:3px;
+
+}
+
+/* ==========================================
+   Disabled
+========================================== */
+
+.color-variant:disabled,
+.color-variant--disabled{
+
+    opacity:.6;
+
+    cursor:not-allowed;
+
+    pointer-events:none;
+
+}
+
+/* ==========================================
+   Color Variants
+========================================== */
+
+.color-variant--primary{
+
+    background:#2563eb;
+
+}
+
+.color-variant--secondary{
+
+    background:#6b7280;
+
+}
+
+.color-variant--success{
+
+    background:#16a34a;
+
+}
+
+.color-variant--warning{
+
+    background:#f59e0b;
+
+}
+
+.color-variant--danger{
+
+    background:#dc2626;
+
+}
+
+.color-variant--purple{
+
+    background:#7c3aed;
+
+}
+
+.color-variant--pink{
+
+    background:#db2777;
+
+}
+
+.color-variant--teal{
+
+    background:#0d9488;
+
+}
+
+.color-variant--cyan{
+
+    background:#0891b2;
+
+}
+
+.color-variant--indigo{
+
+    background:#4f46e5;
+
+}
+
+.color-variant--orange{
+
+    background:#ea580c;
+
+}
+
+.color-variant--lime{
+
+    background:#65a30d;
+
+}
+
+.color-variant--black{
+
+    background:#111827;
+
+}
+
+.color-variant--white{
+
+    background:#ffffff;
+
+    color:#111827;
+
+    border:1px solid #d1d5db;
+
+}
+
+/* ==========================================
+   Gradient Variants
+========================================== */
+
+.color-variant--gradient-blue{
+
+    background:linear-gradient(135deg,#2563eb,#1d4ed8);
+
+}
+
+.color-variant--gradient-green{
+
+    background:linear-gradient(135deg,#22c55e,#15803d);
+
+}
+
+.color-variant--gradient-purple{
+
+    background:linear-gradient(135deg,#8b5cf6,#6d28d9);
+
+}
+
+.color-variant--gradient-red{
+
+    background:linear-gradient(135deg,#ef4444,#b91c1c);
+
+}
+
+/* ==========================================
+   Outline
+========================================== */
+
+.color-variant--outlined{
+
+    background:transparent;
+
+    border:2px solid currentColor;
+
+    color:inherit;
+
+}
+
+.color-variant--outlined:hover{
+
+    background:rgba(0,0,0,.05);
+
+}
+
+/* ==========================================
+   Ghost
+========================================== */
+
+.color-variant--ghost{
+
+    background:transparent;
+
+    color:#2563eb;
+
+}
+
+.color-variant--ghost:hover{
+
+    background:rgba(37,99,235,.08);
+
+}
+
+/* ==========================================
+   Rounded
+========================================== */
+
+.color-variant--rounded-none{
+
+    border-radius:0;
+
+}
+
+.color-variant--rounded-sm{
+
+    border-radius:6px;
+
+}
+
+.color-variant--rounded-md{
+
+    border-radius:10px;
+
+}
+
+.color-variant--rounded-lg{
+
+    border-radius:18px;
+
+}
+
+.color-variant--rounded-xl{
+
+    border-radius:30px;
+
+}
+
+.color-variant--rounded-full{
+
+    border-radius:999px;
+
+}
+
+/* ==========================================
+   Sizes
+========================================== */
+
+.color-variant--xs{
+
+    padding:6px 12px;
+
+    font-size:11px;
+
+}
+
+.color-variant--sm{
+
+    padding:8px 16px;
+
+    font-size:13px;
+
+}
+
+.color-variant--md{
+
+    padding:12px 20px;
+
+    font-size:15px;
+
+}
+
+.color-variant--lg{
+
+    padding:16px 26px;
+
+    font-size:17px;
+
+}
+
+.color-variant--xl{
+
+    padding:20px 34px;
+
+    font-size:20px;
+
+}
+
+/* ==========================================
+   Width Utilities
+========================================== */
+
+.color-variant--full{
+
+    width:100%;
+
+}
+
+.color-variant--fit{
+
+    width:fit-content;
+
+}
+
+/* ==========================================
+   Shadow Utilities
+========================================== */
+
+.color-variant--shadow-sm{
+
+    box-shadow:0 4px 10px rgba(0,0,0,.10);
+
+}
+
+.color-variant--shadow-md{
+
+    box-shadow:0 10px 24px rgba(0,0,0,.15);
+
+}
+
+.color-variant--shadow-lg{
+
+    box-shadow:0 18px 40px rgba(0,0,0,.20);
+
+}
+
+/* ==========================================
+   Hover Effects
+========================================== */
+
+.color-variant--lift:hover{
+
+    transform:translateY(-5px);
+
+}
+
+.color-variant--scale:hover{
+
+    transform:scale(1.05);
+
+}
+
+.color-variant--rotate:hover{
+
+    transform:rotate(-2deg);
+
+}
+
+.color-variant--glow:hover{
+
+    box-shadow:
+        0 0 16px rgba(37,99,235,.4),
+        0 0 30px rgba(37,99,235,.2);
+
+}
+
+/* ==========================================
+   Floating Animation
+========================================== */
+
+.color-variant--floating{
+
+    animation:colorFloat 3s ease-in-out infinite;
+
+}
+
+@keyframes colorFloat{
+
+    0%,100%{
+
+        transform:translateY(0);
+
+    }
+
+    50%{
+
+        transform:translateY(-6px);
+
+    }
+
+}
+
+/* ==========================================
+   Pulse Animation
+========================================== */
+
+.color-variant--pulse{
+
+    animation:colorPulse 2s infinite;
+
+}
+
+@keyframes colorPulse{
+
+    0%{
+
+        box-shadow:0 0 0 0 rgba(37,99,235,.4);
+
+    }
+
+    70%{
+
+        box-shadow:0 0 0 18px rgba(37,99,235,0);
+
+    }
+
+    100%{
+
+        box-shadow:0 0 0 0 rgba(37,99,235,0);
+
+    }
+
+}
+
+/* ==========================================
+   Shine Effect
+========================================== */
+
+.color-variant--shine{
+
+    position:relative;
+
+}
+
+.color-variant--shine::before{
+
+    content:"";
+
+    position:absolute;
+
+    top:0;
+
+    left:-120%;
+
+    width:60%;
+
+    height:100%;
+
+    background:linear-gradient(
+        120deg,
+        transparent,
+        rgba(255,255,255,.5),
+        transparent
+    );
+
+    transition:left .7s;
+
+}
+
+.color-variant--shine:hover::before{
+
+    left:130%;
+
+}
+
+/* ==========================================
+   Icon
+========================================== */
+
+.color-variant__icon{
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    font-size:18px;
+
+}
+
+.color-variant__text{
+
+    white-space:nowrap;
+
+}
+
+/* ==========================================
+   Badge
+========================================== */
+
+.color-variant__badge{
+
+    position:absolute;
+
+    top:-6px;
+
+    right:-6px;
+
+    width:18px;
+
+    height:18px;
+
+    border-radius:50%;
+
+    background:#ef4444;
+
+    color:#ffffff;
+
+    font-size:10px;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+}
+
+/* ==========================================
+   Tooltip
+========================================== */
+
+.color-variant[data-tooltip]{
+
+    position:relative;
+
+}
+
+.color-variant[data-tooltip]::after{
+
+    content:attr(data-tooltip);
+
+    position:absolute;
+
+    bottom:120%;
+
+    left:50%;
+
+    transform:translateX(-50%);
+
+    padding:6px 10px;
+
+    border-radius:6px;
+
+    background:#111827;
+
+    color:#ffffff;
+
+    white-space:nowrap;
+
+    font-size:12px;
+
+    opacity:0;
+
+    visibility:hidden;
+
+    transition:.25s;
+
+}
+
+.color-variant[data-tooltip]:hover::after{
+
+    opacity:1;
+
+    visibility:visible;
+
+}
+
+/* ==========================================
+   Dark Theme
+========================================== */
+
+.dark .color-variant{
+
+    border-color:#374151;
+
+}
+
+/* ==========================================
+   Responsive
+========================================== */
+
+@media(max-width:768px){
+
+.color-variant{
+
+    width:100%;
+
+}
+
+}
+
+@media(max-width:480px){
+
+.color-variant{
+
+    padding:12px 16px;
+
+    font-size:14px;
+
+}
+
+}
+
+/* ==========================================
+   Reduced Motion
+========================================== */
+
+@media(prefers-reduced-motion:reduce){
+
+.color-variant{
+
+    animation:none;
+
+    transition:none;
+
+}
+
+}
