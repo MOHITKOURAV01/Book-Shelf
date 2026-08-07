@@ -1,54 +1,4 @@
-import { useEffect, useState } from 'react';
-import { useParams, Link } from 'react-router-dom';
-import Navbar from '../components/Navbar';
-import Footer from '../components/Footer';
-import RecentlyViewed from '../components/RecentlyViewed';
-import { books } from '../data/books';
-import './BookDetail.css';
-
-export default function BookDetail() {
-  const { id } = useParams();
-  const [book, setBook] = useState(null);
-  
-  useEffect(() => {
-    // Find book by ID
-    const foundBook = books.find(b => String(b.id) === String(id));
-    setBook(foundBook);
-    
-    if (foundBook) {
-      // Track recently viewed
-      try {
-        const stored = localStorage.getItem('recentlyViewed');
-        let viewedList = stored ? JSON.parse(stored) : [];
-        
-        // Remove if it exists to push to front
-        viewedList = viewedList.filter(bookId => String(bookId) !== String(foundBook.id));
-        
-        // Add to front
-        viewedList.unshift(foundBook.id);
-        
-        // Cap at 10 items
-        if (viewedList.length > 10) {
-          viewedList = viewedList.slice(0, 10);
-        }
-        
-        localStorage.setItem('recentlyViewed', JSON.stringify(viewedList));
-      } catch (e) {
-        console.error('Failed to update recently viewed:', e);
-      }
-    }
-  }, [id]);
-
-  if (!book) {
-    return (
-      <div className="book-detail-page">
-        <Navbar cartCount={0} onCartClick={() => {}} />
-        <main className="book-detail-main not-found">
-          <h2>Book Not Found</h2>
-          <Link to="/" className="btn-return">Return Home</Link>
-        </main>
-        <Footer />
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { books } from '../data/books.js';
 import Rating from '../components/Rating.jsx';
@@ -57,6 +7,7 @@ import SkeletonLoader from '../components/SkeletonLoader.jsx';
 import { CartContext } from '../context/CartContext.jsx';
 import { WishlistContext } from '../context/WishlistContext.jsx';
 import { useTranslation } from 'react-i18next';
+import BookCard from '../components/BookCard.jsx';
 import './BookDetail.css';
 
 export default function BookDetail() {
@@ -70,7 +21,7 @@ export default function BookDetail() {
   const { addToCart } = useContext(CartContext);
   const { wishlist, toggleWishlist } = useContext(WishlistContext);
 
-  const book = books.find((item) => item.id === id);
+  const book = books.find((item) => String(item.id) === String(id));
 
   useEffect(() => {
     const timer = setTimeout(() => setLoading(false), 700);
@@ -111,38 +62,14 @@ export default function BookDetail() {
   if (!book) {
     return (
       <div className="book-detail-not-found">
-        <h2>{t('bookDetail.notFound')}</h2>
-        <Link to="/" className="book-detail-back-link">{t('bookDetail.returnToCatalog')}</Link>
+        <h2>{t('bookDetail.notFound') || 'Book Not Found'}</h2>
+        <Link to="/" className="book-detail-back-link">{t('bookDetail.returnToCatalog') || 'Return to Catalog'}</Link>
       </div>
     );
   }
 
-  return (
-    <div className="book-detail-page">
-      <Navbar cartCount={0} onCartClick={() => {}} />
-      <div className="nav-spacer" />
-      
-      <main className="book-detail-main">
-        <div className="book-detail-content">
-          <div className="book-detail-image-container">
-            <img src={book.coverImage} alt={book.title} className="book-detail-image" />
-          </div>
-          <div className="book-detail-info">
-            <h1 className="book-detail-title">{book.title}</h1>
-            <p className="book-detail-author">by {book.author}</p>
-            <p className="book-detail-price">${book.price.toFixed(2)}</p>
-            <p className="book-detail-description">{book.description}</p>
-            <button className="btn-add-to-cart">Add to Cart</button>
-          </div>
-        </div>
-      </main>
-
-      <RecentlyViewed currentBookId={book.id} />
-      
-      <Footer />
-    </div>
   const relatedBooks = books
-    .filter((b) => b.genre === book.genre && b.id !== book.id)
+    .filter((b) => b.genre === book.genre && String(b.id) !== String(book.id))
     .slice(0, 4);
 
   return (
@@ -157,7 +84,7 @@ export default function BookDetail() {
 
         <div className="book-detail-content">
           <h1 className="book-detail-title">{book.title}</h1>
-          <p className="book-detail-author">{t('bookDetail.by')} {book.author}</p>
+          <p className="book-detail-author">{t('bookDetail.by') || 'by'} {book.author}</p>
 
           <div className="book-detail-metadata">
             <span className="book-detail-badge">{book.genre}</span>
@@ -170,13 +97,13 @@ export default function BookDetail() {
           </div>
 
           <div className="book-detail-extra-info">
-            {book.isbn && <p><strong>{t('bookDetail.isbn')}</strong> {book.isbn}</p>}
-            {book.year && <p><strong>{t('bookDetail.publicationYear')}</strong> {book.year}</p>}
+            {book.isbn && <p><strong>{t('bookDetail.isbn') || 'ISBN:'}</strong> {book.isbn}</p>}
+            {book.year && <p><strong>{t('bookDetail.publicationYear') || 'Year:'}</strong> {book.year}</p>}
           </div>
 
           <div className="book-detail-actions">
             <button className="book-detail-add-btn" onClick={() => addToCart(book)}>
-              {t('bookDetail.addToCart')}
+              {t('bookDetail.addToCart') || 'Add to Cart'}
             </button>
             <WishlistButton active={wishlist?.includes(book.id)} onToggle={() => toggleWishlist(book.id)} />
           </div>
@@ -184,7 +111,7 @@ export default function BookDetail() {
       </div>
       
       <div className="book-review-section">
-        <h2 className="book-review-title">{t('bookDetail.writeReview')}</h2>
+        <h2 className="book-review-title">{t('bookDetail.writeReview') || 'Write a Review'}</h2>
         <form className="book-review-form" onSubmit={handleReviewSubmit}>
           <div className="book-review-rating">
             <Rating value={rating} onChange={setRating} />
@@ -193,19 +120,19 @@ export default function BookDetail() {
           {successMsg && <p className="book-review-success">{successMsg}</p>}
           <textarea
             className="book-review-textarea"
-            placeholder={t('bookDetail.reviewPlaceholder')}
+            placeholder={t('bookDetail.reviewPlaceholder') || 'Share your thoughts...'}
             value={reviewText}
             onChange={(e) => setReviewText(e.target.value)}
             rows={4}
             maxLength={1000}
           />
-          <button type="submit" className="book-review-submit-btn">{t('bookDetail.submitReview')}</button>
+          <button type="submit" className="book-review-submit-btn">{t('bookDetail.submitReview') || 'Submit'}</button>
         </form>
       </div>
 
       {relatedBooks.length > 0 && (
         <div className="book-related-section">
-          <h2 className="book-related-title">{t('bookDetail.relatedBooks')}</h2>
+          <h2 className="book-related-title">{t('bookDetail.relatedBooks') || 'Related Books'}</h2>
           <div className="book-related-grid">
             {relatedBooks.map(relatedBook => (
               <BookCard key={relatedBook.id} book={relatedBook} />
