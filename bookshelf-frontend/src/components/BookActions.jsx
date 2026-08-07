@@ -1,4 +1,4 @@
-import "./BookActions.css";
+import './BookActions.css';
 
 export default function BookActions({
   book,

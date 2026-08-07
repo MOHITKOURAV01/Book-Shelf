@@ -44,7 +44,9 @@
   background: var(--leather);
   padding: 12px 22px;
   border-radius: 4px;
-  transition: background 0.15s ease, transform 0.15s ease;
+  transition:
+    background 0.15s ease,
+    transform 0.15s ease;
 }
 
 .hero__cta:hover {
@@ -69,7 +71,9 @@
   height: var(--spine-height);
   background: var(--spine-color);
   border-radius: 3px 3px 2px 2px;
-  box-shadow: inset -6px 0 10px -6px rgba(0,0,0,0.4), 0 6px 10px -8px rgba(0,0,0,0.5);
+  box-shadow:
+    inset -6px 0 10px -6px rgba(0, 0, 0, 0.4),
+    0 6px 10px -8px rgba(0, 0, 0, 0.5);
   transform-origin: bottom center;
   transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
   cursor: pointer;
@@ -113,7 +117,9 @@
   gap: 2px;
   opacity: 0;
   pointer-events: none;
-  transition: opacity 0.2s ease, transform 0.2s ease;
+  transition:
+    opacity 0.2s ease,
+    transform 0.2s ease;
 }
 
 .shelf__tag strong {
@@ -143,7 +149,7 @@
   margin: 0 24px;
   background: linear-gradient(180deg, var(--leather-deep), var(--leather));
   border-radius: 0 0 4px 4px;
-  box-shadow: 0 8px 16px -6px rgba(34,30,25,0.4);
+  box-shadow: 0 8px 16px -6px rgba(34, 30, 25, 0.4);
 }
 
 @media (max-width: 720px) {

@@ -8,7 +8,9 @@
   min-height: 100vh;
   font-family: 'Inter', sans-serif;
   overflow-x: hidden;
-  transition: background-color 0.25s ease, color 0.25s ease;
+  transition:
+    background-color 0.25s ease,
+    color 0.25s ease;
 }
 
 /* ── Hero section ── */
@@ -26,7 +28,11 @@
   transform: translateX(-50%);
   width: 550px;
   height: 550px;
-  background: radial-gradient(circle, rgba(184, 92, 44, 0.06) 0%, transparent 70%);
+  background: radial-gradient(
+    circle,
+    rgba(184, 92, 44, 0.06) 0%,
+    transparent 70%
+  );
   pointer-events: none;
 }
 
@@ -118,7 +124,9 @@
   border: 1px solid var(--line);
   border-radius: 12px;
   padding: 24px 20px;
-  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  transition:
+    transform 0.25s ease,
+    box-shadow 0.25s ease;
 }
 
 .tos-summary__card:hover {
@@ -390,27 +398,31 @@
 /* ═══════════════════════════════════════════════════
    Dark mode overrides
    ═══════════════════════════════════════════════════ */
-[data-theme="dark"] .tos-hero::before {
-  background: radial-gradient(circle, rgba(217, 121, 61, 0.08) 0%, transparent 70%);
+[data-theme='dark'] .tos-hero::before {
+  background: radial-gradient(
+    circle,
+    rgba(217, 121, 61, 0.08) 0%,
+    transparent 70%
+  );
 }
 
-[data-theme="dark"] .tos-summary__card {
+[data-theme='dark'] .tos-summary__card {
   background: var(--paper-dim);
 }
 
-[data-theme="dark"] .tos-summary__card:hover {
+[data-theme='dark'] .tos-summary__card:hover {
   box-shadow: 0 16px 36px -12px rgba(0, 0, 0, 0.4);
 }
 
-[data-theme="dark"] .tos-toc__list li a:hover {
+[data-theme='dark'] .tos-toc__list li a:hover {
   background: rgba(217, 121, 61, 0.12);
 }
 
-[data-theme="dark"] .tos-section__number {
+[data-theme='dark'] .tos-section__number {
   color: rgba(243, 236, 221, 0.04);
 }
 
-[data-theme="dark"] .tos-callout {
+[data-theme='dark'] .tos-callout {
   background: rgba(47, 110, 95, 0.08);
   border-color: rgba(47, 110, 95, 0.18);
 }

@@ -8,7 +8,9 @@
   min-height: 100vh;
   font-family: 'Inter', sans-serif;
   overflow-x: hidden;
-  transition: background-color 0.25s ease, color 0.25s ease;
+  transition:
+    background-color 0.25s ease,
+    color 0.25s ease;
 }
 
 /* ── Hero ── */
@@ -26,7 +28,11 @@
   transform: translateX(-50%);
   width: 500px;
   height: 500px;
-  background: radial-gradient(circle, rgba(31, 75, 67, 0.05) 0%, transparent 70%);
+  background: radial-gradient(
+    circle,
+    rgba(31, 75, 67, 0.05) 0%,
+    transparent 70%
+  );
   pointer-events: none;
 }
 
@@ -345,31 +351,35 @@
 /* ═══════════════════════════════════════════════════
    Dark mode overrides
    ═══════════════════════════════════════════════════ */
-[data-theme="dark"] .privacy-hero::before {
-  background: radial-gradient(circle, rgba(47, 110, 95, 0.08) 0%, transparent 70%);
+[data-theme='dark'] .privacy-hero::before {
+  background: radial-gradient(
+    circle,
+    rgba(47, 110, 95, 0.08) 0%,
+    transparent 70%
+  );
 }
 
-[data-theme="dark"] .privacy-section__number {
+[data-theme='dark'] .privacy-section__number {
   color: rgba(243, 236, 221, 0.04);
 }
 
-[data-theme="dark"] .privacy-toc__list a:hover {
+[data-theme='dark'] .privacy-toc__list a:hover {
   background: rgba(243, 236, 221, 0.04);
 }
 
-[data-theme="dark"] .privacy-table thead {
+[data-theme='dark'] .privacy-table thead {
   background: rgba(243, 236, 221, 0.03);
 }
 
-[data-theme="dark"] .privacy-table td {
+[data-theme='dark'] .privacy-table td {
   border-bottom-color: rgba(243, 236, 221, 0.04);
 }
 
-[data-theme="dark"] .privacy-table code {
+[data-theme='dark'] .privacy-table code {
   background: rgba(217, 121, 61, 0.12);
 }
 
-[data-theme="dark"] .privacy-callout {
+[data-theme='dark'] .privacy-callout {
   background: rgba(47, 110, 95, 0.08);
   border-color: rgba(47, 110, 95, 0.18);
 }

@@ -1,59 +1,59 @@
 /* BookBadge.css */
 
-.book-badge{
-  display:inline-flex;
-  align-items:center;
-  justify-content:center;
-  padding:4px 10px;
-  border-radius:999px;
-  font-family:var(--font-mono, monospace);
-  font-size:11px;
-  font-weight:600;
-  letter-spacing:.05em;
-  text-transform:uppercase;
-  border:1px solid transparent;
-  user-select:none;
-  white-space:nowrap;
+.book-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-family: var(--font-mono, monospace);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  border: 1px solid transparent;
+  user-select: none;
+  white-space: nowrap;
 }
 
-.book-badge--best-seller{
-  background:#fef3c7;
-  color:#92400e;
-  border-color:#f59e0b;
+.book-badge--best-seller {
+  background: #fef3c7;
+  color: #92400e;
+  border-color: #f59e0b;
 }
 
-.book-badge--new-arrival{
-  background:#dcfce7;
-  color:#166534;
-  border-color:#22c55e;
+.book-badge--new-arrival {
+  background: #dcfce7;
+  color: #166534;
+  border-color: #22c55e;
 }
 
-.book-badge--editors-pick{
-  background:#dbeafe;
-  color:#1d4ed8;
-  border-color:#3b82f6;
+.book-badge--editors-pick {
+  background: #dbeafe;
+  color: #1d4ed8;
+  border-color: #3b82f6;
 }
 
-.book-badge--limited-edition{
-  background:#fce7f3;
-  color:#9d174d;
-  border-color:#ec4899;
+.book-badge--limited-edition {
+  background: #fce7f3;
+  color: #9d174d;
+  border-color: #ec4899;
 }
 
-.book-badge--trending{
-  background:#fee2e2;
-  color:#b91c1c;
-  border-color:#ef4444;
+.book-badge--trending {
+  background: #fee2e2;
+  color: #b91c1c;
+  border-color: #ef4444;
 }
 
-.book-badge--sale{
-  background:#ede9fe;
-  color:#5b21b6;
-  border-color:#8b5cf6;
+.book-badge--sale {
+  background: #ede9fe;
+  color: #5b21b6;
+  border-color: #8b5cf6;
 }
 
-.book-badge--default{
-  background:var(--paper-dim,#f5f5f5);
-  color:var(--ink,#333);
-  border-color:var(--line,#d4d4d4);
+.book-badge--default {
+  background: var(--paper-dim, #f5f5f5);
+  color: var(--ink, #333);
+  border-color: var(--line, #d4d4d4);
 }

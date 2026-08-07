@@ -3,6 +3,7 @@ import { Routes, Route } from 'react-router-dom';
 
 import ThemeToggle from './components/ThemeToggle.jsx';
 import ScrollToTop from './components/ScrollToTop.jsx';
+
 import CustomCursor from './components/CustomCursor.jsx';
 import Navbar from './components/Navbar.jsx';
 import Footer from './components/Footer.jsx';

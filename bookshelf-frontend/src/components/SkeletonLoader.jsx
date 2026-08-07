@@ -1,17 +1,11 @@
-import "./SkeletonLoader.css";
+import './SkeletonLoader.css';
 
-export default function SkeletonLoader({
-  variant = "card",
-  count = 1,
-}) {
+export default function SkeletonLoader({ variant = 'card', count = 1 }) {
   return (
     <>
       {Array.from({ length: count }).map((_, index) => (
-        <div
-          key={index}
-          className={`skeleton skeleton--${variant}`}
-        >
-          {variant === "card" && (
+        <div key={index} className={`skeleton skeleton--${variant}`}>
+          {variant === 'card' && (
             <>
               <div className="skeleton__cover shimmer"></div>
               <div className="skeleton__body">
@@ -23,7 +17,7 @@ export default function SkeletonLoader({
             </>
           )}
 
-          {variant === "text" && (
+          {variant === 'text' && (
             <div className="skeleton__text-block">
               <div className="skeleton__text shimmer"></div>
               <div className="skeleton__text shimmer"></div>
@@ -31,7 +25,7 @@ export default function SkeletonLoader({
             </div>
           )}
 
-          {variant === "avatar" && (
+          {variant === 'avatar' && (
             <div className="skeleton__avatar shimmer"></div>
           )}
 
