@@ -1,0 +1,568 @@
+/* ==========================================
+   FloatingAnimation.css
+========================================== */
+
+/* Reset */
+
+*,
+*::before,
+*::after{
+
+    box-sizing:border-box;
+
+}
+
+/* ==========================================
+   Root Variables
+========================================== */
+
+:root{
+
+    --float-distance:8px;
+
+    --float-duration:3s;
+
+    --float-delay:0s;
+
+    --float-scale:1;
+
+    --float-shadow:0 12px 28px rgba(37,99,235,.25);
+
+    --float-color:#2563eb;
+
+    --float-text:#ffffff;
+
+}
+
+/* ==========================================
+   Floating Container
+========================================== */
+
+.floating-animation{
+
+    position:relative;
+
+    overflow:hidden;
+
+    display:inline-flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    gap:10px;
+
+    min-width:120px;
+
+    padding:20px 24px;
+
+    border:none;
+
+    border-radius:16px;
+
+    background:var(--float-color);
+
+    color:var(--float-text);
+
+    font-size:15px;
+
+    font-weight:600;
+
+    text-align:center;
+
+    cursor:pointer;
+
+    user-select:none;
+
+    box-shadow:var(--float-shadow);
+
+    animation:
+        float var(--float-duration) ease-in-out infinite;
+
+    animation-delay:var(--float-delay);
+
+    transition:
+        transform .3s ease,
+        box-shadow .3s ease,
+        background .3s ease,
+        opacity .3s ease;
+
+}
+
+/* ==========================================
+   Decorative Glow
+========================================== */
+
+.floating-animation::before{
+
+    content:"";
+
+    position:absolute;
+
+    top:-60px;
+
+    right:-60px;
+
+    width:140px;
+
+    height:140px;
+
+    border-radius:50%;
+
+    background:rgba(255,255,255,.18);
+
+    filter:blur(20px);
+
+}
+
+.floating-animation::after{
+
+    content:"";
+
+    position:absolute;
+
+    bottom:-50px;
+
+    left:-50px;
+
+    width:110px;
+
+    height:110px;
+
+    border-radius:50%;
+
+    background:rgba(255,255,255,.08);
+
+    filter:blur(24px);
+
+}
+
+/* ==========================================
+   Hover
+========================================== */
+
+.floating-animation:hover{
+
+    transform:translateY(-4px) scale(1.02);
+
+    box-shadow:0 20px 42px rgba(37,99,235,.35);
+
+}
+
+.floating-animation:active{
+
+    transform:scale(.97);
+
+}
+
+/* ==========================================
+   Focus
+========================================== */
+
+.floating-animation:focus-visible{
+
+    outline:3px solid rgba(37,99,235,.35);
+
+    outline-offset:4px;
+
+}
+
+/* ==========================================
+   Paused
+========================================== */
+
+.floating-animation--paused{
+
+    animation-play-state:paused;
+
+}
+
+/* ==========================================
+   Direction Variants
+========================================== */
+
+.floating-animation--up{
+
+    animation-name:floatUp;
+
+}
+
+.floating-animation--down{
+
+    animation-name:floatDown;
+
+}
+
+.floating-animation--left{
+
+    animation-name:floatLeft;
+
+}
+
+.floating-animation--right{
+
+    animation-name:floatRight;
+
+}
+
+@keyframes floatUp{
+
+    0%,100%{
+
+        transform:translateY(0);
+
+    }
+
+    50%{
+
+        transform:translateY(calc(var(--float-distance)*-1));
+
+    }
+
+}
+
+@keyframes floatDown{
+
+    0%,100%{
+
+        transform:translateY(0);
+
+    }
+
+    50%{
+
+        transform:translateY(var(--float-distance));
+
+    }
+
+}
+
+@keyframes floatLeft{
+
+    0%,100%{
+
+        transform:translateX(0);
+
+    }
+
+    50%{
+
+        transform:translateX(calc(var(--float-distance)*-1));
+
+    }
+
+}
+
+@keyframes floatRight{
+
+    0%,100%{
+
+        transform:translateX(0);
+
+    }
+
+    50%{
+
+        transform:translateX(var(--float-distance));
+
+    }
+
+}
+
+/* ==========================================
+   Size Variants
+========================================== */
+
+.floating-animation--sm{
+
+    padding:12px 18px;
+
+    font-size:13px;
+
+}
+
+.floating-animation--md{
+
+    padding:20px 24px;
+
+    font-size:15px;
+
+}
+
+.floating-animation--lg{
+
+    padding:28px 34px;
+
+    font-size:18px;
+
+}
+
+/* ==========================================
+   Rounded Variants
+========================================== */
+
+.floating-animation--rounded-sm{
+
+    border-radius:8px;
+
+}
+
+.floating-animation--rounded-md{
+
+    border-radius:16px;
+
+}
+
+.floating-animation--rounded-lg{
+
+    border-radius:28px;
+
+}
+
+.floating-animation--rounded-full{
+
+    border-radius:999px;
+
+}
+
+/* ==========================================
+   Color Variants
+========================================== */
+
+.floating-animation--primary{
+
+    background:#2563eb;
+
+}
+
+.floating-animation--success{
+
+    background:#16a34a;
+
+}
+
+.floating-animation--warning{
+
+    background:#f59e0b;
+
+}
+
+.floating-animation--danger{
+
+    background:#dc2626;
+
+}
+
+.floating-animation--purple{
+
+    background:#7c3aed;
+
+}
+
+.floating-animation--pink{
+
+    background:#db2777;
+
+}
+
+.floating-animation--teal{
+
+    background:#0d9488;
+
+}
+
+/* ==========================================
+   Gradient Variants
+========================================== */
+
+.floating-animation--gradient-blue{
+
+    background:linear-gradient(135deg,#2563eb,#1d4ed8);
+
+}
+
+.floating-animation--gradient-purple{
+
+    background:linear-gradient(135deg,#7c3aed,#5b21b6);
+
+}
+
+.floating-animation--gradient-green{
+
+    background:linear-gradient(135deg,#22c55e,#15803d);
+
+}
+
+/* ==========================================
+   Shadow Variants
+========================================== */
+
+.floating-animation--shadow-sm{
+
+    box-shadow:0 6px 14px rgba(0,0,0,.15);
+
+}
+
+.floating-animation--shadow-md{
+
+    box-shadow:0 12px 28px rgba(0,0,0,.20);
+
+}
+
+.floating-animation--shadow-lg{
+
+    box-shadow:0 20px 45px rgba(0,0,0,.30);
+
+}
+
+/* ==========================================
+   Glow Effect
+========================================== */
+
+.floating-animation--glow{
+
+    box-shadow:
+        0 0 20px rgba(37,99,235,.35),
+        0 0 40px rgba(37,99,235,.20);
+
+}
+
+/* ==========================================
+   Pulse Animation
+========================================== */
+
+.floating-animation--pulse{
+
+    animation:
+        float var(--float-duration) ease-in-out infinite,
+        pulse 2.5s infinite;
+
+}
+
+@keyframes pulse{
+
+    0%{
+
+        box-shadow:0 0 0 0 rgba(37,99,235,.35);
+
+    }
+
+    70%{
+
+        box-shadow:0 0 0 18px rgba(37,99,235,0);
+
+    }
+
+    100%{
+
+        box-shadow:0 0 0 0 rgba(37,99,235,0);
+
+    }
+
+}
+
+/* ==========================================
+   Loading
+========================================== */
+
+.floating-animation--loading{
+
+    pointer-events:none;
+
+    opacity:.75;
+
+}
+
+.floating-animation__spinner{
+
+    width:18px;
+
+    height:18px;
+
+    border:3px solid rgba(255,255,255,.3);
+
+    border-top-color:#ffffff;
+
+    border-radius:50%;
+
+    animation:spin .8s linear infinite;
+
+}
+
+@keyframes spin{
+
+    from{
+
+        transform:rotate(0);
+
+    }
+
+    to{
+
+        transform:rotate(360deg);
+
+    }
+
+}
+
+/* ==========================================
+   Dark Theme
+========================================== */
+
+.dark .floating-animation{
+
+    background:#3b82f6;
+
+}
+
+/* ==========================================
+   Responsive
+========================================== */
+
+@media(max-width:768px){
+
+.floating-animation{
+
+    width:100%;
+
+}
+
+}
+
+@media(max-width:600px){
+
+.floating-animation{
+
+    padding:16px;
+
+    font-size:14px;
+
+}
+
+}
+
+@media(max-width:480px){
+
+.floating-animation{
+
+    border-radius:14px;
+
+}
+
+}
+
+/* ==========================================
+   Accessibility
+========================================== */
+
+@media(prefers-reduced-motion:reduce){
+
+.floating-animation{
+
+    animation:none;
+
+    transition:none;
+
+}
+
+}
