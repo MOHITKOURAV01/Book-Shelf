@@ -1,0 +1,452 @@
+/* ==========================================
+   PulseAnimation.css
+========================================== */
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+/* ==========================================
+   Root Component
+========================================== */
+
+.pulse-animation {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+
+    min-width: 120px;
+    padding: 16px 22px;
+
+    border: 1px solid transparent;
+    border-radius: 14px;
+
+    background: #2563eb;
+    color: #fff;
+
+    font-family: inherit;
+    font-size: 15px;
+    font-weight: 600;
+    line-height: 1.4;
+
+    text-align: center;
+    user-select: none;
+
+    cursor: pointer;
+
+    animation:
+        pulse
+        var(--pulse-duration, 2s)
+        ease-in-out
+        infinite;
+
+    transition:
+        transform .25s ease,
+        box-shadow .25s ease,
+        opacity .25s ease,
+        background .25s ease;
+}
+
+/* ==========================================
+   Paused State
+========================================== */
+
+.pulse-animation--paused {
+    animation-play-state: paused;
+}
+
+/* ==========================================
+   Color Variants
+========================================== */
+
+.pulse-animation--primary {
+    background: #2563eb;
+}
+
+.pulse-animation--success {
+    background: #16a34a;
+}
+
+.pulse-animation--warning {
+    background: #f59e0b;
+}
+
+.pulse-animation--danger {
+    background: #dc2626;
+}
+
+.pulse-animation--purple {
+    background: #7c3aed;
+}
+
+.pulse-animation--pink {
+    background: #db2777;
+}
+
+.pulse-animation--teal {
+    background: #0d9488;
+}
+
+/* ==========================================
+   Base Pulse Animation
+========================================== */
+
+@keyframes pulse {
+
+    0%,
+    100% {
+        transform: scale(1);
+        box-shadow:
+            0 0 0 0 rgba(37, 99, 235, .35);
+    }
+
+    50% {
+        transform:
+            scale(var(--pulse-scale, 1.04));
+
+        box-shadow:
+            0 0 0 16px rgba(37, 99, 235, 0);
+    }
+}
+
+/* ==========================================
+   Success Pulse
+========================================== */
+
+.pulse-animation--success {
+    animation-name: pulse-success;
+}
+
+@keyframes pulse-success {
+
+    0%,
+    100% {
+        transform: scale(1);
+        box-shadow:
+            0 0 0 0 rgba(22, 163, 74, .35);
+    }
+
+    50% {
+        transform:
+            scale(var(--pulse-scale, 1.04));
+
+        box-shadow:
+            0 0 0 16px rgba(22, 163, 74, 0);
+    }
+}
+
+/* ==========================================
+   Warning Pulse
+========================================== */
+
+.pulse-animation--warning {
+    animation-name: pulse-warning;
+}
+
+@keyframes pulse-warning {
+
+    0%,
+    100% {
+        transform: scale(1);
+        box-shadow:
+            0 0 0 0 rgba(245, 158, 11, .35);
+    }
+
+    50% {
+        transform:
+            scale(var(--pulse-scale, 1.04));
+
+        box-shadow:
+            0 0 0 16px rgba(245, 158, 11, 0);
+    }
+}
+
+/* ==========================================
+   Danger Pulse
+========================================== */
+
+.pulse-animation--danger {
+    animation-name: pulse-danger;
+}
+
+@keyframes pulse-danger {
+
+    0%,
+    100% {
+        transform: scale(1);
+        box-shadow:
+            0 0 0 0 rgba(220, 38, 38, .35);
+    }
+
+    50% {
+        transform:
+            scale(var(--pulse-scale, 1.04));
+
+        box-shadow:
+            0 0 0 16px rgba(220, 38, 38, 0);
+    }
+}
+
+/* ==========================================
+   Purple Pulse
+========================================== */
+
+.pulse-animation--purple {
+    animation-name: pulse-purple;
+}
+
+@keyframes pulse-purple {
+
+    0%,
+    100% {
+        transform: scale(1);
+        box-shadow:
+            0 0 0 0 rgba(124, 58, 237, .35);
+    }
+
+    50% {
+        transform:
+            scale(var(--pulse-scale, 1.04));
+
+        box-shadow:
+            0 0 0 16px rgba(124, 58, 237, 0);
+    }
+}
+
+/* ==========================================
+   Pink Pulse
+========================================== */
+
+.pulse-animation--pink {
+    animation-name: pulse-pink;
+}
+
+@keyframes pulse-pink {
+
+    0%,
+    100% {
+        transform: scale(1);
+        box-shadow:
+            0 0 0 0 rgba(219, 39, 119, .35);
+    }
+
+    50% {
+        transform:
+            scale(var(--pulse-scale, 1.04));
+
+        box-shadow:
+            0 0 0 16px rgba(219, 39, 119, 0);
+    }
+}
+
+/* ==========================================
+   Teal Pulse
+========================================== */
+
+.pulse-animation--teal {
+    animation-name: pulse-teal;
+}
+
+@keyframes pulse-teal {
+
+    0%,
+    100% {
+        transform: scale(1);
+        box-shadow:
+            0 0 0 0 rgba(13, 148, 136, .35);
+    }
+
+    50% {
+        transform:
+            scale(var(--pulse-scale, 1.04));
+
+        box-shadow:
+            0 0 0 16px rgba(13, 148, 136, 0);
+    }
+}
+
+/* ==========================================
+   Hover
+========================================== */
+
+.pulse-animation:hover {
+    transform: scale(1.02);
+}
+
+/* ==========================================
+   Active
+========================================== */
+
+.pulse-animation:active {
+    transform: scale(.97);
+}
+
+/* ==========================================
+   Focus
+========================================== */
+
+.pulse-animation:focus-visible {
+    outline: 3px solid rgba(37, 99, 235, .35);
+    outline-offset: 4px;
+}
+
+/* ==========================================
+   Size Variants
+========================================== */
+
+.pulse-animation--sm {
+    min-width: 90px;
+    padding: 10px 16px;
+    font-size: 13px;
+}
+
+.pulse-animation--md {
+    padding: 16px 22px;
+    font-size: 15px;
+}
+
+.pulse-animation--lg {
+    min-width: 150px;
+    padding: 20px 30px;
+    font-size: 18px;
+}
+
+/* ==========================================
+   Rounded Variants
+========================================== */
+
+.pulse-animation--rounded-sm {
+    border-radius: 8px;
+}
+
+.pulse-animation--rounded-md {
+    border-radius: 14px;
+}
+
+.pulse-animation--rounded-lg {
+    border-radius: 24px;
+}
+
+.pulse-animation--rounded-full {
+    border-radius: 999px;
+}
+
+/* ==========================================
+   Outline Variant
+========================================== */
+
+.pulse-animation--outlined {
+    background: transparent;
+    color: #2563eb;
+    border-color: #2563eb;
+}
+
+.pulse-animation--outlined:hover {
+    background: rgba(37, 99, 235, .08);
+}
+
+/* ==========================================
+   Glow Variant
+========================================== */
+
+.pulse-animation--glow {
+    box-shadow:
+        0 0 15px rgba(37, 99, 235, .3),
+        0 0 35px rgba(37, 99, 235, .15);
+}
+
+/* ==========================================
+   Loading State
+========================================== */
+
+.pulse-animation--loading {
+    pointer-events: none;
+    opacity: .7;
+}
+
+.pulse-animation__spinner {
+    width: 18px;
+    height: 18px;
+
+    border: 3px solid rgba(255, 255, 255, .3);
+    border-top-color: #fff;
+
+    border-radius: 50%;
+
+    animation:
+        pulse-spinner
+        .8s
+        linear
+        infinite;
+}
+
+@keyframes pulse-spinner {
+
+    from {
+        transform: rotate(0);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* ==========================================
+   Disabled
+========================================== */
+
+.pulse-animation:disabled,
+.pulse-animation--disabled {
+    opacity: .55;
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
+/* ==========================================
+   Responsive
+========================================== */
+
+@media (max-width: 768px) {
+
+    .pulse-animation {
+        max-width: 100%;
+    }
+
+}
+
+@media (max-width: 600px) {
+
+    .pulse-animation {
+        width: 100%;
+        padding: 14px 18px;
+    }
+
+}
+
+@media (max-width: 480px) {
+
+    .pulse-animation {
+        min-width: 0;
+        font-size: 14px;
+        border-radius: 12px;
+    }
+
+}
+
+/* ==========================================
+   Reduced Motion
+========================================== */
+
+@media (prefers-reduced-motion: reduce) {
+
+    .pulse-animation,
+    .pulse-animation__spinner {
+        animation: none;
+        transition: none;
+    }
+
+}
