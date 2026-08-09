@@ -1,0 +1,124 @@
+*,
+*::before,
+*::after{
+  box-sizing:border-box;
+}
+
+.gradient-background{
+  position:relative;
+  overflow:hidden;
+  width:100%;
+  min-height:180px;
+  padding:28px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  border-radius:18px;
+  color:#fff;
+  background:linear-gradient(
+    var(--gradient-direction,135deg),
+    #2563eb,
+    #7c3aed
+  );
+  transition:transform .3s ease,box-shadow .3s ease;
+}
+
+.gradient-background:hover{
+  transform:translateY(-3px);
+  box-shadow:0 16px 36px rgba(0,0,0,.18);
+}
+
+.gradient-background--blue-purple{
+  background:linear-gradient(var(--gradient-direction),#2563eb,#7c3aed);
+}
+
+.gradient-background--blue-cyan{
+  background:linear-gradient(var(--gradient-direction),#2563eb,#06b6d4);
+}
+
+.gradient-background--purple-pink{
+  background:linear-gradient(var(--gradient-direction),#7c3aed,#db2777);
+}
+
+.gradient-background--orange-pink{
+  background:linear-gradient(var(--gradient-direction),#f97316,#db2777);
+}
+
+.gradient-background--green-teal{
+  background:linear-gradient(var(--gradient-direction),#16a34a,#0d9488);
+}
+
+.gradient-background--sunset{
+  background:linear-gradient(var(--gradient-direction),#f59e0b,#ef4444,#db2777);
+}
+
+.gradient-background--ocean{
+  background:linear-gradient(var(--gradient-direction),#0ea5e9,#2563eb,#4f46e5);
+}
+
+.gradient-background--aurora{
+  background:linear-gradient(var(--gradient-direction),#22c55e,#06b6d4,#7c3aed);
+}
+
+.gradient-background--dark{
+  background:linear-gradient(var(--gradient-direction),#111827,#374151,#111827);
+}
+
+.gradient-background--animated{
+  background-size:200% 200%;
+  animation:gradientMove 6s ease infinite;
+}
+
+@keyframes gradientMove{
+  0%,100%{background-position:0% 50%}
+  50%{background-position:100% 50%}
+}
+
+.gradient-background__content{
+  position:relative;
+  z-index:2;
+  max-width:720px;
+  text-align:center;
+}
+
+.gradient-background__title{
+  margin:0 0 10px;
+  font-size:clamp(24px,4vw,42px);
+}
+
+.gradient-background__text{
+  margin:0;
+  line-height:1.7;
+  opacity:.9;
+}
+
+.gradient-background--rounded-sm{border-radius:8px}
+.gradient-background--rounded-md{border-radius:18px}
+.gradient-background--rounded-lg{border-radius:30px}
+.gradient-background--rounded-full{border-radius:999px}
+
+.gradient-background--glass{
+  border:1px solid rgba(255,255,255,.25);
+  backdrop-filter:blur(12px);
+  -webkit-backdrop-filter:blur(12px);
+}
+
+.gradient-background:focus-visible{
+  outline:3px solid rgba(255,255,255,.6);
+  outline-offset:4px;
+}
+
+@media(max-width:600px){
+  .gradient-background{
+    min-height:150px;
+    padding:20px;
+  }
+}
+
+@media(prefers-reduced-motion:reduce){
+  .gradient-background,
+  .gradient-background--animated{
+    animation:none;
+    transition:none;
+  }
+}
