@@ -1,4 +1,4 @@
-import Order from '../models/Order.js';
+import orderRepository from '../repositories/orderRepository.js';
 import { verifyWebhookSignature } from '../services/stripeService.js';
 import dotenv from 'dotenv';
 
@@ -23,7 +23,7 @@ const stripeWebhookHandler = async (req, res) => {
         const orderId = paymentIntent.metadata.orderId;
         
         if (orderId) {
-          const order = await Order.findById(orderId);
+          const order = await orderRepository.findById(orderId);
           if (order && order.paymentStatus !== 'paid') {
             order.paymentStatus = 'paid';
             order.status = 'confirmed';
@@ -35,7 +35,7 @@ const stripeWebhookHandler = async (req, res) => {
             const randomString = Math.random().toString(36).substring(2, 8).toUpperCase();
             order.receiptNumber = receiptPrefix + randomString;
 
-            await order.save();
+            await orderRepository.save(order);
             console.log(`Order ${orderId} successfully paid.`);
           }
         }
@@ -46,11 +46,11 @@ const stripeWebhookHandler = async (req, res) => {
         const orderId = paymentIntent.metadata.orderId;
         
         if (orderId) {
-          const order = await Order.findById(orderId);
+          const order = await orderRepository.findById(orderId);
           if (order) {
             order.paymentStatus = 'failed';
             order.status = 'payment_failed';
-            await order.save();
+            await orderRepository.save(order);
             console.log(`Order ${orderId} payment failed.`);
           }
         }
@@ -61,11 +61,11 @@ const stripeWebhookHandler = async (req, res) => {
         const orderId = paymentIntent.metadata.orderId;
         
         if (orderId) {
-          const order = await Order.findById(orderId);
+          const order = await orderRepository.findById(orderId);
           if (order) {
             order.paymentStatus = 'canceled';
             order.status = 'canceled';
-            await order.save();
+            await orderRepository.save(order);
             console.log(`Order ${orderId} payment canceled.`);
           }
         }

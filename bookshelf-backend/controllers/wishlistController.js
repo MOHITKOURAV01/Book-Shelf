@@ -1,11 +1,11 @@
-import User from '../models/User.js';
+import userRepository from '../repositories/userRepository.js';
 
 // @desc    Get user wishlist
 // @route   GET /api/wishlist
 // @access  Private
 export const getWishlist = async (req, res) => {
   try {
-    const user = await User.findById(req.user.id);
+    const user = await userRepository.findById(req.user.id);
     if (!user) {
       return res.status(404).json({ message: 'User not found' });
     }
@@ -26,20 +26,21 @@ export const toggleWishlist = async (req, res) => {
       return res.status(400).json({ message: 'Book ID is required' });
     }
 
-    const user = await User.findById(req.user.id);
+    const user = await userRepository.findById(req.user.id);
     if (!user) {
       return res.status(404).json({ message: 'User not found' });
     }
 
-    const index = user.wishlist.indexOf(bookId);
+    let updatedWishlist = [...user.wishlist];
+    const index = updatedWishlist.indexOf(bookId);
     if (index > -1) {
-      user.wishlist.splice(index, 1);
+      updatedWishlist.splice(index, 1);
     } else {
-      user.wishlist.push(bookId);
+      updatedWishlist.push(bookId);
     }
 
-    await user.save();
-    res.json(user.wishlist);
+    await userRepository.updateWishlist(req.user.id, updatedWishlist);
+    res.json(updatedWishlist);
   } catch (error) {
     res.status(500).json({ message: 'Server error', error: error.message });
   }
@@ -56,17 +57,17 @@ export const mergeWishlist = async (req, res) => {
       return res.status(400).json({ message: 'localWishlist array is required' });
     }
 
-    const user = await User.findById(req.user.id);
+    const user = await userRepository.findById(req.user.id);
     if (!user) {
       return res.status(404).json({ message: 'User not found' });
     }
 
     // Merge unique values
     const merged = new Set([...user.wishlist, ...localWishlist]);
-    user.wishlist = Array.from(merged);
+    const updatedWishlist = Array.from(merged);
 
-    await user.save();
-    res.json(user.wishlist);
+    await userRepository.updateWishlist(req.user.id, updatedWishlist);
+    res.json(updatedWishlist);
   } catch (error) {
     res.status(500).json({ message: 'Server error', error: error.message });
   }

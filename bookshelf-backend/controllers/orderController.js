@@ -1,11 +1,11 @@
-import Order from '../models/Order.js';
+import orderRepository from '../repositories/orderRepository.js';
 
 // @desc    Get logged in user orders
 // @route   GET /api/orders/mine
 // @access  Private
 const getMyOrders = async (req, res) => {
   try {
-    const orders = await Order.find({ userId: req.user.id }).sort({ createdAt: -1 });
+    const orders = await orderRepository.findByUserId(req.user.id);
     res.json(orders);
   } catch (error) {
     res.status(500).json({ message: 'Server Error' });
@@ -17,7 +17,7 @@ const getMyOrders = async (req, res) => {
 // @access  Private
 const getOrderById = async (req, res) => {
   try {
-    const order = await Order.findById(req.params.id);
+    const order = await orderRepository.findById(req.params.id);
 
     if (order) {
       // Check if user is admin or user owns order

@@ -1,4 +1,4 @@
-import User from '../models/User.js';
+import userRepository from '../repositories/userRepository.js';
 import generateToken from '../utils/generateToken.js';
 
 // @desc    Auth user & get token
@@ -8,9 +8,9 @@ export const authUser = async (req, res, next) => {
   try {
     const { email, password } = req.body;
 
-    const user = await User.findOne({ email });
+    const user = await userRepository.findByEmail(email);
 
-    if (user && (await user.matchPassword(password))) {
+    if (user && (await userRepository.matchPassword(user, password))) {
       generateToken(res, user._id, user.email, user.role);
 
       res.status(200).json({
@@ -42,14 +42,14 @@ export const registerUser = async (req, res, next) => {
       throw new Error('Password must be at least 8 characters');
     }
 
-    const userExists = await User.findOne({ email });
+    const userExists = await userRepository.findByEmail(email);
 
     if (userExists) {
       res.status(400);
       throw new Error('Email already exists');
     }
 
-    const user = await User.create({
+    const user = await userRepository.create({
       name,
       email,
       password,
@@ -93,7 +93,7 @@ export const logoutUser = (req, res) => {
 // @access  Private
 export const getUserProfile = async (req, res, next) => {
   try {
-    const user = await User.findById(req.user._id).select('-password');
+    const user = await userRepository.findByIdWithoutPassword(req.user._id);
 
     if (user) {
       res.status(200).json({ user });
