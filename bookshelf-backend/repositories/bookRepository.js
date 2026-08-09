@@ -1,15 +1,27 @@
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import cacheManager from '../utils/cacheManager.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const booksFilePath = path.join(__dirname, '../data/books.json');
 
 export const getBooks = () => {
+    // 1. Check Cache
+    const cachedBooks = cacheManager.get('books');
+    if (cachedBooks) {
+        return cachedBooks;
+    }
+
+    // 2. Cache Miss: Read from Disk
     try {
         const data = fs.readFileSync(booksFilePath, 'utf8');
-        return JSON.parse(data);
+        const books = JSON.parse(data);
+        
+        // 3. Store in Cache
+        cacheManager.set('books', books);
+        return books;
     } catch (error) {
         console.error('Error reading books data:', error);
         return [];
@@ -64,6 +76,9 @@ export const updateInventoryWithOCC = (itemsToUpdate) => {
 
         // 3. Write back synchronously
         fs.writeFileSync(booksFilePath, JSON.stringify(books, null, 2), 'utf8');
+
+        // 4. Invalidate Cache after modification
+        cacheManager.del('books');
 
         return true;
     } catch (error) {
