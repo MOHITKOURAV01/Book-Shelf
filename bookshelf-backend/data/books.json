@@ -1,0 +1,90 @@
+[
+  {
+    "id": "b1",
+    "title": "The Quiet Ones",
+    "author": "M. Arora",
+    "genre": "Fiction",
+    "price": 349,
+    "rating": 4.5,
+    "cover": "#7A2E2E",
+    "inventory": 8,
+    "__v": 2
+  },
+  {
+    "id": "b2",
+    "title": "Field Notes",
+    "author": "D. Kapoor",
+    "genre": "Self-Help",
+    "price": 299,
+    "rating": 4.2,
+    "cover": "#1F4B43",
+    "inventory": 10,
+    "__v": 1
+  },
+  {
+    "id": "b3",
+    "title": "Half Moon Bay",
+    "author": "S. Rhee",
+    "genre": "Mystery",
+    "price": 399,
+    "rating": 4.7,
+    "cover": "#B85C2C",
+    "inventory": 10,
+    "__v": 1
+  },
+  {
+    "id": "b4",
+    "title": "Static",
+    "author": "A. Voss",
+    "genre": "Sci-Fi",
+    "price": 449,
+    "rating": 4.3,
+    "cover": "#3A3F63",
+    "inventory": 10,
+    "__v": 1
+  },
+  {
+    "id": "b5",
+    "title": "Low Tide",
+    "author": "R. Menon",
+    "genre": "Poetry",
+    "price": 249,
+    "rating": 4.6,
+    "cover": "#5F7A61",
+    "inventory": 10,
+    "__v": 1
+  },
+  {
+    "id": "b6",
+    "title": "The Long Corridor",
+    "author": "K. Iyer",
+    "genre": "Mystery",
+    "price": 379,
+    "rating": 4.1,
+    "cover": "#93461F",
+    "inventory": 10,
+    "__v": 1
+  },
+  {
+    "id": "b7",
+    "title": "Paper Moths",
+    "author": "L. Fischer",
+    "genre": "Fiction",
+    "price": 329,
+    "rating": 4.4,
+    "cover": "#2E4057",
+    "inventory": 10,
+    "__v": 1
+  },
+  {
+    "id": "b8",
+    "title": "Ordinary Weather",
+    "author": "N. Basu",
+    "genre": "Self-Help",
+    "price": 279,
+    "rating": 4,
+    "cover": "#7A5C2E",
+    "inventory": 10,
+    "__v": 1
+  }
+]
