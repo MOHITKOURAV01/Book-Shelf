@@ -1,4 +1,4 @@
-import Order from '../models/Order.js';
+import orderRepository from '../repositories/orderRepository.js';
 import { createPaymentIntent } from '../services/stripeService.js';
 import { getBookById, updateInventoryWithOCC } from '../repositories/bookRepository.js';
 
@@ -49,7 +49,7 @@ export const createIntent = async (req, res, next) => {
     const shipping = 5.99; // Mock flat shipping rate
     const total = subtotal + tax + shipping;
 
-    const order = new Order({
+    const savedOrder = await orderRepository.create({
       userId: req.user ? req.user._id : null,
       items: orderItems,
       shippingAddress: shippingAddress || {},
@@ -61,15 +61,13 @@ export const createIntent = async (req, res, next) => {
       paymentStatus: 'pending',
     });
 
-    const savedOrder = await order.save();
-
     const paymentIntent = await createPaymentIntent(total, 'usd', {
       orderId: savedOrder._id.toString(),
       userId: req.user ? req.user._id.toString() : 'guest',
     });
 
     savedOrder.stripePaymentIntentId = paymentIntent.id;
-    await savedOrder.save();
+    await orderRepository.save(savedOrder);
 
     res.status(200).json({
       clientSecret: paymentIntent.client_secret,
