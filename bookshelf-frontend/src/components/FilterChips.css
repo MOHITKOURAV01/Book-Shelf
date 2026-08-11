@@ -1,0 +1,468 @@
+/* ==========================================
+   FilterChips.css
+========================================== */
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+/* ==========================================
+   Filter Container
+========================================== */
+
+.filter-chips {
+    width: 100%;
+
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+
+    gap: 12px;
+}
+
+/* ==========================================
+   Filter List
+========================================== */
+
+.filter-chips__list {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+
+    gap: 10px;
+
+    flex: 1;
+}
+
+/* ==========================================
+   Filter Chip
+========================================== */
+
+.filter-chip {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    gap: 7px;
+
+    min-height: 38px;
+
+    padding: 8px 13px;
+
+    border: 1px solid #d1d5db;
+    border-radius: 999px;
+
+    background: #ffffff;
+    color: #374151;
+
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 600;
+    line-height: 1.2;
+
+    cursor: pointer;
+
+    white-space: nowrap;
+
+    transition:
+        background-color .2s ease,
+        color .2s ease,
+        border-color .2s ease,
+        transform .2s ease,
+        box-shadow .2s ease;
+}
+
+/* ==========================================
+   Hover
+========================================== */
+
+.filter-chip:hover:not(:disabled) {
+    transform: translateY(-1px);
+
+    border-color: #93c5fd;
+
+    background: #eff6ff;
+    color: #1d4ed8;
+
+    box-shadow:
+        0 3px 8px rgba(37,99,235,.10);
+}
+
+/* ==========================================
+   Active State
+========================================== */
+
+.filter-chip--active {
+    border-color: #2563eb;
+
+    background: #2563eb;
+    color: #ffffff;
+
+    box-shadow:
+        0 3px 8px rgba(37,99,235,.18);
+}
+
+.filter-chip--active:hover:not(:disabled) {
+    border-color: #1d4ed8;
+
+    background: #1d4ed8;
+    color: #ffffff;
+
+    box-shadow:
+        0 5px 12px rgba(37,99,235,.25);
+}
+
+/* ==========================================
+   Disabled
+========================================== */
+
+.filter-chip--disabled,
+.filter-chip:disabled {
+    opacity: .5;
+
+    cursor: not-allowed;
+
+    transform: none;
+
+    box-shadow: none;
+}
+
+/* ==========================================
+   Icon
+========================================== */
+
+.filter-chip__icon {
+    display: inline-flex;
+
+    align-items: center;
+    justify-content: center;
+
+    width: 18px;
+    height: 18px;
+
+    flex-shrink: 0;
+
+    font-size: 14px;
+}
+
+/* ==========================================
+   Remove Icon
+========================================== */
+
+.filter-chip__remove {
+    display: inline-flex;
+
+    align-items: center;
+    justify-content: center;
+
+    width: 17px;
+    height: 17px;
+
+    flex-shrink: 0;
+
+    border-radius: 50%;
+
+    background: rgba(255,255,255,.2);
+
+    font-size: 15px;
+    font-weight: 700;
+
+    line-height: 1;
+
+    transition:
+        background-color .2s ease,
+        transform .2s ease;
+}
+
+.filter-chip:hover .filter-chip__remove {
+    background: rgba(255,255,255,.3);
+}
+
+.filter-chip__remove:hover {
+    transform: scale(1.08);
+}
+
+/* ==========================================
+   Clear All
+========================================== */
+
+.filter-chips__clear {
+    display: inline-flex;
+
+    align-items: center;
+    justify-content: center;
+
+    min-height: 36px;
+
+    padding: 8px 12px;
+
+    border: 1px solid transparent;
+    border-radius: 8px;
+
+    background: transparent;
+
+    color: #2563eb;
+
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 600;
+
+    cursor: pointer;
+
+    transition:
+        background-color .2s ease,
+        color .2s ease,
+        border-color .2s ease;
+}
+
+.filter-chips__clear:hover {
+    background: #eff6ff;
+
+    border-color: #bfdbfe;
+
+    text-decoration: none;
+}
+
+.filter-chips__clear:active {
+    transform: scale(.97);
+}
+
+/* ==========================================
+   Filter Count
+========================================== */
+
+.filter-chips__count {
+    display: inline-flex;
+
+    align-items: center;
+    justify-content: center;
+
+    min-width: 22px;
+    height: 22px;
+
+    padding: 0 6px;
+
+    border-radius: 999px;
+
+    background: #eff6ff;
+
+    color: #2563eb;
+
+    font-size: 11px;
+    font-weight: 700;
+}
+
+/* ==========================================
+   Search / Toolbar Variant
+========================================== */
+
+.filter-chips--toolbar {
+    padding: 12px;
+
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+
+    background: #f9fafb;
+}
+
+/* ==========================================
+   Compact Variant
+========================================== */
+
+.filter-chips--compact {
+    gap: 8px;
+}
+
+.filter-chips--compact .filter-chips__list {
+    gap: 7px;
+}
+
+.filter-chips--compact .filter-chip {
+    min-height: 32px;
+
+    padding: 6px 10px;
+
+    font-size: 12px;
+}
+
+/* ==========================================
+   Large Variant
+========================================== */
+
+.filter-chips--large .filter-chip {
+    min-height: 44px;
+
+    padding: 10px 16px;
+
+    font-size: 14px;
+}
+
+/* ==========================================
+   Color Variants
+========================================== */
+
+.filter-chip--success {
+    border-color: #bbf7d0;
+
+    background: #f0fdf4;
+    color: #15803d;
+}
+
+.filter-chip--success.filter-chip--active {
+    border-color: #16a34a;
+
+    background: #16a34a;
+    color: #ffffff;
+}
+
+.filter-chip--warning {
+    border-color: #fde68a;
+
+    background: #fffbeb;
+    color: #b45309;
+}
+
+.filter-chip--warning.filter-chip--active {
+    border-color: #f59e0b;
+
+    background: #f59e0b;
+    color: #ffffff;
+}
+
+.filter-chip--danger {
+    border-color: #fecaca;
+
+    background: #fef2f2;
+    color: #dc2626;
+}
+
+.filter-chip--danger.filter-chip--active {
+    border-color: #dc2626;
+
+    background: #dc2626;
+    color: #ffffff;
+}
+
+.filter-chip--purple {
+    border-color: #ddd6fe;
+
+    background: #faf5ff;
+    color: #7c3aed;
+}
+
+.filter-chip--purple.filter-chip--active {
+    border-color: #7c3aed;
+
+    background: #7c3aed;
+    color: #ffffff;
+}
+
+/* ==========================================
+   Focus Accessibility
+========================================== */
+
+.filter-chip:focus-visible,
+.filter-chips__clear:focus-visible {
+    outline:
+        3px solid
+        rgba(37,99,235,.35);
+
+    outline-offset: 3px;
+}
+
+/* ==========================================
+   Responsive
+========================================== */
+
+@media (max-width: 768px) {
+
+    .filter-chips {
+        align-items: flex-start;
+    }
+
+    .filter-chips__list {
+        width: 100%;
+    }
+
+}
+
+/* ==========================================
+   Mobile
+========================================== */
+
+@media (max-width: 600px) {
+
+    .filter-chips {
+        align-items: stretch;
+
+        flex-direction: column;
+    }
+
+    .filter-chips__list {
+        width: 100%;
+    }
+
+    .filter-chip {
+        flex: 0 1 auto;
+    }
+
+    .filter-chips__clear {
+        align-self: flex-start;
+    }
+
+    .filter-chips--toolbar {
+        padding: 10px;
+    }
+
+}
+
+/* ==========================================
+   Small Mobile
+========================================== */
+
+@media (max-width: 420px) {
+
+    .filter-chips__list {
+        gap: 8px;
+    }
+
+    .filter-chip {
+        min-height: 36px;
+
+        padding: 7px 11px;
+
+        font-size: 12px;
+    }
+
+}
+
+/* ==========================================
+   Reduced Motion
+========================================== */
+
+@media (prefers-reduced-motion: reduce) {
+
+    .filter-chip,
+    .filter-chip__remove,
+    .filter-chips__clear {
+
+        transition: none;
+    }
+
+    .filter-chip:hover:not(:disabled) {
+        transform: none;
+
+        box-shadow: none;
+    }
+
+    .filter-chip__remove:hover {
+        transform: none;
+    }
+
+    .filter-chips__clear:active {
+        transform: none;
+    }
+
+}
