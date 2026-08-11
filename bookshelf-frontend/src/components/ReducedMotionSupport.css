@@ -1,0 +1,352 @@
+/* ==========================================
+   ReducedMotionSupport.css
+========================================== */
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+/* ==========================================
+   Base Wrapper
+========================================== */
+
+.reduced-motion-support {
+    position: relative;
+
+    width: 100%;
+
+    transition:
+        transform .3s ease,
+        opacity .3s ease,
+        box-shadow .3s ease,
+        filter .3s ease;
+}
+
+/* ==========================================
+   Manual Motion Disabled
+========================================== */
+
+.reduced-motion-support--disabled,
+.reduced-motion-support--disabled *,
+.reduced-motion-support--disabled *::before,
+.reduced-motion-support--disabled *::after {
+
+    animation: none !important;
+
+    transition: none !important;
+
+    scroll-behavior: auto !important;
+
+}
+
+/* ==========================================
+   Reduced Motion Preference
+========================================== */
+
+@media (prefers-reduced-motion: reduce) {
+
+    .reduced-motion-support,
+    .reduced-motion-support *,
+    .reduced-motion-support *::before,
+    .reduced-motion-support *::after {
+
+        animation-duration: .01ms !important;
+
+        animation-iteration-count: 1 !important;
+
+        animation-delay: 0ms !important;
+
+        scroll-behavior: auto !important;
+
+        transition-duration: .01ms !important;
+
+        transition-delay: 0ms !important;
+
+    }
+
+}
+
+/* ==========================================
+   Normal Motion Preference
+========================================== */
+
+@media (prefers-reduced-motion: no-preference) {
+
+    .reduced-motion-support {
+
+        transition:
+            transform .3s ease,
+            opacity .3s ease,
+            box-shadow .3s ease,
+            filter .3s ease;
+
+    }
+
+}
+
+/* ==========================================
+   Hover Utility
+========================================== */
+
+.reduced-motion-support--hover {
+
+    cursor: pointer;
+
+}
+
+.reduced-motion-support--hover:hover {
+
+    transform: translateY(-3px);
+
+    box-shadow:
+        0 10px 24px rgba(0,0,0,.12);
+
+}
+
+/* ==========================================
+   Fade Utility
+========================================== */
+
+.reduced-motion-support--fade {
+
+    animation:
+        reducedFade
+        .5s
+        ease
+        both;
+
+}
+
+@keyframes reducedFade {
+
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+
+}
+
+/* ==========================================
+   Slide Utility
+========================================== */
+
+.reduced-motion-support--slide {
+
+    animation:
+        reducedSlide
+        .5s
+        ease
+        both;
+
+}
+
+@keyframes reducedSlide {
+
+    from {
+        opacity: 0;
+        transform: translateY(12px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+}
+
+/* ==========================================
+   Scale Utility
+========================================== */
+
+.reduced-motion-support--scale {
+
+    animation:
+        reducedScale
+        .4s
+        ease
+        both;
+
+}
+
+@keyframes reducedScale {
+
+    from {
+        opacity: 0;
+        transform: scale(.96);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+
+}
+
+/* ==========================================
+   Loading State
+========================================== */
+
+.reduced-motion-support--loading {
+
+    pointer-events: none;
+
+    opacity: .65;
+
+}
+
+.reduced-motion-support__spinner {
+
+    width: 24px;
+    height: 24px;
+
+    border: 3px solid rgba(37,99,235,.2);
+
+    border-top-color: #2563eb;
+
+    border-radius: 50%;
+
+    animation:
+        reducedSpinner
+        .8s
+        linear
+        infinite;
+
+}
+
+@keyframes reducedSpinner {
+
+    from {
+        transform: rotate(0);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+
+}
+
+/* ==========================================
+   Focus Accessibility
+========================================== */
+
+.reduced-motion-support:focus-visible {
+
+    outline:
+        3px solid
+        rgba(37,99,235,.35);
+
+    outline-offset: 4px;
+
+}
+
+/* ==========================================
+   Screen Reader Friendly State
+========================================== */
+
+.reduced-motion-support[aria-busy="true"] {
+
+    cursor: progress;
+
+}
+
+/* ==========================================
+   Responsive
+========================================== */
+
+@media (max-width: 768px) {
+
+    .reduced-motion-support {
+
+        max-width: 100%;
+
+    }
+
+}
+
+@media (max-width: 600px) {
+
+    .reduced-motion-support {
+
+        width: 100%;
+
+    }
+
+}
+
+/* ==========================================
+   Extra Small Screens
+========================================== */
+
+@media (max-width: 400px) {
+
+    .reduced-motion-support {
+
+        transition-duration: .2s;
+
+    }
+
+}
+
+/* ==========================================
+   High Contrast Support
+========================================== */
+
+@media (forced-colors: active) {
+
+    .reduced-motion-support:focus-visible {
+
+        outline: 2px solid CanvasText;
+
+    }
+
+}
+
+/* ==========================================
+   Reduced Motion Override
+========================================== */
+
+@media (prefers-reduced-motion: reduce) {
+
+    .reduced-motion-support--fade,
+    .reduced-motion-support--slide,
+    .reduced-motion-support--scale,
+    .reduced-motion-support--loading {
+
+        animation: none !important;
+
+    }
+
+    .reduced-motion-support--hover:hover {
+
+        transform: none;
+
+        box-shadow: none;
+
+    }
+
+}
+
+/* ==========================================
+   Print
+========================================== */
+
+@media print {
+
+    .reduced-motion-support {
+
+        animation: none !important;
+
+        transition: none !important;
+
+        transform: none !important;
+
+        box-shadow: none !important;
+
+    }
+
+}
