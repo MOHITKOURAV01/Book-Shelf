@@ -1,0 +1,401 @@
+/* ==========================================
+   StatusBadge.css
+========================================== */
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+/* ==========================================
+   Base Badge
+========================================== */
+
+.status-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    gap: 8px;
+
+    width: max-content;
+    max-width: 100%;
+
+    padding: 7px 12px;
+
+    border: 1px solid transparent;
+    border-radius: 999px;
+
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 600;
+
+    line-height: 1.2;
+
+    text-transform: capitalize;
+
+    white-space: nowrap;
+
+    color: #374151;
+    background: #f3f4f6;
+
+    transition:
+        background-color .2s ease,
+        border-color .2s ease,
+        color .2s ease,
+        transform .2s ease,
+        box-shadow .2s ease;
+}
+
+/* ==========================================
+   Status Dot
+========================================== */
+
+.status-badge__dot {
+    width: 8px;
+    height: 8px;
+
+    flex: 0 0 8px;
+
+    border-radius: 50%;
+
+    background: currentColor;
+}
+
+.status-badge__label {
+    min-width: 0;
+
+    overflow: hidden;
+
+    text-overflow: ellipsis;
+}
+
+/* ==========================================
+   Sizes
+========================================== */
+
+.status-badge--sm {
+    gap: 6px;
+
+    padding: 5px 9px;
+
+    font-size: 11px;
+}
+
+.status-badge--sm .status-badge__dot {
+    width: 6px;
+    height: 6px;
+
+    flex-basis: 6px;
+}
+
+.status-badge--md {
+    gap: 8px;
+
+    padding: 7px 12px;
+
+    font-size: 13px;
+}
+
+.status-badge--lg {
+    gap: 9px;
+
+    padding: 9px 15px;
+
+    font-size: 15px;
+}
+
+.status-badge--lg .status-badge__dot {
+    width: 9px;
+    height: 9px;
+
+    flex-basis: 9px;
+}
+
+/* ==========================================
+   Success / Positive States
+========================================== */
+
+.status-badge--active,
+.status-badge--success,
+.status-badge--completed,
+.status-badge--available,
+.status-badge--verified {
+    color: #166534;
+
+    background: #dcfce7;
+
+    border-color: #bbf7d0;
+}
+
+/* ==========================================
+   Pending States
+========================================== */
+
+.status-badge--pending,
+.status-badge--warning,
+.status-badge--processing {
+    color: #92400e;
+
+    background: #fef3c7;
+
+    border-color: #fde68a;
+}
+
+/* ==========================================
+   Neutral States
+========================================== */
+
+.status-badge--inactive,
+.status-badge--neutral,
+.status-badge--draft {
+    color: #4b5563;
+
+    background: #f3f4f6;
+
+    border-color: #e5e7eb;
+}
+
+/* ==========================================
+   Error States
+========================================== */
+
+.status-badge--error,
+.status-badge--danger,
+.status-badge--failed,
+.status-badge--unavailable {
+    color: #b91c1c;
+
+    background: #fee2e2;
+
+    border-color: #fecaca;
+}
+
+/* ==========================================
+   Information States
+========================================== */
+
+.status-badge--info,
+.status-badge--new {
+    color: #1d4ed8;
+
+    background: #dbeafe;
+
+    border-color: #bfdbfe;
+}
+
+/* ==========================================
+   Purple
+========================================== */
+
+.status-badge--purple {
+    color: #6d28d9;
+
+    background: #ede9fe;
+
+    border-color: #ddd6fe;
+}
+
+/* ==========================================
+   Teal
+========================================== */
+
+.status-badge--teal {
+    color: #0f766e;
+
+    background: #ccfbf1;
+
+    border-color: #99f6e4;
+}
+
+/* ==========================================
+   Pulse Animation
+========================================== */
+
+.status-badge--pulse .status-badge__dot {
+    animation:
+        statusPulse
+        1.6s
+        ease-in-out
+        infinite;
+}
+
+@keyframes statusPulse {
+
+    0%,
+    100% {
+        opacity: 1;
+
+        transform: scale(1);
+    }
+
+    50% {
+        opacity: .45;
+
+        transform: scale(.75);
+    }
+}
+
+/* ==========================================
+   Hover
+========================================== */
+
+.status-badge--interactive {
+    cursor: pointer;
+}
+
+.status-badge--interactive:hover {
+    transform: translateY(-1px);
+
+    box-shadow:
+        0 4px 10px rgba(0,0,0,.10);
+}
+
+/* ==========================================
+   Outline
+========================================== */
+
+.status-badge--outline {
+    color: #2563eb;
+
+    background: transparent;
+
+    border-color: #93c5fd;
+}
+
+.status-badge--outline:hover {
+    background: #eff6ff;
+}
+
+/* ==========================================
+   Strong Outline Variants
+========================================== */
+
+.status-badge--outline-success {
+    color: #15803d;
+
+    background: transparent;
+
+    border-color: #86efac;
+}
+
+.status-badge--outline-danger {
+    color: #dc2626;
+
+    background: transparent;
+
+    border-color: #fca5a5;
+}
+
+.status-badge--outline-warning {
+    color: #b45309;
+
+    background: transparent;
+
+    border-color: #fcd34d;
+}
+
+/* ==========================================
+   Dotless Variant
+========================================== */
+
+.status-badge--dotless {
+    gap: 0;
+}
+
+/* ==========================================
+   Strong Variant
+========================================== */
+
+.status-badge--strong {
+    box-shadow:
+        0 2px 6px rgba(0,0,0,.08);
+}
+
+/* ==========================================
+   Focus Accessibility
+========================================== */
+
+.status-badge:focus-visible {
+    outline:
+        3px solid
+        rgba(37,99,235,.35);
+
+    outline-offset: 3px;
+}
+
+/* ==========================================
+   Disabled State
+========================================== */
+
+.status-badge--disabled {
+    opacity: .55;
+
+    cursor: not-allowed;
+
+    pointer-events: none;
+}
+
+/* ==========================================
+   Responsive
+========================================== */
+
+@media (max-width: 600px) {
+
+    .status-badge {
+        max-width: 100%;
+    }
+
+    .status-badge--lg {
+        padding: 8px 13px;
+
+        font-size: 14px;
+    }
+
+}
+
+/* ==========================================
+   Reduced Motion
+========================================== */
+
+@media (prefers-reduced-motion: reduce) {
+
+    .status-badge,
+    .status-badge--pulse .status-badge__dot {
+
+        animation: none !important;
+
+        transition: none !important;
+    }
+
+    .status-badge--interactive:hover {
+
+        transform: none;
+
+        box-shadow: none;
+    }
+
+}
+
+/* ==========================================
+   High Contrast
+========================================== */
+
+@media (forced-colors: active) {
+
+    .status-badge {
+
+        border-color: CanvasText;
+
+        color: CanvasText;
+
+        background: Canvas;
+    }
+
+    .status-badge__dot {
+
+        background: currentColor;
+    }
+
+}
