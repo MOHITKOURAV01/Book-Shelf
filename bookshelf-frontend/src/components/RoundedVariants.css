@@ -1,0 +1,385 @@
+/* ==========================================
+   RoundedVariants.css
+========================================== */
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+/* ==========================================
+   Base Component
+========================================== */
+
+.rounded-variant {
+    position: relative;
+    overflow: hidden;
+
+    width: 100%;
+    padding: 20px;
+
+    border: 1px solid #e5e7eb;
+
+    background: #ffffff;
+    color: #111827;
+
+    transition:
+        border-radius .25s ease,
+        transform .25s ease,
+        box-shadow .25s ease,
+        border-color .25s ease,
+        background .25s ease;
+}
+
+/* ==========================================
+   Hover
+========================================== */
+
+.rounded-variant:hover {
+    transform: translateY(-2px);
+
+    box-shadow:
+        0 10px 24px rgba(0,0,0,.10);
+}
+
+/* ==========================================
+   Radius Variants
+========================================== */
+
+.rounded-variant--none {
+    border-radius: 0;
+}
+
+.rounded-variant--xs {
+    border-radius: 4px;
+}
+
+.rounded-variant--sm {
+    border-radius: 8px;
+}
+
+.rounded-variant--md {
+    border-radius: 14px;
+}
+
+.rounded-variant--lg {
+    border-radius: 22px;
+}
+
+.rounded-variant--xl {
+    border-radius: 30px;
+}
+
+.rounded-variant--2xl {
+    border-radius: 40px;
+}
+
+.rounded-variant--3xl {
+    border-radius: 52px;
+}
+
+.rounded-variant--full {
+    border-radius: 999px;
+}
+
+/* ==========================================
+   Pill Variant
+========================================== */
+
+.rounded-variant--pill {
+    width: auto;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 12px 24px;
+
+    border-radius: 999px;
+
+    white-space: nowrap;
+}
+
+/* ==========================================
+   Directional Variants
+========================================== */
+
+.rounded-variant--top {
+    border-radius: 20px 20px 0 0;
+}
+
+.rounded-variant--bottom {
+    border-radius: 0 0 20px 20px;
+}
+
+.rounded-variant--left {
+    border-radius: 20px 0 0 20px;
+}
+
+.rounded-variant--right {
+    border-radius: 0 20px 20px 0;
+}
+
+/* ==========================================
+   Soft Variant
+========================================== */
+
+.rounded-variant--soft {
+    border-radius: 12px;
+
+    background: #f9fafb;
+
+    border-color: #f3f4f6;
+}
+
+/* ==========================================
+   Card Variant
+========================================== */
+
+.rounded-variant--card {
+    border-radius: 18px;
+
+    box-shadow:
+        0 4px 14px rgba(0,0,0,.08);
+}
+
+/* ==========================================
+   Glass Variant
+========================================== */
+
+.rounded-variant--glass {
+    border-radius: 20px;
+
+    border-color:
+        rgba(255,255,255,.30);
+
+    background:
+        rgba(255,255,255,.25);
+
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+}
+
+/* ==========================================
+   Interactive Variant
+========================================== */
+
+.rounded-variant--interactive {
+    cursor: pointer;
+}
+
+.rounded-variant--interactive:hover {
+    transform: translateY(-4px);
+
+    border-color: #2563eb;
+
+    box-shadow:
+        0 14px 30px rgba(37,99,235,.16);
+}
+
+.rounded-variant--interactive:active {
+    transform: translateY(-1px);
+}
+
+/* ==========================================
+   Outline Variant
+========================================== */
+
+.rounded-variant--outlined {
+    background: transparent;
+
+    border:
+        2px solid #2563eb;
+
+    color: #2563eb;
+}
+
+/* ==========================================
+   Color Variants
+========================================== */
+
+.rounded-variant--primary {
+    background: #eff6ff;
+    border-color: #bfdbfe;
+    color: #1d4ed8;
+}
+
+.rounded-variant--success {
+    background: #ecfdf5;
+    border-color: #bbf7d0;
+    color: #15803d;
+}
+
+.rounded-variant--warning {
+    background: #fffbeb;
+    border-color: #fde68a;
+    color: #b45309;
+}
+
+.rounded-variant--danger {
+    background: #fef2f2;
+    border-color: #fecaca;
+    color: #dc2626;
+}
+
+.rounded-variant--purple {
+    background: #faf5ff;
+    border-color: #e9d5ff;
+    color: #7e22ce;
+}
+
+/* ==========================================
+   Shadow Variants
+========================================== */
+
+.rounded-variant--shadow-sm {
+    box-shadow:
+        0 4px 10px rgba(0,0,0,.08);
+}
+
+.rounded-variant--shadow-md {
+    box-shadow:
+        0 8px 20px rgba(0,0,0,.12);
+}
+
+.rounded-variant--shadow-lg {
+    box-shadow:
+        0 16px 36px rgba(0,0,0,.18);
+}
+
+/* ==========================================
+   Focus Accessibility
+========================================== */
+
+.rounded-variant:focus-visible {
+    outline:
+        3px solid
+        rgba(37,99,235,.35);
+
+    outline-offset: 3px;
+}
+
+/* ==========================================
+   Loading State
+========================================== */
+
+.rounded-variant--loading {
+    pointer-events: none;
+    opacity: .65;
+}
+
+.rounded-variant__spinner {
+    width: 20px;
+    height: 20px;
+
+    border:
+        3px solid
+        rgba(37,99,235,.20);
+
+    border-top-color: #2563eb;
+
+    border-radius: 50%;
+
+    animation:
+        roundedSpinner
+        .8s
+        linear
+        infinite;
+}
+
+@keyframes roundedSpinner {
+
+    from {
+        transform: rotate(0);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+
+}
+
+/* ==========================================
+   Disabled State
+========================================== */
+
+.rounded-variant--disabled {
+    opacity: .55;
+
+    pointer-events: none;
+
+    cursor: not-allowed;
+}
+
+/* ==========================================
+   Responsive
+========================================== */
+
+@media (max-width: 768px) {
+
+    .rounded-variant {
+        max-width: 100%;
+    }
+
+}
+
+@media (max-width: 600px) {
+
+    .rounded-variant {
+        padding: 16px;
+    }
+
+    .rounded-variant--3xl {
+        border-radius: 32px;
+    }
+
+    .rounded-variant--2xl {
+        border-radius: 34px;
+    }
+
+    .rounded-variant--xl {
+        border-radius: 26px;
+    }
+
+    .rounded-variant--pill {
+        width: 100%;
+        padding: 12px 18px;
+    }
+
+}
+
+/* ==========================================
+   Extra Small Screens
+========================================== */
+
+@media (max-width: 400px) {
+
+    .rounded-variant {
+        padding: 14px;
+    }
+
+    .rounded-variant--lg {
+        border-radius: 18px;
+    }
+
+    .rounded-variant--xl {
+        border-radius: 22px;
+    }
+
+}
+
+/* ==========================================
+   Reduced Motion
+========================================== */
+
+@media (prefers-reduced-motion: reduce) {
+
+    .rounded-variant,
+    .rounded-variant__spinner {
+        animation: none;
+
+        transition: none;
+    }
+
+}
