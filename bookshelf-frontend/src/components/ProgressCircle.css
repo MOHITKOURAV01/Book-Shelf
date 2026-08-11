@@ -1,0 +1,445 @@
+/* ==========================================
+   ProgressCircle.css
+========================================== */
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+/* ==========================================
+   Base Progress Circle
+========================================== */
+
+.progress-circle {
+    position: relative;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    width: var(--circle-size, 110px);
+    height: var(--circle-size, 110px);
+
+    flex-shrink: 0;
+
+    border-radius: 50%;
+}
+
+/* ==========================================
+   SVG
+========================================== */
+
+.progress-circle__svg {
+    display: block;
+
+    width: 100%;
+    height: 100%;
+
+    transform: rotate(-90deg);
+
+    overflow: visible;
+}
+
+/* ==========================================
+   Track
+========================================== */
+
+.progress-circle__track {
+    stroke: #e5e7eb;
+
+    fill: none;
+
+    opacity: .9;
+}
+
+/* ==========================================
+   Progress Value
+========================================== */
+
+.progress-circle__value {
+    fill: none;
+
+    stroke: #2563eb;
+
+    stroke-linecap: round;
+
+    transition:
+        stroke-dashoffset .6s ease,
+        stroke .25s ease;
+}
+
+/* ==========================================
+   Content
+========================================== */
+
+.progress-circle__content {
+    position: absolute;
+
+    inset: 0;
+
+    display: flex;
+    flex-direction: column;
+
+    align-items: center;
+    justify-content: center;
+
+    gap: 4px;
+
+    padding: 10px;
+
+    text-align: center;
+
+    color: #111827;
+
+    pointer-events: none;
+}
+
+/* ==========================================
+   Percentage
+========================================== */
+
+.progress-circle__content strong {
+    margin: 0;
+
+    font-size: 20px;
+    font-weight: 700;
+
+    line-height: 1;
+
+    color: #111827;
+}
+
+/* ==========================================
+   Label
+========================================== */
+
+.progress-circle__content span {
+    display: block;
+
+    max-width: 80%;
+
+    overflow: hidden;
+
+    font-size: 11px;
+    font-weight: 500;
+
+    line-height: 1.3;
+
+    color: #6b7280;
+
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* ==========================================
+   Small
+========================================== */
+
+.progress-circle--sm {
+    --circle-size: 72px;
+}
+
+.progress-circle--sm .progress-circle__content strong {
+    font-size: 15px;
+}
+
+.progress-circle--sm .progress-circle__content span {
+    font-size: 9px;
+}
+
+/* ==========================================
+   Medium
+========================================== */
+
+.progress-circle--md {
+    --circle-size: 110px;
+}
+
+.progress-circle--md .progress-circle__content strong {
+    font-size: 20px;
+}
+
+/* ==========================================
+   Large
+========================================== */
+
+.progress-circle--lg {
+    --circle-size: 160px;
+}
+
+.progress-circle--lg .progress-circle__content strong {
+    font-size: 28px;
+}
+
+.progress-circle--lg .progress-circle__content span {
+    font-size: 12px;
+}
+
+/* ==========================================
+   Primary
+========================================== */
+
+.progress-circle--primary .progress-circle__value {
+    stroke: #2563eb;
+}
+
+/* ==========================================
+   Success
+========================================== */
+
+.progress-circle--success .progress-circle__value {
+    stroke: #16a34a;
+}
+
+/* ==========================================
+   Warning
+========================================== */
+
+.progress-circle--warning .progress-circle__value {
+    stroke: #f59e0b;
+}
+
+/* ==========================================
+   Danger
+========================================== */
+
+.progress-circle--danger .progress-circle__value {
+    stroke: #dc2626;
+}
+
+/* ==========================================
+   Purple
+========================================== */
+
+.progress-circle--purple .progress-circle__value {
+    stroke: #7c3aed;
+}
+
+/* ==========================================
+   Pink
+========================================== */
+
+.progress-circle--pink .progress-circle__value {
+    stroke: #db2777;
+}
+
+/* ==========================================
+   Teal
+========================================== */
+
+.progress-circle--teal .progress-circle__value {
+    stroke: #0d9488;
+}
+
+/* ==========================================
+   Animated Drawing
+========================================== */
+
+.progress-circle--animated .progress-circle__value {
+    animation:
+        progressCircleDraw
+        .8s
+        ease-out;
+}
+
+@keyframes progressCircleDraw {
+
+    from {
+        stroke-dashoffset: var(--circle-circumference);
+    }
+
+    to {
+        stroke-dashoffset: var(--circle-offset);
+    }
+
+}
+
+/* ==========================================
+   Glow Variants
+========================================== */
+
+.progress-circle--glow .progress-circle__value {
+    filter:
+        drop-shadow(
+            0 0 5px
+            rgba(37,99,235,.45)
+        );
+}
+
+.progress-circle--success.progress-circle--glow
+.progress-circle__value {
+    filter:
+        drop-shadow(
+            0 0 5px
+            rgba(22,163,74,.45)
+        );
+}
+
+.progress-circle--danger.progress-circle--glow
+.progress-circle__value {
+    filter:
+        drop-shadow(
+            0 0 5px
+            rgba(220,38,38,.45)
+        );
+}
+
+/* ==========================================
+   Complete State
+========================================== */
+
+.progress-circle--complete .progress-circle__content strong {
+    color: #16a34a;
+}
+
+.progress-circle--complete .progress-circle__value {
+    stroke: #16a34a;
+}
+
+/* ==========================================
+   Empty State
+========================================== */
+
+.progress-circle--empty .progress-circle__value {
+    stroke: #d1d5db;
+}
+
+/* ==========================================
+   Interactive State
+========================================== */
+
+.progress-circle--interactive {
+    cursor: pointer;
+
+    transition:
+        transform .25s ease,
+        filter .25s ease;
+}
+
+.progress-circle--interactive:hover {
+    transform: scale(1.04);
+}
+
+.progress-circle--interactive:active {
+    transform: scale(.98);
+}
+
+/* ==========================================
+   Focus Accessibility
+========================================== */
+
+.progress-circle:focus-visible {
+    outline:
+        3px solid
+        rgba(37,99,235,.35);
+
+    outline-offset: 4px;
+}
+
+/* ==========================================
+   Loading State
+========================================== */
+
+.progress-circle--loading .progress-circle__value {
+    animation:
+        progressCircleLoading
+        1.4s
+        ease-in-out
+        infinite;
+}
+
+@keyframes progressCircleLoading {
+
+    0% {
+        stroke-dashoffset: 100;
+        opacity: .45;
+    }
+
+    50% {
+        opacity: 1;
+    }
+
+    100% {
+        stroke-dashoffset: 0;
+        opacity: .45;
+    }
+
+}
+
+/* ==========================================
+   Responsive
+========================================== */
+
+@media (max-width: 600px) {
+
+    .progress-circle--lg {
+        --circle-size: 140px;
+    }
+
+}
+
+/* ==========================================
+   Extra Small Screens
+========================================== */
+
+@media (max-width: 400px) {
+
+    .progress-circle--lg {
+        --circle-size: 120px;
+    }
+
+    .progress-circle__content {
+        padding: 8px;
+    }
+
+}
+
+/* ==========================================
+   Reduced Motion
+========================================== */
+
+@media (prefers-reduced-motion: reduce) {
+
+    .progress-circle__value,
+    .progress-circle--animated .progress-circle__value,
+    .progress-circle--loading .progress-circle__value {
+
+        animation: none !important;
+
+        transition: none !important;
+    }
+
+    .progress-circle--interactive {
+        transition: none;
+    }
+
+    .progress-circle--interactive:hover,
+    .progress-circle--interactive:active {
+        transform: none;
+    }
+
+}
+
+/* ==========================================
+   High Contrast
+========================================== */
+
+@media (forced-colors: active) {
+
+    .progress-circle__track {
+        stroke: CanvasText;
+        opacity: .3;
+    }
+
+    .progress-circle__value {
+        stroke: Highlight;
+    }
+
+    .progress-circle__content strong,
+    .progress-circle__content span {
+        color: CanvasText;
+    }
+
+}
