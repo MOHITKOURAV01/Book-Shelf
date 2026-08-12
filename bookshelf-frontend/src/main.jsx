@@ -1,67 +1,37 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import App from './App.jsx';
-import AboutUs from './pages/AboutUs.jsx';
-import PrivacyPolicy from './pages/PrivacyPolicy.jsx';
-import TermsOfService from './pages/TermsOfService.jsx';
-import Login from './pages/Login.jsx';
-import Register from './pages/Register.jsx';
-import Profile from './pages/Profile.jsx';
-import ProtectedRoute from './components/ProtectedRoute.jsx';
+import { BrowserRouter } from 'react-router-dom';
+
+import AppRoutes from './routes/AppRoutes.jsx';
 import { AuthProvider } from './context/AuthContext.jsx';
 import { WishlistProvider } from './context/WishlistContext.jsx';
+import { CartProvider } from './context/CartContext.jsx';
+
+// Side-effect import: this is what actually calls i18n.init(). Nothing
+// imported it before, so every useTranslation() call in the app was running
+// against an uninitialised i18next instance.
+import './i18n.js';
+
 import './index.css';
 
-import Checkout from './pages/Checkout.jsx';
-import OrderConfirmation from './pages/OrderConfirmation.jsx';
-import OrdersPage from './pages/OrdersPage.jsx';
-import OrderDetailsPage from './pages/OrderDetailsPage.jsx';
-import WishlistPage from './pages/WishlistPage.jsx';
-
+/*
+ * Provider order matters here.
+ *
+ * WishlistProvider reads AuthContext to decide whether to load the wishlist
+ * from the API or from localStorage, so it has to sit inside AuthProvider.
+ * CartProvider is independent of both — it only touches localStorage — but it
+ * has to be above the router, because Navbar and CartDrawer both consume it
+ * and they are rendered by the App layout on every route.
+ */
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
     <AuthProvider>
       <WishlistProvider>
-        <BrowserRouter>
-          <Routes>
-          <Route path="/" element={<App />} />
-          <Route path="/about" element={<AboutUs />} />
-          <Route path="/privacy" element={<PrivacyPolicy />} />
-          <Route path="/terms" element={<TermsOfService />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
-          <Route path="/checkout" element={
-            <ProtectedRoute>
-              <Checkout />
-            </ProtectedRoute>
-          } />
-          <Route path="/order-confirmation" element={
-            <ProtectedRoute>
-              <OrderConfirmation />
-            </ProtectedRoute>
-          } />
-          <Route path="/account/orders" element={
-            <ProtectedRoute>
-              <OrdersPage />
-            </ProtectedRoute>
-          } />
-          <Route path="/account/orders/:id" element={
-            <ProtectedRoute>
-              <OrderDetailsPage />
-            </ProtectedRoute>
-          } />
-          <Route
-            path="/profile"
-            element={
-              <ProtectedRoute>
-                <Profile />
-              </ProtectedRoute>
-            }
-          />
-          <Route path="/wishlist" element={<WishlistPage />} />
-        </Routes>
-      </BrowserRouter>
+        <CartProvider>
+          <BrowserRouter>
+            <AppRoutes />
+          </BrowserRouter>
+        </CartProvider>
       </WishlistProvider>
     </AuthProvider>
   </React.StrictMode>

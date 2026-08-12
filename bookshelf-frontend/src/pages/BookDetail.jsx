@@ -4,7 +4,7 @@ import { books } from '../data/books.js';
 import Rating from '../components/Rating.jsx';
 import WishlistButton from '../components/WishlistButton.jsx';
 import SkeletonLoader from '../components/SkeletonLoader.jsx';
-import { CartContext } from '../context/CartContext.jsx';
+import { useCart } from '../hooks/useCart.js';
 import { WishlistContext } from '../context/WishlistContext.jsx';
 import { useTranslation } from 'react-i18next';
 import BookCard from '../components/BookCard.jsx';
@@ -18,7 +18,7 @@ export default function BookDetail() {
   const [error, setError] = useState('');
   const [successMsg, setSuccessMsg] = useState('');
   const [loading, setLoading] = useState(true);
-  const { addToCart } = useContext(CartContext);
+  const { addToCart } = useCart();
   const { wishlist, toggleWishlist } = useContext(WishlistContext);
 
   const book = books.find((item) => String(item.id) === String(id));

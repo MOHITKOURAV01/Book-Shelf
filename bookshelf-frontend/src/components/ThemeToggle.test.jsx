@@ -41,13 +41,13 @@ describe('ThemeToggle', () => {
     await user.click(button);
     
     expect(document.documentElement.getAttribute('data-theme')).toBe('dark');
-    expect(window.localStorage.getItem('bookshelf-theme')).toBe('dark');
+    expect(window.localStorage.getItem('theme')).toBe('dark');
     expect(screen.getByRole('button', { name: /Switch to light theme/i })).toBeInTheDocument();
     expect(button).toHaveTextContent('☀️');
   });
 
   it('initializes with saved theme from localStorage', () => {
-    window.localStorage.setItem('bookshelf-theme', 'dark');
+    window.localStorage.setItem('theme', 'dark');
     render(<ThemeToggle />);
     
     expect(document.documentElement.getAttribute('data-theme')).toBe('dark');

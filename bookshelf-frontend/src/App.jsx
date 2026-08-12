@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Routes, Route } from 'react-router-dom';
+import { Outlet } from 'react-router-dom';
 
 import ThemeToggle from './components/ThemeToggle.jsx';
 import ScrollToTop from './components/ScrollToTop.jsx';
@@ -10,21 +10,20 @@ import Footer from './components/Footer.jsx';
 import RecentlyViewed from './components/RecentlyViewed.jsx';
 import CartDrawer from './components/CartDrawer.jsx';
 
-import Home from './pages/Home.jsx';
-import AboutUs from './pages/AboutUs.jsx';
-import PrivacyPolicy from './pages/PrivacyPolicy.jsx';
-import TermsOfService from './pages/TermsOfService.jsx';
-import BookDetail from './pages/BookDetail.jsx';
-import Wishlist from './pages/Wishlist.jsx';
-import Login from './pages/Login.jsx';
-import Signup from './pages/Signup.jsx';
-import NotFound from './pages/NotFound.jsx';
-import Profile from './pages/Profile.jsx';
-import Checkout from './pages/Checkout.jsx';
-import OrderHistory from './pages/OrderHistory.jsx';
-
 import './App.css';
 
+/**
+ * App is the layout shell, not a page.
+ *
+ * It owns the chrome that should persist across navigations (navbar, footer,
+ * cart drawer, cursor) and renders whichever page matched through <Outlet />.
+ * The route table itself lives in routes/AppRoutes.jsx so there is exactly
+ * one of them.
+ *
+ * The search input lives in the navbar but the results are rendered by Home,
+ * so the query is held here and passed down through the outlet context.
+ * Pages that need it read it with useOutletContext().
+ */
 export default function App() {
   const [searchQuery, setSearchQuery] = useState('');
 
@@ -33,31 +32,15 @@ export default function App() {
       <ThemeToggle />
       <ScrollToTop />
       <CustomCursor />
-      
-      <Navbar 
-        searchQuery={searchQuery}
-        setSearchQuery={setSearchQuery}
-      />
+
+      <Navbar searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
       <div className="nav-spacer" />
 
-      <Routes>
-        <Route path="/" element={<Home searchQuery={searchQuery} />} />
-        <Route path="/book/:id" element={<BookDetail />} />
-        <Route path="/wishlist" element={<Wishlist />} />
-        <Route path="/orders" element={<OrderHistory />} />
-        <Route path="/about" element={<AboutUs />} />
-        <Route path="/privacy" element={<PrivacyPolicy />} />
-        <Route path="/terms" element={<TermsOfService />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/signup" element={<Signup />} />
-        <Route path="/profile" element={<Profile />} />
-        <Route path="/checkout" element={<Checkout />} />
-        <Route path="*" element={<NotFound />} />
-      </Routes>
+      <Outlet context={{ searchQuery, setSearchQuery }} />
 
       <RecentlyViewed />
       <Footer />
-      
+
       <CartDrawer />
     </div>
   );
