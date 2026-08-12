@@ -1,18 +1,12 @@
-import axios from 'axios';
-
-const API_URL = import.meta.env.VITE_API_URL ? `${import.meta.env.VITE_API_URL.replace(/\/api\/payments$/, '')}/api/orders` : 'http://localhost:5000/api/orders';
-
-const axiosInstance = axios.create({
-  withCredentials: true,
-});
+import api from '../utils/api.js';
 
 const getMyOrders = async () => {
-  const response = await axiosInstance.get(`${API_URL}/mine`);
+  const response = await api.get('/orders/mine');
   return response.data;
 };
 
 const getOrderById = async (id) => {
-  const response = await axiosInstance.get(`${API_URL}/${id}`);
+  const response = await api.get(`/orders/${id}`);
   return response.data;
 };
 

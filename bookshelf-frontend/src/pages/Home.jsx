@@ -5,6 +5,7 @@ import FilterSidebar from '../components/FilterSidebar.jsx';
 import BookCard from '../components/BookCard.jsx';
 import Pagination from '../components/Pagination.jsx';
 import SkeletonLoader from '../components/SkeletonLoader.jsx';
+import { API_BASE_URL } from '../config/env.js';
 
 // Genre list is static since the backend catalogue is fixed.
 // If the backend adds a GET /api/genres endpoint in the future, replace this.
@@ -80,7 +81,9 @@ export default function Home({ searchQuery = '' }) {
           search: searchQuery,
           ...(activeSort && { sort: activeSort }),
         });
-        const response = await fetch(`http://localhost:5000/api/books?${params.toString()}`);
+        const response = await fetch(
+          `${API_BASE_URL}/books?${params.toString()}`
+        );
 
         if (!response.ok) {
           throw new Error('Failed to load books');

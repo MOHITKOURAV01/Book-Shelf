@@ -98,7 +98,24 @@ npm install
 
 ---
 
-## 5. Start the Frontend
+## 5. Configure the Frontend Environment
+
+```bash
+cp .env.example .env
+```
+
+`.env` is gitignored. Only variables prefixed `VITE_` are exposed to the app,
+and Vite inlines them at **build** time — so `VITE_API_BASE_URL` has to be set
+wherever `npm run build` runs, not on the server that later hosts the files.
+
+| Variable | Required | Default | Purpose |
+| --- | --- | --- | --- |
+| `VITE_API_BASE_URL` | Not for local dev | `http://localhost:5000/api` | Base URL of the backend, including the `/api` prefix. Must be set for any deployed build, or the bundle calls localhost. |
+| `VITE_STRIPE_PUBLISHABLE_KEY` | For checkout | mock key | Stripe publishable key (`pk_...`). Never put the secret key here — that belongs in the backend `.env`. |
+
+---
+
+## 6. Start the Frontend
 
 ```bash
 npm run dev
@@ -106,7 +123,7 @@ npm run dev
 
 ---
 
-## 6. Backend (If Available)
+## 7. Backend (If Available)
 
 ```bash
 cd bookshelf-backend

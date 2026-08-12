@@ -1,5 +1,6 @@
 import React, { createContext, useState, useEffect } from 'react';
 import authService from '../services/authService.js';
+import { onUnauthorized } from '../utils/api.js';
 
 export const AuthContext = createContext();
 
@@ -10,6 +11,17 @@ export const AuthProvider = ({ children }) => {
 
   useEffect(() => {
     checkAuth();
+  }, []);
+
+  // The API client cannot import this context without a cycle, so it exposes
+  // a subscription instead. A 401 from any request now drops the local
+  // session, rather than leaving the user on a page that silently fails to
+  // load with no prompt to log in again.
+  useEffect(() => {
+    return onUnauthorized(() => {
+      setUser(null);
+      setIsAuthenticated(false);
+    });
   }, []);
 
   const checkAuth = async () => {
