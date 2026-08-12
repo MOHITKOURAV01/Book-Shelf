@@ -35,12 +35,10 @@ export const authUser = async (req, res, next) => {
 // @access  Public
 export const registerUser = async (req, res, next) => {
   try {
+    // Shape, length and email format are enforced by validateBody() on the
+    // route, and email arrives already trimmed and lowercased. This handler
+    // only has to deal with the one rule that needs a database lookup.
     const { name, email, password } = req.body;
-
-    if (password.length < 8) {
-      res.status(400);
-      throw new Error('Password must be at least 8 characters');
-    }
 
     const userExists = await userRepository.findByEmail(email);
 
