@@ -9,6 +9,10 @@ class OrderRepository {
     return await Order.findById(id);
   }
 
+  async findAll() {
+    return await Order.find({}).sort({ createdAt: -1 });
+  }
+
   async create(orderData) {
     const order = new Order(orderData);
     return await order.save();

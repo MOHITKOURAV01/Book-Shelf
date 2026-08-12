@@ -5,7 +5,7 @@ import userRepository from '../repositories/userRepository.js';
 // @access  Private
 export const getWishlist = async (req, res) => {
   try {
-    const user = await userRepository.findById(req.user.id);
+    const user = await userRepository.findById(req.user._id);
     if (!user) {
       return res.status(404).json({ message: 'User not found' });
     }
@@ -26,7 +26,7 @@ export const toggleWishlist = async (req, res) => {
       return res.status(400).json({ message: 'Book ID is required' });
     }
 
-    const user = await userRepository.findById(req.user.id);
+    const user = await userRepository.findById(req.user._id);
     if (!user) {
       return res.status(404).json({ message: 'User not found' });
     }
@@ -39,7 +39,7 @@ export const toggleWishlist = async (req, res) => {
       updatedWishlist.push(bookId);
     }
 
-    await userRepository.updateWishlist(req.user.id, updatedWishlist);
+    await userRepository.updateWishlist(req.user._id, updatedWishlist);
     res.json(updatedWishlist);
   } catch (error) {
     res.status(500).json({ message: 'Server error', error: error.message });
@@ -57,7 +57,7 @@ export const mergeWishlist = async (req, res) => {
       return res.status(400).json({ message: 'localWishlist array is required' });
     }
 
-    const user = await userRepository.findById(req.user.id);
+    const user = await userRepository.findById(req.user._id);
     if (!user) {
       return res.status(404).json({ message: 'User not found' });
     }
@@ -66,7 +66,7 @@ export const mergeWishlist = async (req, res) => {
     const merged = new Set([...user.wishlist, ...localWishlist]);
     const updatedWishlist = Array.from(merged);
 
-    await userRepository.updateWishlist(req.user.id, updatedWishlist);
+    await userRepository.updateWishlist(req.user._id, updatedWishlist);
     res.json(updatedWishlist);
   } catch (error) {
     res.status(500).json({ message: 'Server error', error: error.message });
