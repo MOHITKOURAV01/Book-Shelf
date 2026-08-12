@@ -1,26 +1,32 @@
 import { useContext } from 'react';
 import { Link } from 'react-router-dom';
 import WishlistButton from './WishlistButton.jsx';
-import { CartContext } from '../context/CartContext.jsx';
 import { WishlistContext } from '../context/WishlistContext.jsx';
+import { useCart } from '../hooks/useCart.js';
 import './BookCard.css';
-import { useContext } from 'react';
-import { WishlistContext } from '../context/WishlistContext.jsx';
-import WishlistButton from './WishlistButton.jsx';
 
 /**
  * BookCard — displays a single book as a card.
  *
  * Props:
  *   book        {object}   required — the book data object
- *   onAddToCart {function} optional — override the default CartContext addToCart.
- *                          Useful for contexts where the book object returned by the
- *                          parent differs from what CartContext would receive
- *                          (e.g. RecentlyViewed). Falls back to CartContext.addToCart.
+ *   onAddToCart {function} optional — override the default cart addToCart.
+ *                          Useful where the book object the parent holds
+ *                          differs from what the cart expects
+ *                          (e.g. RecentlyViewed). Falls back to addToCart.
  */
 export default function BookCard({ book, onAddToCart }) {
   const { wishlist, toggleWishlist } = useContext(WishlistContext);
-  const isWishlisted = wishlist.includes(book.id);
+  const { addToCart } = useCart();
+  const isWishlisted = wishlist?.includes(book.id);
+
+  const handleAddToCart = () => {
+    if (onAddToCart) {
+      onAddToCart(book);
+      return;
+    }
+    addToCart(book);
+  };
 
   return (
     <article className="book-card">
@@ -28,9 +34,9 @@ export default function BookCard({ book, onAddToCart }) {
         <span className="book-card__genre">{book.genre}</span>
         <span className="book-card__cover-title">{book.title}</span>
         <div className="book-card__wishlist-overlay">
-          <WishlistButton 
-            active={isWishlisted} 
-            onToggle={() => toggleWishlist(book.id)} 
+          <WishlistButton
+            active={isWishlisted}
+            onToggle={() => toggleWishlist(book.id)}
           />
         </div>
       </div>
@@ -51,10 +57,6 @@ export default function BookCard({ book, onAddToCart }) {
           <button className="book-card__add" onClick={handleAddToCart}>
             Add to cart
           </button>
-          <WishlistButton
-            active={wishlist?.includes(book.id)}
-            onToggle={() => toggleWishlist(book.id)}
-          />
         </div>
       </div>
     </article>
