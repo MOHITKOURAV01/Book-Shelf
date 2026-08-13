@@ -1,0 +1,495 @@
+/* ==========================================
+   BookRatingStars.css
+========================================== */
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+/* ==========================================
+   Main Component
+========================================== */
+
+.book-rating-stars {
+    display: inline-flex;
+    align-items: center;
+
+    gap: 9px;
+
+    width: max-content;
+    max-width: 100%;
+
+    color: #111827;
+
+    font-family: inherit;
+}
+
+/* ==========================================
+   Stars Container
+========================================== */
+
+.book-rating-stars__stars {
+    display: inline-flex;
+    align-items: center;
+
+    gap: 2px;
+}
+
+/* ==========================================
+   Individual Star
+========================================== */
+
+.book-rating-stars__star {
+    position: relative;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 26px;
+    height: 30px;
+
+    padding: 0;
+
+    border: 0;
+    border-radius: 5px;
+
+    background: transparent;
+
+    color: #d1d5db;
+
+    font: inherit;
+    line-height: 1;
+
+    cursor: default;
+
+    transition:
+        background-color .2s ease,
+        box-shadow .2s ease;
+}
+
+.book-rating-stars__star-base {
+    position: relative;
+    z-index: 1;
+
+    display: block;
+
+    color: #d1d5db;
+
+    font-size: 24px;
+    line-height: 1;
+
+    transform-origin: center;
+
+    transition:
+        transform .2s ease,
+        color .2s ease,
+        filter .2s ease;
+}
+
+/* ==========================================
+   Half Star
+========================================== */
+
+.book-rating-stars__star-fill {
+    position: absolute;
+    z-index: 2;
+
+    top: 50%;
+    left: 50%;
+
+    width: 50%;
+    height: 100%;
+
+    overflow: hidden;
+
+    color: #f59e0b;
+
+    font-size: 24px;
+    line-height: 1;
+
+    transform: translate(-50%, -50%);
+
+    pointer-events: none;
+
+    white-space: nowrap;
+}
+
+/* ==========================================
+   Full Star
+========================================== */
+
+.book-rating-stars__star--full .book-rating-stars__star-base {
+    color: #f59e0b;
+}
+
+/* ==========================================
+   Interactive Mode
+========================================== */
+
+.book-rating-stars--interactive
+.book-rating-stars__star {
+    cursor: pointer;
+}
+
+.book-rating-stars--interactive
+.book-rating-stars__star:hover
+.book-rating-stars__star-base,
+
+.book-rating-stars--interactive
+.book-rating-stars__star:focus-visible
+.book-rating-stars__star-base {
+    transform: scale(1.15);
+}
+
+.book-rating-stars--interactive
+.book-rating-stars__star:hover {
+    background: rgba(245, 158, 11, .06);
+}
+
+/* ==========================================
+   Focus Accessibility
+========================================== */
+
+.book-rating-stars__star:focus-visible {
+    outline:
+        3px solid
+        rgba(37, 99, 235, .3);
+
+    outline-offset: 2px;
+
+    border-radius: 5px;
+}
+
+/* ==========================================
+   Rating Information
+========================================== */
+
+.book-rating-stars__info {
+    display: inline-flex;
+    align-items: baseline;
+
+    gap: 5px;
+
+    white-space: nowrap;
+}
+
+.book-rating-stars__value {
+    color: #111827;
+
+    font-size: 14px;
+    font-weight: 700;
+
+    line-height: 1.2;
+}
+
+.book-rating-stars__reviews {
+    color: #6b7280;
+
+    font-size: 12px;
+    font-weight: 500;
+
+    line-height: 1.2;
+}
+
+/* ==========================================
+   Small Size
+========================================== */
+
+.book-rating-stars--sm {
+    gap: 6px;
+}
+
+.book-rating-stars--sm .book-rating-stars__stars {
+    gap: 1px;
+}
+
+.book-rating-stars--sm
+.book-rating-stars__star {
+    width: 20px;
+    height: 24px;
+}
+
+.book-rating-stars--sm
+.book-rating-stars__star-base,
+
+.book-rating-stars--sm
+.book-rating-stars__star-fill {
+    font-size: 18px;
+}
+
+.book-rating-stars--sm
+.book-rating-stars__value {
+    font-size: 12px;
+}
+
+.book-rating-stars--sm
+.book-rating-stars__reviews {
+    font-size: 11px;
+}
+
+/* ==========================================
+   Medium Size
+========================================== */
+
+.book-rating-stars--md {
+    gap: 9px;
+}
+
+/* ==========================================
+   Large Size
+========================================== */
+
+.book-rating-stars--lg {
+    gap: 11px;
+}
+
+.book-rating-stars--lg
+.book-rating-stars__stars {
+    gap: 3px;
+}
+
+.book-rating-stars--lg
+.book-rating-stars__star {
+    width: 34px;
+    height: 38px;
+}
+
+.book-rating-stars--lg
+.book-rating-stars__star-base,
+
+.book-rating-stars--lg
+.book-rating-stars__star-fill {
+    font-size: 32px;
+}
+
+.book-rating-stars--lg
+.book-rating-stars__value {
+    font-size: 16px;
+}
+
+.book-rating-stars--lg
+.book-rating-stars__reviews {
+    font-size: 13px;
+}
+
+/* ==========================================
+   Gold Variant
+========================================== */
+
+.book-rating-stars--gold
+.book-rating-stars__star--full
+.book-rating-stars__star-base,
+
+.book-rating-stars--gold
+.book-rating-stars__star-fill {
+    color: #f59e0b;
+}
+
+/* ==========================================
+   Blue Variant
+========================================== */
+
+.book-rating-stars--blue
+.book-rating-stars__star--full
+.book-rating-stars__star-base,
+
+.book-rating-stars--blue
+.book-rating-stars__star-fill {
+    color: #2563eb;
+}
+
+/* ==========================================
+   Purple Variant
+========================================== */
+
+.book-rating-stars--purple
+.book-rating-stars__star--full
+.book-rating-stars__star-base,
+
+.book-rating-stars--purple
+.book-rating-stars__star-fill {
+    color: #7c3aed;
+}
+
+/* ==========================================
+   Red Variant
+========================================== */
+
+.book-rating-stars--red
+.book-rating-stars__star--full
+.book-rating-stars__star-base,
+
+.book-rating-stars--red
+.book-rating-stars__star-fill {
+    color: #dc2626;
+}
+
+/* ==========================================
+   Green Variant
+========================================== */
+
+.book-rating-stars--green
+.book-rating-stars__star--full
+.book-rating-stars__star-base,
+
+.book-rating-stars--green
+.book-rating-stars__star-fill {
+    color: #16a34a;
+}
+
+/* ==========================================
+   Pink Variant
+========================================== */
+
+.book-rating-stars--pink
+.book-rating-stars__star--full
+.book-rating-stars__star-base,
+
+.book-rating-stars--pink
+.book-rating-stars__star-fill {
+    color: #db2777;
+}
+
+/* ==========================================
+   Compact Variant
+========================================== */
+
+.book-rating-stars--compact
+.book-rating-stars__info {
+    display: none;
+}
+
+/* ==========================================
+   Review-only Variant
+========================================== */
+
+.book-rating-stars--reviews-only
+.book-rating-stars__value {
+    display: none;
+}
+
+/* ==========================================
+   Muted Variant
+========================================== */
+
+.book-rating-stars--muted
+.book-rating-stars__star-base {
+    color: #9ca3af;
+}
+
+.book-rating-stars--muted
+.book-rating-stars__star--full
+.book-rating-stars__star-base {
+    color: #6b7280;
+}
+
+.book-rating-stars--muted
+.book-rating-stars__star-fill {
+    color: #6b7280;
+}
+
+/* ==========================================
+   Card Style
+========================================== */
+
+.book-rating-stars--card {
+    padding: 10px 14px;
+
+    border:
+        1px solid
+        #e5e7eb;
+
+    border-radius: 12px;
+
+    background: #ffffff;
+
+    box-shadow:
+        0 4px 12px rgba(0, 0, 0, .06);
+}
+
+/* ==========================================
+   Responsive
+========================================== */
+
+@media (max-width: 600px) {
+
+    .book-rating-stars {
+        max-width: 100%;
+
+        flex-wrap: wrap;
+    }
+
+    .book-rating-stars__info {
+        max-width: 100%;
+    }
+
+}
+
+/* ==========================================
+   Small Mobile
+========================================== */
+
+@media (max-width: 400px) {
+
+    .book-rating-stars--lg
+    .book-rating-stars__star {
+        width: 29px;
+        height: 34px;
+    }
+
+    .book-rating-stars--lg
+    .book-rating-stars__star-base,
+
+    .book-rating-stars--lg
+    .book-rating-stars__star-fill {
+        font-size: 27px;
+    }
+
+}
+
+/* ==========================================
+   Reduced Motion
+========================================== */
+
+@media (prefers-reduced-motion: reduce) {
+
+    .book-rating-stars__star,
+    .book-rating-stars__star-base {
+        transition: none;
+    }
+
+    .book-rating-stars--interactive
+    .book-rating-stars__star:hover
+    .book-rating-stars__star-base,
+
+    .book-rating-stars--interactive
+    .book-rating-stars__star:focus-visible
+    .book-rating-stars__star-base {
+        transform: none;
+    }
+
+}
+
+/* ==========================================
+   High Contrast Mode
+========================================== */
+
+@media (forced-colors: active) {
+
+    .book-rating-stars__star {
+        color: ButtonText;
+    }
+
+    .book-rating-stars__star-base,
+    .book-rating-stars__star-fill {
+        color: ButtonText;
+    }
+
+    .book-rating-stars__star:focus-visible {
+        outline-color: Highlight;
+    }
+
+}
