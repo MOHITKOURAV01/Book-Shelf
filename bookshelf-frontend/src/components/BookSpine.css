@@ -1,0 +1,267 @@
+*,
+*::before,
+*::after{
+  box-sizing:border-box;
+}
+
+.book-spine{
+  --book-spine-height:220px;
+  --book-spine-width:58px;
+
+  position:relative;
+
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:space-between;
+
+  width:var(--book-spine-width);
+  height:var(--book-spine-height);
+
+  padding:16px 10px;
+
+  border:0;
+  border-left:3px solid rgba(0,0,0,.18);
+  border-right:2px solid rgba(255,255,255,.22);
+  border-radius:5px 8px 7px 4px;
+
+  background:#2563eb;
+  color:#fff;
+
+  font-family:inherit;
+  cursor:default;
+
+  box-shadow:
+    5px 6px 12px rgba(0,0,0,.18),
+    inset -4px 0 8px rgba(0,0,0,.08),
+    inset 3px 0 5px rgba(255,255,255,.08);
+
+  overflow:hidden;
+
+  transform-origin:center bottom;
+
+  transition:
+    transform .25s ease,
+    box-shadow .25s ease,
+    filter .25s ease;
+}
+
+.book-spine::before{
+  content:"";
+
+  position:absolute;
+  inset:0;
+
+  background:
+    linear-gradient(
+      90deg,
+      rgba(255,255,255,.14),
+      transparent 18%,
+      transparent 78%,
+      rgba(0,0,0,.08)
+    );
+
+  pointer-events:none;
+}
+
+.book-spine__top,
+.book-spine__bottom{
+  position:relative;
+  z-index:1;
+
+  width:100%;
+  height:2px;
+
+  border-radius:999px;
+
+  background:rgba(255,255,255,.35);
+}
+
+.book-spine__title{
+  position:relative;
+  z-index:1;
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  flex:1;
+
+  width:100%;
+
+  padding:8px 0;
+
+  font-size:13px;
+  font-weight:700;
+
+  line-height:1.15;
+  text-align:center;
+
+  writing-mode:vertical-rl;
+  transform:rotate(180deg);
+
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+
+.book-spine__author{
+  position:relative;
+  z-index:1;
+
+  max-width:100%;
+
+  font-size:9px;
+  font-weight:500;
+
+  line-height:1;
+
+  white-space:nowrap;
+
+  overflow:hidden;
+  text-overflow:ellipsis;
+
+  writing-mode:vertical-rl;
+  transform:rotate(180deg);
+
+  opacity:.82;
+}
+
+.book-spine--interactive{
+  cursor:pointer;
+}
+
+.book-spine--interactive:hover{
+  transform:translateY(-8px) rotate(-1deg);
+
+  box-shadow:
+    8px 14px 20px rgba(0,0,0,.22),
+    inset -4px 0 8px rgba(0,0,0,.08);
+}
+
+.book-spine--interactive:active{
+  transform:translateY(-3px);
+}
+
+.book-spine--horizontal{
+  width:var(--book-spine-height);
+  height:var(--book-spine-width);
+
+  flex-direction:row;
+
+  padding:10px 16px;
+
+  border-left:3px solid rgba(0,0,0,.18);
+}
+
+.book-spine--horizontal .book-spine__title,
+.book-spine--horizontal .book-spine__author{
+  writing-mode:horizontal-tb;
+  transform:none;
+
+  white-space:nowrap;
+}
+
+.book-spine--horizontal .book-spine__title{
+  justify-content:flex-start;
+
+  text-align:left;
+}
+
+.book-spine--horizontal .book-spine__author{
+  max-width:30%;
+}
+
+/* Color variants */
+
+.book-spine--blue{background:#2563eb}
+.book-spine--green{background:#16a34a}
+.book-spine--red{background:#dc2626}
+.book-spine--purple{background:#7c3aed}
+.book-spine--pink{background:#db2777}
+.book-spine--orange{background:#ea580c}
+.book-spine--teal{background:#0d9488}
+.book-spine--dark{background:#1f2937}
+.book-spine--brown{background:#92400e}
+
+/* Light variants */
+
+.book-spine--light-blue{
+  background:#60a5fa;
+}
+
+.book-spine--light-purple{
+  background:#a78bfa;
+}
+
+.book-spine--light-green{
+  background:#4ade80;
+}
+
+.book-spine--cream{
+  background:#d6b77c;
+  color:#422006;
+}
+
+.book-spine--cream .book-spine__top,
+.book-spine--cream .book-spine__bottom{
+  background:rgba(66,32,6,.25);
+}
+
+/* Focus */
+
+.book-spine:focus-visible{
+  outline:3px solid rgba(37,99,235,.45);
+  outline-offset:5px;
+}
+
+/* Shelf grouping */
+
+.book-spine-group{
+  display:flex;
+  align-items:flex-end;
+  gap:8px;
+
+  min-height:var(--book-spine-height,220px);
+
+  padding:20px;
+
+  border-bottom:8px solid #92400e;
+  background:#f9fafb;
+}
+
+/* Mobile */
+
+@media(max-width:600px){
+  .book-spine{
+    --book-spine-height:180px;
+    --book-spine-width:50px;
+
+    padding:12px 8px;
+  }
+
+  .book-spine__title{
+    font-size:11px;
+  }
+
+  .book-spine__author{
+    font-size:8px;
+  }
+
+  .book-spine--horizontal{
+    width:180px;
+    height:50px;
+  }
+}
+
+/* Reduced motion */
+
+@media(prefers-reduced-motion:reduce){
+  .book-spine{
+    transition:none;
+  }
+
+  .book-spine--interactive:hover,
+  .book-spine--interactive:active{
+    transform:none;
+  }
+}
