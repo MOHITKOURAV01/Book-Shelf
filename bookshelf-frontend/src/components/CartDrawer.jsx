@@ -1,10 +1,10 @@
-import { useEffect, useRef, useContext } from 'react';
+import { useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { CartContext } from '../context/CartContext.jsx';
+import { useCart } from '../hooks/useCart.js';
 import './CartDrawer.css';
 
 export default function CartDrawer() {
-  const { cart, isCartOpen, setIsCartOpen, updateQuantity, removeFromCart, clearCart } = useContext(CartContext);
+  const { cart, isCartOpen, setIsCartOpen, updateQuantity, removeFromCart, clearCart } = useCart();
   const navigate = useNavigate();
   const drawerRef = useRef(null);
   const previousFocusRef = useRef(null);

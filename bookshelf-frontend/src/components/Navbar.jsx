@@ -1,7 +1,7 @@
-import { useState, useContext } from 'react';
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useTheme } from '../hooks/useTheme';
-import { CartContext } from '../context/CartContext.jsx';
+import { useCart } from '../hooks/useCart.js';
 import { useTranslation } from 'react-i18next';
 import './Navbar.css';
 
@@ -9,7 +9,7 @@ export default function Navbar({ searchQuery, setSearchQuery }) {
   const { t } = useTranslation();
   const [mobileOpen, setMobileOpen] = useState(false);
   const { theme, toggleTheme } = useTheme();
-  const { cart, setIsCartOpen } = useContext(CartContext);
+  const { cart, setIsCartOpen } = useCart();
 
   return (
     <div className="nav-wrapper">

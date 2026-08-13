@@ -1,4 +1,5 @@
 import { useMemo, useState, useEffect, useCallback } from 'react';
+import { useOutletContext } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import Hero from '../components/Hero.jsx';
 import FilterSidebar from '../components/FilterSidebar.jsx';
@@ -10,8 +11,14 @@ import SkeletonLoader from '../components/SkeletonLoader.jsx';
 // If the backend adds a GET /api/genres endpoint in the future, replace this.
 const ALL_GENRES = ['All', 'Fiction', 'Sci-Fi', 'Mystery', 'Self-Help', 'Poetry'];
 
-export default function Home({ searchQuery = '' }) {
+export default function Home({ searchQuery: searchQueryProp }) {
   const { t } = useTranslation();
+
+  // The search box lives in the navbar, which the App layout renders, so the
+  // query reaches this page through the outlet context. The prop is kept as
+  // an override so Home can still be rendered standalone in tests.
+  const outletContext = useOutletContext();
+  const searchQuery = searchQueryProp ?? outletContext?.searchQuery ?? '';
 
   // ── Server-side data ──────────────────────────────────────────────────
   const [books, setBooks] = useState([]);
