@@ -14,8 +14,15 @@ export const errorHandler = (err, req, res, next) => {
     message = 'Resource not found';
   }
 
-  res.status(statusCode).json({
-    message,
-    stack: process.env.NODE_ENV === 'production' ? null : err.stack,
-  });
+  const body = { message };
+
+  // Only ever include the stack when NODE_ENV says development outright.
+  // This used to be `=== 'production' ? null : err.stack`, which leaks
+  // absolute paths and internals on any deployment that forgets to set
+  // NODE_ENV at all. Fail closed instead.
+  if (process.env.NODE_ENV === 'development') {
+    body.stack = err.stack;
+  }
+
+  res.status(statusCode).json(body);
 };
