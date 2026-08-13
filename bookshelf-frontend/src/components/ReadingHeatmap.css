@@ -1,0 +1,468 @@
+/* ==========================================
+   ReadingHeatmap.css
+========================================== */
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+/* ==========================================
+   Main Container
+========================================== */
+
+.reading-heatmap {
+    width: 100%;
+    max-width: 760px;
+
+    padding: 22px;
+
+    border: 1px solid #e5e7eb;
+    border-radius: 18px;
+
+    background: #ffffff;
+    color: #111827;
+
+    box-shadow:
+        0 8px 24px rgba(0, 0, 0, .08);
+
+    overflow: hidden;
+
+    transition:
+        transform .25s ease,
+        box-shadow .25s ease,
+        border-color .25s ease;
+}
+
+.reading-heatmap:hover {
+    transform: translateY(-2px);
+
+    box-shadow:
+        0 14px 32px rgba(0, 0, 0, .12);
+}
+
+/* ==========================================
+   Header
+========================================== */
+
+.reading-heatmap__header {
+    display: flex;
+
+    align-items: flex-start;
+    justify-content: space-between;
+
+    gap: 20px;
+
+    margin-bottom: 18px;
+}
+
+.reading-heatmap__title {
+    margin: 0;
+
+    color: #111827;
+
+    font-size: 18px;
+    font-weight: 700;
+
+    line-height: 1.3;
+}
+
+.reading-heatmap__subtitle {
+    margin: 4px 0 0;
+
+    color: #6b7280;
+
+    font-size: 13px;
+
+    line-height: 1.5;
+}
+
+.reading-heatmap__total {
+    flex-shrink: 0;
+
+    color: #166534;
+
+    font-size: 20px;
+    font-weight: 700;
+
+    line-height: 1.2;
+
+    white-space: nowrap;
+}
+
+/* ==========================================
+   Heatmap Grid
+========================================== */
+
+.reading-heatmap__grid {
+    display: grid;
+
+    grid-template-rows: repeat(7, 12px);
+
+    grid-auto-flow: column;
+    grid-auto-columns: minmax(10px, 1fr);
+
+    gap: 5px;
+
+    width: 100%;
+    min-width: 280px;
+
+    overflow-x: auto;
+
+    scrollbar-width: thin;
+}
+
+.reading-heatmap__grid::-webkit-scrollbar {
+    height: 5px;
+}
+
+.reading-heatmap__grid::-webkit-scrollbar-thumb {
+    border-radius: 999px;
+
+    background: #d1d5db;
+}
+
+/* ==========================================
+   Heatmap Cells
+========================================== */
+
+.reading-heatmap__cell {
+    display: block;
+
+    width: 100%;
+    min-width: 10px;
+
+    border-radius: 3px;
+
+    background: #f3f4f6;
+
+    cursor: pointer;
+
+    transition:
+        transform .18s ease,
+        filter .18s ease,
+        box-shadow .18s ease;
+}
+
+.reading-heatmap__cell:hover {
+    transform: scale(1.18);
+
+    filter: brightness(.95);
+
+    box-shadow:
+        0 2px 6px rgba(0, 0, 0, .12);
+}
+
+/* ==========================================
+   Green Levels
+========================================== */
+
+.reading-heatmap__cell--0 {
+    background: #f3f4f6;
+}
+
+.reading-heatmap__cell--1 {
+    background: #dcfce7;
+}
+
+.reading-heatmap__cell--2 {
+    background: #86efac;
+}
+
+.reading-heatmap__cell--3 {
+    background: #22c55e;
+}
+
+.reading-heatmap__cell--4 {
+    background: #15803d;
+}
+
+/* ==========================================
+   Legend
+========================================== */
+
+.reading-heatmap__legend {
+    display: flex;
+
+    align-items: center;
+    justify-content: flex-end;
+
+    gap: 5px;
+
+    margin-top: 14px;
+
+    color: #6b7280;
+
+    font-size: 11px;
+    line-height: 1;
+}
+
+.reading-heatmap__legend-cell {
+    display: block;
+
+    width: 12px;
+    height: 12px;
+
+    flex-shrink: 0;
+
+    border-radius: 3px;
+}
+
+.reading-heatmap__legend-cell--0 {
+    background: #f3f4f6;
+}
+
+.reading-heatmap__legend-cell--1 {
+    background: #dcfce7;
+}
+
+.reading-heatmap__legend-cell--2 {
+    background: #86efac;
+}
+
+.reading-heatmap__legend-cell--3 {
+    background: #22c55e;
+}
+
+.reading-heatmap__legend-cell--4 {
+    background: #15803d;
+}
+
+/* ==========================================
+   Blue Variant
+========================================== */
+
+.reading-heatmap--blue .reading-heatmap__cell--1 {
+    background: #dbeafe;
+}
+
+.reading-heatmap--blue .reading-heatmap__cell--2 {
+    background: #93c5fd;
+}
+
+.reading-heatmap--blue .reading-heatmap__cell--3 {
+    background: #3b82f6;
+}
+
+.reading-heatmap--blue .reading-heatmap__cell--4 {
+    background: #1d4ed8;
+}
+
+.reading-heatmap--blue .reading-heatmap__total {
+    color: #1d4ed8;
+}
+
+.reading-heatmap--blue .reading-heatmap__legend-cell--1 {
+    background: #dbeafe;
+}
+
+.reading-heatmap--blue .reading-heatmap__legend-cell--2 {
+    background: #93c5fd;
+}
+
+.reading-heatmap--blue .reading-heatmap__legend-cell--3 {
+    background: #3b82f6;
+}
+
+.reading-heatmap--blue .reading-heatmap__legend-cell--4 {
+    background: #1d4ed8;
+}
+
+/* ==========================================
+   Purple Variant
+========================================== */
+
+.reading-heatmap--purple .reading-heatmap__cell--1 {
+    background: #ede9fe;
+}
+
+.reading-heatmap--purple .reading-heatmap__cell--2 {
+    background: #c4b5fd;
+}
+
+.reading-heatmap--purple .reading-heatmap__cell--3 {
+    background: #8b5cf6;
+}
+
+.reading-heatmap--purple .reading-heatmap__cell--4 {
+    background: #6d28d9;
+}
+
+.reading-heatmap--purple .reading-heatmap__total {
+    color: #6d28d9;
+}
+
+.reading-heatmap--purple .reading-heatmap__legend-cell--1 {
+    background: #ede9fe;
+}
+
+.reading-heatmap--purple .reading-heatmap__legend-cell--2 {
+    background: #c4b5fd;
+}
+
+.reading-heatmap--purple .reading-heatmap__legend-cell--3 {
+    background: #8b5cf6;
+}
+
+.reading-heatmap--purple .reading-heatmap__legend-cell--4 {
+    background: #6d28d9;
+}
+
+/* ==========================================
+   Orange Variant
+========================================== */
+
+.reading-heatmap--orange .reading-heatmap__cell--1 {
+    background: #ffedd5;
+}
+
+.reading-heatmap--orange .reading-heatmap__cell--2 {
+    background: #fdba74;
+}
+
+.reading-heatmap--orange .reading-heatmap__cell--3 {
+    background: #f97316;
+}
+
+.reading-heatmap--orange .reading-heatmap__cell--4 {
+    background: #c2410c;
+}
+
+.reading-heatmap--orange .reading-heatmap__total {
+    color: #c2410c;
+}
+
+.reading-heatmap--orange .reading-heatmap__legend-cell--1 {
+    background: #ffedd5;
+}
+
+.reading-heatmap--orange .reading-heatmap__legend-cell--2 {
+    background: #fdba74;
+}
+
+.reading-heatmap--orange .reading-heatmap__legend-cell--3 {
+    background: #f97316;
+}
+
+.reading-heatmap--orange .reading-heatmap__legend-cell--4 {
+    background: #c2410c;
+}
+
+/* ==========================================
+   Focus Accessibility
+========================================== */
+
+.reading-heatmap:focus-visible {
+    outline:
+        3px solid
+        rgba(37, 99, 235, .35);
+
+    outline-offset: 4px;
+}
+
+/* ==========================================
+   Responsive - Tablet
+========================================== */
+
+@media (max-width: 700px) {
+
+    .reading-heatmap {
+        padding: 18px;
+    }
+
+    .reading-heatmap__grid {
+        grid-auto-columns: 12px;
+
+        justify-content: start;
+
+        overflow-x: auto;
+
+        padding-bottom: 4px;
+    }
+
+}
+
+/* ==========================================
+   Responsive - Mobile
+========================================== */
+
+@media (max-width: 600px) {
+
+    .reading-heatmap {
+        max-width: 100%;
+
+        border-radius: 16px;
+    }
+
+    .reading-heatmap__header {
+        align-items: flex-start;
+
+        gap: 12px;
+    }
+
+    .reading-heatmap__title {
+        font-size: 16px;
+    }
+
+    .reading-heatmap__subtitle {
+        font-size: 12px;
+    }
+
+    .reading-heatmap__total {
+        font-size: 18px;
+    }
+
+}
+
+/* ==========================================
+   Small Mobile
+========================================== */
+
+@media (max-width: 400px) {
+
+    .reading-heatmap {
+        padding: 16px;
+    }
+
+    .reading-heatmap__header {
+        flex-direction: column;
+    }
+
+    .reading-heatmap__grid {
+        gap: 4px;
+    }
+
+    .reading-heatmap__legend {
+        justify-content: flex-start;
+    }
+
+}
+
+/* ==========================================
+   Reduced Motion
+========================================== */
+
+@media (prefers-reduced-motion: reduce) {
+
+    .reading-heatmap,
+    .reading-heatmap__cell {
+        transition: none;
+    }
+
+    .reading-heatmap:hover {
+        transform: none;
+
+        box-shadow:
+            0 8px 24px rgba(0, 0, 0, .08);
+    }
+
+    .reading-heatmap__cell:hover {
+        transform: none;
+
+        filter: none;
+
+        box-shadow: none;
+    }
+
+}
