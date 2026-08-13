@@ -1,0 +1,543 @@
+/* ==========================================
+   ReadingStreak.css
+========================================== */
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+/* ==========================================
+   Main Card
+========================================== */
+
+.reading-streak {
+    width: 100%;
+    max-width: 420px;
+
+    padding: 22px;
+
+    border: 1px solid #e5e7eb;
+    border-radius: 18px;
+
+    background: #ffffff;
+    color: #111827;
+
+    box-shadow:
+        0 8px 24px rgba(0, 0, 0, .08);
+
+    transition:
+        transform .25s ease,
+        box-shadow .25s ease,
+        border-color .25s ease;
+}
+
+.reading-streak:hover {
+    transform: translateY(-3px);
+
+    box-shadow:
+        0 14px 32px rgba(0, 0, 0, .12);
+}
+
+/* ==========================================
+   Header
+========================================== */
+
+.reading-streak__header {
+    display: flex;
+    align-items: center;
+
+    gap: 14px;
+}
+
+.reading-streak__icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 54px;
+    height: 54px;
+
+    flex-shrink: 0;
+
+    border-radius: 16px;
+
+    background: #fff7ed;
+
+    font-size: 28px;
+
+    box-shadow:
+        inset 0 0 0 1px rgba(249, 115, 22, .08);
+}
+
+.reading-streak__heading {
+    min-width: 0;
+}
+
+/* ==========================================
+   Label
+========================================== */
+
+.reading-streak__label {
+    margin: 0 0 3px;
+
+    color: #6b7280;
+
+    font-size: 13px;
+    font-weight: 600;
+
+    line-height: 1.3;
+}
+
+/* ==========================================
+   Current Streak
+========================================== */
+
+.reading-streak__current {
+    display: flex;
+    align-items: baseline;
+
+    gap: 7px;
+}
+
+.reading-streak__current strong {
+    color: #111827;
+
+    font-size: 34px;
+    font-weight: 800;
+
+    line-height: 1;
+}
+
+.reading-streak__current span {
+    color: #6b7280;
+
+    font-size: 14px;
+    font-weight: 500;
+}
+
+/* ==========================================
+   Statistics
+========================================== */
+
+.reading-streak__stats {
+    display: grid;
+
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+
+    gap: 10px;
+
+    margin-top: 20px;
+}
+
+.reading-streak__stats div {
+    min-width: 0;
+
+    padding: 12px;
+
+    border: 1px solid #f3f4f6;
+    border-radius: 12px;
+
+    background: #f9fafb;
+
+    transition:
+        background-color .2s ease,
+        border-color .2s ease;
+}
+
+.reading-streak__stats div:hover {
+    border-color: #e5e7eb;
+
+    background: #f3f4f6;
+}
+
+.reading-streak__stats span {
+    display: block;
+
+    margin-bottom: 4px;
+
+    color: #6b7280;
+
+    font-size: 11px;
+    font-weight: 600;
+
+    text-transform: uppercase;
+
+    letter-spacing: .04em;
+}
+
+.reading-streak__stats strong {
+    color: #111827;
+
+    font-size: 18px;
+    font-weight: 700;
+}
+
+/* ==========================================
+   Weekly Activity
+========================================== */
+
+.reading-streak__week {
+    display: grid;
+
+    grid-template-columns: repeat(7, minmax(0, 1fr));
+
+    gap: 8px;
+
+    margin-top: 18px;
+}
+
+.reading-streak__day {
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: center;
+
+    gap: 6px;
+
+    min-width: 0;
+
+    color: #9ca3af;
+
+    font-size: 11px;
+    font-weight: 600;
+
+    line-height: 1.2;
+}
+
+.reading-streak__day span {
+    display: block;
+
+    text-align: center;
+}
+
+.reading-streak__day i {
+    display: block;
+
+    width: 100%;
+    max-width: 30px;
+
+    aspect-ratio: 1 / 1;
+
+    border-radius: 9px;
+
+    background: #e5e7eb;
+
+    transition:
+        transform .2s ease,
+        background-color .2s ease,
+        box-shadow .2s ease;
+}
+
+.reading-streak__day:hover i {
+    transform: scale(1.08);
+}
+
+/* ==========================================
+   Active Day
+========================================== */
+
+.reading-streak__day--active {
+    color: #c2410c;
+}
+
+.reading-streak__day--active i {
+    background: #f97316;
+
+    box-shadow:
+        0 3px 8px rgba(249, 115, 22, .25);
+}
+
+/* ==========================================
+   Message
+========================================== */
+
+.reading-streak__message {
+    margin: 18px 0 0;
+
+    color: #6b7280;
+
+    font-size: 13px;
+
+    line-height: 1.5;
+}
+
+/* ==========================================
+   Orange Variant
+========================================== */
+
+.reading-streak--orange .reading-streak__icon {
+    background: #fff7ed;
+}
+
+.reading-streak--orange .reading-streak__day--active {
+    color: #c2410c;
+}
+
+.reading-streak--orange .reading-streak__day--active i {
+    background: #f97316;
+}
+
+/* ==========================================
+   Blue Variant
+========================================== */
+
+.reading-streak--blue .reading-streak__icon {
+    background: #eff6ff;
+}
+
+.reading-streak--blue .reading-streak__day--active {
+    color: #1d4ed8;
+}
+
+.reading-streak--blue .reading-streak__day--active i {
+    background: #2563eb;
+
+    box-shadow:
+        0 3px 8px rgba(37, 99, 235, .25);
+}
+
+/* ==========================================
+   Green Variant
+========================================== */
+
+.reading-streak--green .reading-streak__icon {
+    background: #ecfdf5;
+}
+
+.reading-streak--green .reading-streak__day--active {
+    color: #15803d;
+}
+
+.reading-streak--green .reading-streak__day--active i {
+    background: #16a34a;
+
+    box-shadow:
+        0 3px 8px rgba(22, 163, 74, .25);
+}
+
+/* ==========================================
+   Purple Variant
+========================================== */
+
+.reading-streak--purple .reading-streak__icon {
+    background: #faf5ff;
+}
+
+.reading-streak--purple .reading-streak__day--active {
+    color: #6d28d9;
+}
+
+.reading-streak--purple .reading-streak__day--active i {
+    background: #7c3aed;
+
+    box-shadow:
+        0 3px 8px rgba(124, 58, 237, .25);
+}
+
+/* ==========================================
+   Success State
+========================================== */
+
+.reading-streak--complete {
+    border-color: #bbf7d0;
+
+    background: #f0fdf4;
+}
+
+.reading-streak--complete .reading-streak__icon {
+    background: #dcfce7;
+}
+
+.reading-streak--complete .reading-streak__current strong {
+    color: #15803d;
+}
+
+/* ==========================================
+   Empty State
+========================================== */
+
+.reading-streak--empty {
+    border-style: dashed;
+}
+
+.reading-streak--empty .reading-streak__day i {
+    background: #f3f4f6;
+}
+
+/* ==========================================
+   Interactive Variant
+========================================== */
+
+.reading-streak--interactive {
+    cursor: pointer;
+}
+
+.reading-streak--interactive:hover {
+    border-color: #bfdbfe;
+
+    box-shadow:
+        0 16px 36px rgba(37, 99, 235, .14);
+}
+
+.reading-streak--interactive:active {
+    transform: translateY(-1px);
+}
+
+/* ==========================================
+   Focus Accessibility
+========================================== */
+
+.reading-streak:focus-visible {
+    outline:
+        3px solid
+        rgba(37, 99, 235, .35);
+
+    outline-offset: 4px;
+}
+
+/* ==========================================
+   Responsive
+========================================== */
+
+@media (max-width: 768px) {
+
+    .reading-streak {
+        max-width: 100%;
+    }
+
+}
+
+/* ==========================================
+   Mobile
+========================================== */
+
+@media (max-width: 600px) {
+
+    .reading-streak {
+        max-width: 100%;
+
+        padding: 18px;
+
+        border-radius: 16px;
+    }
+
+    .reading-streak__icon {
+        width: 50px;
+        height: 50px;
+
+        border-radius: 14px;
+
+        font-size: 25px;
+    }
+
+    .reading-streak__current strong {
+        font-size: 30px;
+    }
+
+    .reading-streak__week {
+        gap: 6px;
+    }
+
+    .reading-streak__day i {
+        max-width: 27px;
+
+        border-radius: 8px;
+    }
+
+}
+
+/* ==========================================
+   Small Mobile
+========================================== */
+
+@media (max-width: 400px) {
+
+    .reading-streak {
+        padding: 16px;
+    }
+
+    .reading-streak__header {
+        gap: 10px;
+    }
+
+    .reading-streak__icon {
+        width: 46px;
+        height: 46px;
+
+        font-size: 22px;
+    }
+
+    .reading-streak__current strong {
+        font-size: 27px;
+    }
+
+    .reading-streak__current span {
+        font-size: 12px;
+    }
+
+    .reading-streak__week {
+        gap: 4px;
+    }
+
+    .reading-streak__day {
+        font-size: 10px;
+    }
+
+}
+
+/* ==========================================
+   Reduced Motion
+========================================== */
+
+@media (prefers-reduced-motion: reduce) {
+
+    .reading-streak,
+    .reading-streak__stats div,
+    .reading-streak__day i {
+
+        transition: none;
+    }
+
+    .reading-streak:hover,
+    .reading-streak--interactive:hover,
+    .reading-streak--interactive:active {
+
+        transform: none;
+    }
+
+    .reading-streak__day:hover i {
+        transform: none;
+    }
+
+}
+
+/* ==========================================
+   High Contrast Mode
+========================================== */
+
+@media (forced-colors: active) {
+
+    .reading-streak {
+        border-color: CanvasText;
+
+        background: Canvas;
+
+        color: CanvasText;
+    }
+
+    .reading-streak__stats div,
+    .reading-streak__day i {
+        border-color: CanvasText;
+
+        background: Canvas;
+    }
+
+    .reading-streak__current strong,
+    .reading-streak__stats strong {
+        color: CanvasText;
+    }
+
+}
