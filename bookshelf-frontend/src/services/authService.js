@@ -1,33 +1,29 @@
-import axios from 'axios';
+import api from '../utils/api.js';
 
-const API_URL =
-  import.meta.env.VITE_API_URL || 'http://localhost:5000/api/auth';
-
-const axiosInstance = axios.create({
-  withCredentials: true,
-});
+// Paths are relative to the shared client's baseURL, so the host is
+// configured in exactly one place (src/config/env.js).
 
 // Register user
 const register = async (userData) => {
-  const response = await axiosInstance.post(`${API_URL}/register`, userData);
+  const response = await api.post('/auth/register', userData);
   return response.data;
 };
 
 // Login user
 const login = async (userData) => {
-  const response = await axiosInstance.post(`${API_URL}/login`, userData);
+  const response = await api.post('/auth/login', userData);
   return response.data;
 };
 
 // Logout user
 const logout = async () => {
-  const response = await axiosInstance.post(`${API_URL}/logout`);
+  const response = await api.post('/auth/logout');
   return response.data;
 };
 
 // Get current user profile
 const getCurrentUser = async () => {
-  const response = await axiosInstance.get(`${API_URL}/me`);
+  const response = await api.get('/auth/me');
   return response.data;
 };
 
