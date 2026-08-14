@@ -1,11 +1,11 @@
-import { useState, useEffect, useContext } from 'react';
+import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { books } from '../data/books.js';
 import Rating from '../components/Rating.jsx';
 import WishlistButton from '../components/WishlistButton.jsx';
 import SkeletonLoader from '../components/SkeletonLoader.jsx';
 import { useCart } from '../hooks/useCart.js';
-import { WishlistContext } from '../context/WishlistContext.jsx';
+import { useWishlist } from '../hooks/useWishlist.js';
 import { useTranslation } from 'react-i18next';
 import BookCard from '../components/BookCard.jsx';
 import './BookDetail.css';
@@ -19,7 +19,7 @@ export default function BookDetail() {
   const [successMsg, setSuccessMsg] = useState('');
   const [loading, setLoading] = useState(true);
   const { addToCart } = useCart();
-  const { wishlist, toggleWishlist } = useContext(WishlistContext);
+  const { isWishlisted, toggleWishlist } = useWishlist();
 
   const book = books.find((item) => String(item.id) === String(id));
 
@@ -105,7 +105,7 @@ export default function BookDetail() {
             <button className="book-detail-add-btn" onClick={() => addToCart(book)}>
               {t('bookDetail.addToCart') || 'Add to Cart'}
             </button>
-            <WishlistButton active={wishlist?.includes(book.id)} onToggle={() => toggleWishlist(book.id)} />
+            <WishlistButton active={isWishlisted(book.id)} onToggle={() => toggleWishlist(book.id)} />
           </div>
         </div>
       </div>

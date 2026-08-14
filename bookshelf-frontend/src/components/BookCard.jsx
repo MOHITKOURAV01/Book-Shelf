@@ -1,7 +1,6 @@
-import { useContext } from 'react';
 import { Link } from 'react-router-dom';
 import WishlistButton from './WishlistButton.jsx';
-import { WishlistContext } from '../context/WishlistContext.jsx';
+import { useWishlist } from '../hooks/useWishlist.js';
 import { useCart } from '../hooks/useCart.js';
 import './BookCard.css';
 
@@ -16,9 +15,9 @@ import './BookCard.css';
  *                          (e.g. RecentlyViewed). Falls back to addToCart.
  */
 export default function BookCard({ book, onAddToCart }) {
-  const { wishlist, toggleWishlist } = useContext(WishlistContext);
+  const { isWishlisted, toggleWishlist } = useWishlist();
   const { addToCart } = useCart();
-  const isWishlisted = wishlist?.includes(book.id);
+  const wishlisted = isWishlisted(book.id);
 
   const handleAddToCart = () => {
     if (onAddToCart) {
@@ -35,7 +34,7 @@ export default function BookCard({ book, onAddToCart }) {
         <span className="book-card__cover-title">{book.title}</span>
         <div className="book-card__wishlist-overlay">
           <WishlistButton
-            active={isWishlisted}
+            active={wishlisted}
             onToggle={() => toggleWishlist(book.id)}
           />
         </div>

@@ -1,6 +1,5 @@
-import { useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { WishlistContext } from '../context/WishlistContext.jsx';
+import { useWishlist } from '../hooks/useWishlist.js';
 import { books } from '../data/books.js';
 import BookCard from '../components/BookCard.jsx';
 import './WishlistPage.css';
@@ -12,7 +11,7 @@ import './WishlistPage.css';
  * two navbars once the routes actually resolve.
  */
 export default function WishlistPage() {
-  const { wishlist, loading } = useContext(WishlistContext);
+  const { wishlist, loading } = useWishlist();
   const navigate = useNavigate();
 
   // Find books that are in the wishlist
