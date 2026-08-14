@@ -18,9 +18,45 @@ const DEFAULT_MAX = 10;
  * 'trust proxy' setting is on. Falling back to a constant would put every
  * unidentifiable caller in one shared bucket, which is the safe direction to
  * fail for a limiter.
+ *
+ * This is only as good as the 'trust proxy' setting — see
+ * config/trustProxy.js. With it unset behind a proxy, every request reports
+ * the proxy's address and this returns the same string for everybody.
  */
-function defaultKeyGenerator(req) {
+export function ipKeyGenerator(req) {
   return req.ip || req.socket?.remoteAddress || 'unknown';
+}
+
+const defaultKeyGenerator = ipKeyGenerator;
+
+/**
+ * Key on the IP *and* the account being attempted.
+ *
+ * Keying on the IP alone means one attacker hammering one account exhausts
+ * the budget for every user sharing that address — which, behind a proxy or
+ * a corporate NAT, is all of them. The endpoint being protected is a login,
+ * so the account is the more meaningful half of the identity: it bounds
+ * guesses per account, which is what actually stops a password being
+ * brute-forced, without letting one victim's attacker lock out bystanders.
+ *
+ * The email is normalised the way validators.normaliseEmail does it, because
+ * this middleware runs *before* validateBody — a limiter should not have to
+ * wait on body validation to decide whether to answer 429. Without
+ * normalising, "Alice@Example.com" and "alice@example.com" would each get a
+ * fresh budget and the per-account limit would be trivial to sidestep.
+ *
+ * A request with no usable email falls back to the IP alone. That is the
+ * malformed-request case, and validateBody rejects it a moment later.
+ */
+export function ipAndEmailKeyGenerator(req) {
+  const ip = ipKeyGenerator(req);
+  const rawEmail = req.body?.email;
+
+  if (typeof rawEmail !== 'string' || rawEmail.trim() === '') {
+    return `${ip}|-`;
+  }
+
+  return `${ip}|${rawEmail.trim().toLowerCase()}`;
 }
 
 export function createRateLimiter({
@@ -101,13 +137,43 @@ export function createRateLimiter({
  * Login is the endpoint worth protecting: it returns a fast, distinguishable
  * 401 for a wrong password, so it can be brute-forced as fast as the network
  * allows. Successful logins clear the counter.
+ *
+ * Keyed on address *and* account. Keyed on the address alone — which is what
+ * this did — a single attacker running a loop of bad passwords could hold
+ * the whole endpoint at 429 indefinitely: once the shared counter is over
+ * the limit, `authUser` is never reached, so nobody can produce the success
+ * that would reset it. That is a denial of service on authentication,
+ * delivered through the control added to prevent one. See #298.
  */
 export const loginLimiter = createRateLimiter({
   windowMs: 15 * 60 * 1000,
   max: 10,
   resetOnSuccess: true,
+  keyGenerator: ipAndEmailKeyGenerator,
   message:
-    'Too many login attempts from this address. Please try again in a few minutes.',
+    'Too many login attempts for this account. Please try again in a few minutes.',
+});
+
+/**
+ * A looser ceiling per address, alongside the per-account limit above.
+ *
+ * The per-account limit stops one password being guessed. It does nothing
+ * about credential stuffing — one attempt each against a thousand different
+ * emails never trips it, because every attempt lands in a fresh bucket. This
+ * bounds the total from one address.
+ *
+ * The number has to clear a shared NAT: an office or a school arrives as one
+ * address, and a hundred attempts an hour is generous for real people and
+ * still four orders of magnitude slower than a script wants. It does not
+ * reset on success — the point is the aggregate rate, and a stuffing run
+ * produces successes too.
+ */
+export const loginIpLimiter = createRateLimiter({
+  windowMs: 60 * 60 * 1000,
+  max: 100,
+  keyGenerator: ipKeyGenerator,
+  message:
+    'Too many login attempts from this address. Please try again later.',
 });
 
 /**
