@@ -1,10 +1,12 @@
 import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import Navbar from '../components/Navbar.jsx';
-import Footer from '../components/Footer.jsx';
-import ThemeToggle from '../components/ThemeToggle.jsx';
 import './TermsOfService.css';
 
+/*
+ * Renders page content only — the theme toggle, navbar and footer come from
+ * the App layout. Repeating them here put a second navbar and a third theme
+ * toggle on the page, each with its own copy of the theme state. See #296.
+ */
 export default function TermsOfService() {
   /* Scroll to top on mount */
   useEffect(() => {
@@ -16,13 +18,6 @@ export default function TermsOfService() {
 
   return (
     <div className="tos-page">
-      {/* ── Theme toggle ── */}
-      <ThemeToggle />
-
-      {/* ── Navbar ── */}
-      <Navbar cartCount={0} onCartClick={() => {}} />
-      <div className="nav-spacer" />
-
       {/* ── Hero Section ── */}
       <section className="tos-hero">
         <div className="tos-hero__inner">
