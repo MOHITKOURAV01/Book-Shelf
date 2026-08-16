@@ -1,67 +1,102 @@
 import orderRepository from '../repositories/orderRepository.js';
 import { createPaymentIntent } from '../services/stripeService.js';
-import { getBookById, updateInventoryWithOCC } from '../repositories/bookRepository.js';
+import {
+  getBookById,
+  updateInventoryWithOCC,
+  restoreInventory,
+} from '../repositories/bookRepository.js';
+import { prepareCheckout, CheckoutValidationError } from '../utils/checkout.js';
+import { format } from '../utils/money.js';
 
+/**
+ * @desc    Create a payment intent for a cart
+ * @route   POST /api/payments/create-intent
+ * @access  Public — guests can check out
+ *
+ * The route is unauthenticated, so every value in the body is hostile until
+ * proved otherwise. Previously `items` was iterated straight off the request:
+ * a missing array was a 500, and a negative quantity passed the stock check,
+ * *added* inventory to books.json and produced an order with a negative
+ * total. See #297.
+ *
+ * Order of operations, and why:
+ *
+ *   1. Validate and price. Nothing is written until the whole cart is known
+ *      to be good — a request that fails here has touched nothing.
+ *   2. Reserve inventory. Before the payment, because the alternative is
+ *      overselling in the window between charging and reserving.
+ *   3. Create the order and the payment intent. Anything that fails from
+ *      here on releases the reservation before returning.
+ */
 export const createIntent = async (req, res, next) => {
+  const { items, shippingAddress } = req.body ?? {};
+
+  let checkout;
+
   try {
-    const { items, shippingAddress, couponCode } = req.body;
-    
-    // Server-side calculation of total to prevent client-side tampering
-    // In a real application, we would fetch book prices from the database based on bookIds
-    // For this demonstration, we'll calculate based on the passed prices, but 
-    // ideally, this needs DB validation.
-    let subtotal = 0;
-    const orderItems = [];
-    const itemVersions = [];
-
-    for (const item of items) {
-      const bookId = item.bookId || item.id;
-      const bookRecord = getBookById(bookId);
-
-      if (!bookRecord) {
-        return res.status(404).json({ message: `Book not found: ${bookId}` });
-      }
-
-      itemVersions.push({
-        bookId,
-        quantity: item.quantity,
-        expectedVersion: bookRecord.__v,
-      });
-
-      subtotal += bookRecord.price * item.quantity;
-      
-      orderItems.push({
-        bookId: bookRecord.id,
-        title: bookRecord.title,
-        price: bookRecord.price,
-        quantity: item.quantity,
+    checkout = prepareCheckout(items, getBookById);
+  } catch (error) {
+    if (error instanceof CheckoutValidationError) {
+      return res.status(400).json({
+        message: 'Invalid checkout request',
+        errors: error.errors,
       });
     }
 
-    // Attempt OCC Inventory Update
-    try {
-      updateInventoryWithOCC(itemVersions);
-    } catch (error) {
-      return res.status(error.status || 500).json({ message: error.message });
+    return next(error);
+  }
+
+  // Reserve stock. A version mismatch or insufficient stock is the client's
+  // answer (409), not a server fault.
+  try {
+    updateInventoryWithOCC(checkout.reservation);
+  } catch (error) {
+    return res.status(error.status || 500).json({ message: error.message });
+  }
+
+  let reservationHeld = true;
+
+  const release = (reason) => {
+    if (!reservationHeld) {
+      return;
     }
 
-    const tax = subtotal * 0.05; // 5% mock tax
-    const shipping = 5.99; // Mock flat shipping rate
-    const total = subtotal + tax + shipping;
+    reservationHeld = false;
 
-    const savedOrder = await orderRepository.create({
+    const { failed } = restoreInventory(checkout.reservation);
+
+    if (failed.length > 0) {
+      // Worth a loud log: the shop's stock is now understated and only a
+      // human can reconcile it.
+      console.error(
+        `[checkout] released reservation after ${reason}, but ${failed.length} ` +
+          'line(s) could not be restored:',
+        failed
+      );
+    }
+  };
+
+  let savedOrder;
+
+  try {
+    savedOrder = await orderRepository.create({
       userId: req.user ? req.user._id : null,
-      items: orderItems,
+      items: checkout.orderItems,
       shippingAddress: shippingAddress || {},
-      subtotal,
-      tax,
-      shipping,
-      total,
+      subtotal: checkout.subtotal,
+      tax: checkout.tax,
+      shipping: checkout.shipping,
+      total: checkout.total,
       status: 'pending',
       paymentStatus: 'pending',
     });
+  } catch (error) {
+    release('the order could not be saved');
+    return next(error);
+  }
 
-    const paymentIntent = await createPaymentIntent(total, 'usd', {
+  try {
+    const paymentIntent = await createPaymentIntent(checkout.total, 'usd', {
       orderId: savedOrder._id.toString(),
       userId: req.user ? req.user._id.toString() : 'guest',
     });
@@ -69,11 +104,43 @@ export const createIntent = async (req, res, next) => {
     savedOrder.stripePaymentIntentId = paymentIntent.id;
     await orderRepository.save(savedOrder);
 
-    res.status(200).json({
+    // Past this point the reservation belongs to the order, and the webhook
+    // is responsible for it: payment_intent.payment_failed and
+    // payment_intent.canceled are where it gets released.
+    reservationHeld = false;
+
+    return res.status(200).json({
       clientSecret: paymentIntent.client_secret,
       orderId: savedOrder._id,
+      amount: {
+        subtotal: checkout.subtotal,
+        tax: checkout.tax,
+        shipping: checkout.shipping,
+        total: checkout.total,
+      },
     });
   } catch (error) {
-    next(error);
+    release('the payment intent could not be created');
+
+    // Leave a trace rather than an order stuck at 'pending' forever with no
+    // payment intent attached to it.
+    try {
+      savedOrder.status = 'payment_failed';
+      savedOrder.paymentStatus = 'failed';
+      await orderRepository.save(savedOrder);
+    } catch (saveError) {
+      console.error(
+        `[checkout] could not mark order ${savedOrder._id} as failed:`,
+        saveError
+      );
+    }
+
+    console.error(
+      `[checkout] payment intent failed for order ${savedOrder._id} ` +
+        `(total ${format(checkout.minorUnits.total)}):`,
+      error.message
+    );
+
+    return next(error);
   }
 };
