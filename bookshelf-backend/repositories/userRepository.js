@@ -21,12 +21,29 @@ class UserRepository {
     return await user.matchPassword(password);
   }
 
+  /**
+   * Replace a user's wishlist.
+   *
+   * Uses a targeted update rather than load-mutate-save. Two reasons:
+   *
+   *   - `save()` runs every document hook and rewrites every path, so an
+   *     unrelated write like this one dragged the password through the
+   *     pre-save hook. That is what made #295 reachable from a wishlist
+   *     click. The hook is fixed, but a write that only names the field it
+   *     is changing cannot resurrect the problem.
+   *   - It is one round trip instead of two, and it does not read the
+   *     password hash into process memory to change a list of book ids.
+   *
+   * `runValidators` keeps the schema's array-of-strings constraint enforced,
+   * which `save()` was giving us for free. Returns null for an unknown id,
+   * as before.
+   */
   async updateWishlist(userId, newWishlist) {
-    const user = await User.findById(userId);
-    if (!user) return null;
-    user.wishlist = newWishlist;
-    await user.save();
-    return user;
+    return await User.findByIdAndUpdate(
+      userId,
+      { $set: { wishlist: newWishlist } },
+      { new: true, runValidators: true }
+    ).select('-password');
   }
 }
 
