@@ -1,7 +1,11 @@
 import test, { describe } from 'node:test';
 import assert from 'node:assert/strict';
 
-import { createRateLimiter } from '../middleware/rateLimiter.js';
+import {
+  createRateLimiter,
+  ipKeyGenerator,
+  ipAndEmailKeyGenerator,
+} from '../middleware/rateLimiter.js';
 
 /**
  * A clock the tests drive by hand, so the window can be crossed without
@@ -231,5 +235,191 @@ describe('createRateLimiter', () => {
     limiter.reset();
 
     assert.equal(call(limiter).allowed, true);
+  });
+});
+
+/**
+ * Key derivation.
+ *
+ * The reported bug is not in the counting — it is in what the counter is
+ * keyed on. See #298.
+ */
+describe('ipKeyGenerator', () => {
+  test('uses req.ip when Express has resolved one', () => {
+    assert.equal(ipKeyGenerator({ ip: '203.0.113.7' }), '203.0.113.7');
+  });
+
+  test('falls back to the socket address', () => {
+    assert.equal(
+      ipKeyGenerator({ socket: { remoteAddress: '203.0.113.9' } }),
+      '203.0.113.9'
+    );
+  });
+
+  test('falls back to a shared bucket rather than to no limit', () => {
+    // Unidentifiable callers sharing one bucket is the safe direction for a
+    // limiter to fail.
+    assert.equal(ipKeyGenerator({}), 'unknown');
+  });
+});
+
+describe('ipAndEmailKeyGenerator', () => {
+  const req = (ip, email) => ({ ip, body: email === undefined ? {} : { email } });
+
+  test('combines the address and the account', () => {
+    assert.equal(
+      ipAndEmailKeyGenerator(req('203.0.113.7', 'alice@example.com')),
+      '203.0.113.7|alice@example.com'
+    );
+  });
+
+  test('separates two accounts on the same address', () => {
+    const alice = ipAndEmailKeyGenerator(req('203.0.113.7', 'alice@example.com'));
+    const bob = ipAndEmailKeyGenerator(req('203.0.113.7', 'bob@example.com'));
+
+    assert.notEqual(alice, bob);
+  });
+
+  test('separates the same account on two addresses', () => {
+    const home = ipAndEmailKeyGenerator(req('203.0.113.7', 'alice@example.com'));
+    const cafe = ipAndEmailKeyGenerator(req('198.51.100.4', 'alice@example.com'));
+
+    assert.notEqual(home, cafe);
+  });
+
+  test('normalises the email the way the validators do', () => {
+    // This middleware runs before validateBody, so the email arrives raw.
+    // Without normalising, changing the casing would hand an attacker a
+    // fresh budget on every request.
+    const canonical = ipAndEmailKeyGenerator(req('203.0.113.7', 'alice@example.com'));
+
+    for (const variant of [
+      'ALICE@EXAMPLE.COM',
+      '  Alice@Example.com  ',
+      'aLiCe@ExAmPlE.cOm',
+    ]) {
+      assert.equal(ipAndEmailKeyGenerator(req('203.0.113.7', variant)), canonical, variant);
+    }
+  });
+
+  test('falls back to the address alone when there is no usable email', () => {
+    for (const email of [undefined, '', '   ', null, 42]) {
+      assert.equal(
+        ipAndEmailKeyGenerator(req('203.0.113.7', email)),
+        '203.0.113.7|-'
+      );
+    }
+  });
+
+  test('survives a request with no body at all', () => {
+    assert.equal(ipAndEmailKeyGenerator({ ip: '203.0.113.7' }), '203.0.113.7|-');
+  });
+});
+
+/**
+ * The behaviour the key change buys, expressed against a limiter rather than
+ * against the key function.
+ */
+describe('login limiting behaviour', () => {
+  function callWith(limiter, { ip = '10.0.0.1', email, statusCode = 200 } = {}) {
+    const req = { ip, body: email === undefined ? {} : { email } };
+    const res = makeRes();
+    let nextCalled = false;
+
+    limiter(req, res, () => {
+      nextCalled = true;
+    });
+
+    res.statusCode = nextCalled ? statusCode : res.statusCode;
+    res.finish();
+
+    return { res, allowed: nextCalled };
+  }
+
+  test('exhausting one account does not lock out another on the same address', () => {
+    // Keyed on the address alone — which is what it did — the victim below
+    // gets a 429 having made no requests at all.
+    const limiter = createRateLimiter({
+      max: 3,
+      windowMs: 60_000,
+      keyGenerator: ipAndEmailKeyGenerator,
+    });
+
+    const attacker = { ip: '203.0.113.7', email: 'target@example.com', statusCode: 401 };
+
+    for (let attempt = 0; attempt < 5; attempt += 1) {
+      callWith(limiter, attacker);
+    }
+
+    assert.equal(callWith(limiter, attacker).allowed, false);
+
+    const bystander = callWith(limiter, {
+      ip: '203.0.113.7',
+      email: 'someone-else@example.com',
+    });
+
+    assert.equal(bystander.allowed, true);
+  });
+
+  test('still bounds guesses against a single account', () => {
+    const limiter = createRateLimiter({
+      max: 3,
+      windowMs: 60_000,
+      keyGenerator: ipAndEmailKeyGenerator,
+    });
+
+    const target = { ip: '203.0.113.7', email: 'target@example.com', statusCode: 401 };
+
+    assert.equal(callWith(limiter, target).allowed, true);
+    assert.equal(callWith(limiter, target).allowed, true);
+    assert.equal(callWith(limiter, target).allowed, true);
+    assert.equal(callWith(limiter, target).allowed, false);
+  });
+
+  test('a per-address ceiling still catches a spray across many accounts', () => {
+    // Per-account limits never trip when every attempt is a different
+    // account, so the looser per-IP limiter is what bounds credential
+    // stuffing.
+    const limiter = createRateLimiter({
+      max: 5,
+      windowMs: 60_000,
+      keyGenerator: ipKeyGenerator,
+    });
+
+    for (let attempt = 0; attempt < 5; attempt += 1) {
+      const result = callWith(limiter, {
+        ip: '203.0.113.7',
+        email: `victim-${attempt}@example.com`,
+        statusCode: 401,
+      });
+      assert.equal(result.allowed, true, `attempt ${attempt}`);
+    }
+
+    const blocked = callWith(limiter, {
+      ip: '203.0.113.7',
+      email: 'victim-6@example.com',
+    });
+
+    assert.equal(blocked.allowed, false);
+  });
+
+  test('a successful login clears only that account, not the whole address', () => {
+    const limiter = createRateLimiter({
+      max: 2,
+      windowMs: 60_000,
+      resetOnSuccess: true,
+      keyGenerator: ipAndEmailKeyGenerator,
+    });
+
+    const alice = { ip: '203.0.113.7', email: 'alice@example.com' };
+    const bob = { ip: '203.0.113.7', email: 'bob@example.com', statusCode: 401 };
+
+    callWith(limiter, bob);
+    callWith(limiter, bob);
+
+    callWith(limiter, { ...alice, statusCode: 200 }); // succeeds, clears alice
+
+    assert.equal(callWith(limiter, bob).allowed, false);
+    assert.equal(callWith(limiter, alice).allowed, true);
   });
 });
