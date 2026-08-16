@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { Outlet } from 'react-router-dom';
 
-import ThemeToggle from './components/ThemeToggle.jsx';
 import ScrollToTop from './components/ScrollToTop.jsx';
 
 import CustomCursor from './components/CustomCursor.jsx';
@@ -29,7 +28,11 @@ export default function App() {
 
   return (
     <div className="app">
-      <ThemeToggle />
+      {/*
+        The theme toggle used to be rendered here *as well as* in the navbar,
+        as two separate components each holding their own copy of the theme.
+        It now lives only in the navbar, reading the shared ThemeContext.
+      */}
       <ScrollToTop />
       <CustomCursor />
 

@@ -1,10 +1,12 @@
 import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import Navbar from '../components/Navbar.jsx';
-import Footer from '../components/Footer.jsx';
-import ThemeToggle from '../components/ThemeToggle.jsx';
 import './PrivacyPolicy.css';
 
+/*
+ * Renders page content only — the theme toggle, navbar and footer come from
+ * the App layout. Repeating them here put a second navbar and a third theme
+ * toggle on the page, each with its own copy of the theme state. See #296.
+ */
 export default function PrivacyPolicy() {
   /* Scroll to top on mount */
   useEffect(() => {
@@ -15,13 +17,6 @@ export default function PrivacyPolicy() {
 
   return (
     <div className="privacy-page">
-      {/* ── Theme toggle (same as landing page) ── */}
-      <ThemeToggle />
-
-      {/* ── Navbar (same as landing page) ── */}
-      <Navbar cartCount={0} onCartClick={() => {}} />
-      <div className="nav-spacer" />
-
       {/* ── Hero ── */}
       <section className="privacy-hero">
         <div className="privacy-hero__inner">

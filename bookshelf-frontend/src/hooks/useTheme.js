@@ -1,36 +1,39 @@
-import { useState, useEffect } from 'react';
+import { useContext } from 'react';
+import { ThemeContext } from '../context/ThemeContext.jsx';
 
+/**
+ * Read the current theme.
+ *
+ * This used to be a full implementation — its own `useState`, its own
+ * `localStorage` writes, its own `matchMedia` listener — which meant every
+ * component that called it got a *private* copy of the theme. Navbar had one,
+ * ThemeToggle had another, and the two disagreed the moment either was
+ * clicked. It is now a consumer of the single ThemeContext. See #296.
+ *
+ * Throws when used outside the provider rather than handing back `undefined`
+ * and letting the caller blow up on the destructuring line, matching the
+ * pattern `useCart` already established.
+ *
+ * Returns:
+ *   theme               'light' | 'dark' — what is on screen right now
+ *   isDark              convenience boolean
+ *   preference          'system' | 'light' | 'dark' — what the user asked for
+ *   isSystemPreference  true while the app is following the OS
+ *   setTheme(next)      pick 'light' or 'dark' explicitly
+ *   toggleTheme()       flip whatever is currently on screen
+ *   useSystemTheme()    go back to following the OS
+ */
 export function useTheme() {
-  const [theme, setThemeState] = useState(() => {
-    const savedTheme = localStorage.getItem('theme');
-    if (savedTheme) {
-      return savedTheme;
-    }
-    const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-    return systemPrefersDark ? 'dark' : 'light';
-  });
+  const context = useContext(ThemeContext);
 
-  useEffect(() => {
-    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
-    const handleChange = (e) => {
-      if (!localStorage.getItem('theme')) {
-        setTheme(e.matches ? 'dark' : 'light');
-      }
-    };
-    
-    mediaQuery.addEventListener('change', handleChange);
-    return () => mediaQuery.removeEventListener('change', handleChange);
-  }, []);
+  if (context === undefined) {
+    throw new Error(
+      'useTheme() must be used inside a <ThemeProvider>. ' +
+        'Check that ThemeProvider wraps the component tree in main.jsx.'
+    );
+  }
 
-  const setTheme = (newTheme) => {
-    setThemeState(newTheme);
-    document.documentElement.setAttribute('data-theme', newTheme);
-    localStorage.setItem('theme', newTheme);
-  };
-
-  const toggleTheme = () => {
-    setTheme(theme === 'dark' ? 'light' : 'dark');
-  };
-
-  return { theme, setTheme, toggleTheme };
+  return context;
 }
+
+export default useTheme;

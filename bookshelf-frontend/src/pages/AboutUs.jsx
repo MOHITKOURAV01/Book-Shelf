@@ -1,19 +1,15 @@
 import { Link } from 'react-router-dom';
-import Navbar from '../components/Navbar.jsx';
-import Footer from '../components/Footer.jsx';
-import ThemeToggle from '../components/ThemeToggle.jsx';
 import './AboutUs.css';
 
+/*
+ * Renders page content only. The theme toggle, navbar and spacer used to be
+ * repeated here as well as in the App layout, so /about carried a second
+ * navbar and a third theme toggle — each with its own copy of the theme
+ * state. Footer was imported but never rendered. See #296.
+ */
 export default function AboutUs() {
   return (
     <div className="about-page">
-      {/* ── Theme toggle (same as landing page) ── */}
-      <ThemeToggle />
-
-      {/* ── Navbar (same as landing page) ── */}
-      <Navbar cartCount={0} onCartClick={() => {}} />
-      <div className="nav-spacer" />
-
       {/* ── Hero section ── */}
       <section className="about-hero">
         <div className="about-hero__inner">
@@ -224,8 +220,7 @@ export default function AboutUs() {
         </div>
       </section>
 
-      {/* ── Footer (same as landing page) ── */}
-      {/* <Footer /> */}
+      {/* The footer comes from the App layout. */}
     </div>
   );
 }

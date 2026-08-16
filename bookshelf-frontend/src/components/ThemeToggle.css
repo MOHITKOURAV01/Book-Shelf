@@ -1,7 +1,10 @@
+/*
+ * Shared button shape. The positioning used to live here, which meant the
+ * component could only ever be a floating corner button — so Navbar hand-
+ * rolled a second one rather than reuse it. Layout now belongs to the
+ * variant modifiers below. See #296.
+ */
 .theme-toggle {
-  position: fixed;
-  left: 24px;
-  bottom: 24px;
   width: 44px;
   height: 44px;
   border-radius: 50%;
@@ -13,12 +16,10 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: var(--shadow-card);
   cursor: pointer;
   transition:
     background 0.2s ease,
     transform 0.2s ease;
-  z-index: 900;
 }
 
 .theme-toggle:hover,
@@ -27,12 +28,49 @@
   transform: scale(1.05);
 }
 
-@media (max-width: 640px) {
+/* Pinned to the corner of the viewport. */
+.theme-toggle--floating {
+  position: fixed;
+  left: 24px;
+  bottom: 24px;
+  box-shadow: var(--shadow-card);
+  z-index: 900;
+}
+
+/* Sits in a row of controls, e.g. the navbar actions. */
+.theme-toggle--inline {
+  position: static;
+  width: 38px;
+  height: 38px;
+  flex: 0 0 auto;
+}
+
+/*
+ * The toggle is a control, not decoration — respect a reduced-motion
+ * preference rather than scaling it under the pointer.
+ */
+@media (prefers-reduced-motion: reduce) {
   .theme-toggle {
+    transition: none;
+  }
+
+  .theme-toggle:hover,
+  .theme-toggle:focus-visible {
+    transform: none;
+  }
+}
+
+@media (max-width: 640px) {
+  .theme-toggle--floating {
     left: 16px;
     bottom: 16px;
     width: 40px;
     height: 40px;
     font-size: 16px;
+  }
+
+  .theme-toggle--inline {
+    width: 34px;
+    height: 34px;
   }
 }
