@@ -10,23 +10,36 @@
       href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;0,9..144,600;1,9..144,500&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500&display=swap"
       rel="stylesheet"
     />
+    <!--
+      Sets data-theme before the browser paints, so a returning visitor never
+      sees a flash of the wrong theme while the bundle loads.
+
+      This has to run before any module exists, so it cannot import
+      src/utils/themeBoot.js. It implements the same rule, and
+      src/utils/themeBoot.test.js executes this exact block and asserts the two
+      agree — the previous version of this script was a SyntaxError that the
+      browser discarded whole, and nothing caught it because an inline script
+      is invisible to both ESLint and the bundler.
+
+      It reads localStorage and never writes to it. Recording the resolved
+      value here would turn "no preference, follow the OS" into an explicit
+      choice on first load.
+    -->
     <script>
-      (function() {
+      (function () {
+        var theme = 'light';
         try {
-          var savedTheme = localStorage.getItem('theme');
-          var systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-          var isDark = savedTheme === 'dark' || (!savedTheme && systemPrefersDark);
-          if (isDark) {
-            document.documentElement.setAttribute('data-theme', 'dark');
-          } else {
-            document.documentElement.setAttribute('data-theme', 'light');
-          if (savedTheme === 'light' || savedTheme === 'dark') {
-            document.documentElement.setAttribute('data-theme', savedTheme);
-          } else {
-            var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-            document.documentElement.setAttribute('data-theme', prefersDark ? 'dark' : 'light');
+          var saved = localStorage.getItem('theme');
+          if (saved === 'light' || saved === 'dark') {
+            theme = saved;
+          } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            theme = 'dark';
           }
-        } catch (e) {}
+        } catch (e) {
+          // Storage can be unavailable outright — Safari private browsing, or
+          // site data blocked. Fall through with the light default.
+        }
+        document.documentElement.setAttribute('data-theme', theme);
       })();
     </script>
   </head>
