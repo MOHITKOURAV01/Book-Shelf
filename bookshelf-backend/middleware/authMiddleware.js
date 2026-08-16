@@ -1,6 +1,8 @@
 import jwt from 'jsonwebtoken';
 import User from '../models/User.js';
 import { isAdmin } from '../utils/roles.js';
+import { getJwtConfig } from '../config/jwt.js';
+import { SESSION_COOKIE_NAME } from '../utils/cookies.js';
 
 /**
  * Requires a valid session cookie.
@@ -12,7 +14,7 @@ import { isAdmin } from '../utils/roles.js';
 export const protect = async (req, res, next) => {
   // req.cookies is undefined if cookie-parser has not run, so guard it
   // rather than throwing a TypeError inside auth middleware.
-  const token = req.cookies?.token;
+  const token = req.cookies?.[SESSION_COOKIE_NAME];
 
   if (!token) {
     res.status(401);
@@ -20,10 +22,12 @@ export const protect = async (req, res, next) => {
   }
 
   try {
-    const decoded = jwt.verify(
-      token,
-      process.env.JWT_SECRET || 'fallback_secret'
-    );
+    // The secret comes from config/jwt.js, which has already established that
+    // there is a real one. The `|| 'fallback_secret'` that used to be here
+    // meant a server started without JWT_SECRET would happily *verify* tokens
+    // signed with a constant published in this repository.
+    const { secret } = getJwtConfig();
+    const decoded = jwt.verify(token, secret);
 
     const user = await User.findById(decoded.userId).select('-password');
 
