@@ -1,5 +1,9 @@
 import userRepository from '../repositories/userRepository.js';
 import generateToken from '../utils/generateToken.js';
+import {
+  SESSION_COOKIE_NAME,
+  clearSessionCookieOptions,
+} from '../utils/cookies.js';
 
 // @desc    Auth user & get token
 // @route   POST /api/auth/login
@@ -78,10 +82,12 @@ export const registerUser = async (req, res, next) => {
 // @route   POST /api/auth/logout
 // @access  Public
 export const logoutUser = (req, res) => {
-  res.cookie('token', '', {
-    httpOnly: true,
-    expires: new Date(0),
-  });
+  // A browser only replaces a cookie when name, domain and path all match the
+  // one it already has. Deriving these from the same helper that sets the
+  // cookie is what guarantees they do — the inline `{ httpOnly, expires }`
+  // that used to be here matched only by coincidence, and would have stopped
+  // matching the moment the setter grew a `domain`.
+  res.cookie(SESSION_COOKIE_NAME, '', clearSessionCookieOptions());
 
   res.status(200).json({ message: 'Logged out successfully' });
 };
