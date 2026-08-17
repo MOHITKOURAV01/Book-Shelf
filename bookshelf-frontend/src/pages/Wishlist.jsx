@@ -1,13 +1,13 @@
-import { useContext, useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import BookCard from '../components/BookCard.jsx';
 import SkeletonLoader from '../components/SkeletonLoader.jsx';
 import { books } from '../data/books.js';
-import { WishlistContext } from '../context/WishlistContext.jsx';
+import { useWishlist } from '../hooks/useWishlist.js';
 import './Wishlist.css';
 
 export default function Wishlist() {
-  const { wishlist } = useContext(WishlistContext);
+  const { wishlist } = useWishlist();
   const wishlistedBooks = books.filter((book) => wishlist.includes(book.id));
   const [loading, setLoading] = useState(true);
 
