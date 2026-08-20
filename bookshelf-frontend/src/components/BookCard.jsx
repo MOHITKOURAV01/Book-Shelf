@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom';
 import WishlistButton from './WishlistButton.jsx';
 import { useWishlist } from '../hooks/useWishlist.js';
 import { useCart } from '../hooks/useCart.js';
+import { formatPrice, formatRating, isInStock } from '../utils/bookFormat.js';
 import './BookCard.css';
 
 /**
@@ -18,6 +19,13 @@ export default function BookCard({ book, onAddToCart }) {
   const { isWishlisted, toggleWishlist } = useWishlist();
   const { addToCart } = useCart();
   const wishlisted = isWishlisted(book.id);
+
+  // `book.rating.toFixed(1)` ran unguarded here. Nothing requires a book to
+  // carry a rating, and one record without it threw a TypeError that took the
+  // whole grid down rather than leaving one line blank. See #317.
+  const ratingLabel = formatRating(book.rating);
+  const priceLabel = formatPrice(book.price);
+  const available = isInStock(book);
 
   const handleAddToCart = () => {
     if (onAddToCart) {
@@ -48,13 +56,19 @@ export default function BookCard({ book, onAddToCart }) {
         <p className="book-card__author">{book.author}</p>
 
         <div className="book-card__meta">
-          <span className="book-card__rating">★ {book.rating.toFixed(1)}</span>
-          <span className="book-card__price">₹{book.price}</span>
+          {ratingLabel && (
+            <span className="book-card__rating">★ {ratingLabel}</span>
+          )}
+          {priceLabel && <span className="book-card__price">{priceLabel}</span>}
         </div>
 
         <div className="book-card__actions">
-          <button className="book-card__add" onClick={handleAddToCart}>
-            Add to cart
+          <button
+            className="book-card__add"
+            onClick={handleAddToCart}
+            disabled={!available}
+          >
+            {available ? 'Add to cart' : 'Out of stock'}
           </button>
         </div>
       </div>

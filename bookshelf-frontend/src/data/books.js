@@ -1,5 +1,18 @@
 // Sample catalog — in the real app this is served by the Node backend
 // from data/books.json. Kept local here for the frontend-only draft.
+//
+// DEPRECATED for anything with an API behind it. `books` below is a snapshot
+// of bookshelf-backend/data/books.json that nothing keeps in sync: it has no
+// `inventory`, its prices go stale the moment the catalogue is edited, and a
+// book added to the backend does not exist here at all. Home (#274) and the
+// book detail page (#317) read the API instead.
+//
+// Still imported by pages/Wishlist.jsx, pages/WishlistPage.jsx and
+// components/RecentlyViewed.jsx, which resolve stored book ids to records.
+// Those should move to the API too; until they do, this file stays.
+//
+// `spines` has no API behind it — it drives the decorative shelf strip in
+// Hero.jsx and is genuinely local data.
 
 export const spines = [
   {
