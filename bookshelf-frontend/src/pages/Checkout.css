@@ -342,3 +342,208 @@
     gap: 10px;
   }
 }
+
+/* ─── Checkout page shell (#315) ─────────────────────────────────────────
+ *
+ * The page used to carry its layout in inline `style` objects, including a
+ * hardcoded `background: '#fff'` and `color: '#221e19'`. That made the
+ * checkout the one page in the app the theme from #296 could not reach — it
+ * stayed cream-on-white under `data-theme="dark"`. Everything below goes
+ * through the same custom properties the rest of the app uses.
+ *
+ * The `.checkout-*` rules above belong to the earlier multi-step checkout
+ * layout and are left untouched.
+ */
+
+.checkout {
+  max-width: 1040px;
+  margin: 48px auto;
+  padding: 0 20px 80px;
+}
+
+.checkout__title {
+  font-family: var(--font-display);
+  font-size: clamp(1.6rem, 3vw, 2.2rem);
+  color: var(--ink);
+  margin: 0 0 28px;
+}
+
+.checkout__layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr);
+  gap: 24px;
+  align-items: start;
+}
+
+@media (max-width: 860px) {
+  .checkout__layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+.checkout__panel {
+  background: var(--paper-dim);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 28px;
+}
+
+.checkout__panel--message {
+  max-width: 520px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.checkout__panel--message p {
+  color: var(--ink-soft);
+  margin: 12px 0 24px;
+}
+
+.checkout__section-title {
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+  color: var(--ink);
+  margin: 0 0 20px;
+}
+
+.checkout__form,
+.checkout__payment-form {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.checkout__field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.checkout__label {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: var(--ink-soft);
+}
+
+.checkout__input {
+  padding: 11px 14px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: 15px;
+}
+
+.checkout__input:focus-visible {
+  outline: 2px solid var(--leather);
+  outline-offset: 1px;
+}
+
+.checkout__input--invalid {
+  border-color: #c0392b;
+}
+
+.checkout__error {
+  color: #c0392b;
+  font-size: 13px;
+}
+
+.checkout__error--form {
+  margin: 0;
+  padding: 12px 14px;
+  border-radius: 8px;
+  background: rgba(192, 57, 43, 0.1);
+}
+
+.checkout__submit,
+.checkout__link-btn {
+  display: inline-block;
+  padding: 13px 20px;
+  border: none;
+  border-radius: 8px;
+  background: var(--leather);
+  color: #fff;
+  font-family: var(--font-body);
+  font-size: 15px;
+  font-weight: 700;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.checkout__submit:hover:not(:disabled),
+.checkout__link-btn:hover {
+  background: var(--leather-deep);
+}
+
+.checkout__submit:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.checkout__lines {
+  list-style: none;
+  margin: 0 0 20px;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.checkout__line {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  font-size: 14px;
+  color: var(--ink);
+}
+
+.checkout__line-qty {
+  color: var(--ink-soft);
+}
+
+.checkout__line-price {
+  white-space: nowrap;
+  font-family: var(--font-mono);
+}
+
+.checkout__totals {
+  margin: 0;
+  padding-top: 16px;
+  border-top: 1px solid var(--line);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.checkout__total-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  color: var(--ink);
+}
+
+.checkout__total-row dt,
+.checkout__total-row dd {
+  margin: 0;
+}
+
+.checkout__total-row dd {
+  font-family: var(--font-mono);
+}
+
+.checkout__total-row--grand {
+  padding-top: 10px;
+  border-top: 1px solid var(--line);
+  font-weight: 700;
+  font-size: 1.05rem;
+}
+
+.checkout__note {
+  margin: 16px 0 0;
+  font-size: 13px;
+  color: var(--ink-soft);
+}
