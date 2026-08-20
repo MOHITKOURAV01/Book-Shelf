@@ -530,3 +530,42 @@
   font-weight: 500;
   padding: 10px 12px;
 }
+/* ─── Active route + auth controls (#316) ───────────────────────────────
+ *
+ * The desktop links are <NavLink> now, so the current route can mark itself
+ * instead of every link looking identical. The logout control is a <button>
+ * because it performs an action rather than navigating — styling it to sit
+ * flush with its neighbours is the whole job.
+ */
+
+.nav__links a.is-active,
+.nav__mobile-menu a.is-active {
+  color: var(--leather-deep);
+  font-weight: 600;
+}
+
+.nav__links a.is-active::after {
+  content: '';
+  display: block;
+  height: 2px;
+  margin-top: 2px;
+  border-radius: 2px;
+  background: var(--leather);
+}
+
+.nav__mobile-cart-btn {
+  width: 100%;
+  margin-top: 8px;
+  padding: 12px 14px;
+  border: none;
+  border-radius: 8px;
+  background: var(--leather);
+  color: #fff;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.nav__mobile-cart-btn:hover {
+  background: var(--leather-deep);
+}
