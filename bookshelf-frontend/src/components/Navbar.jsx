@@ -1,21 +1,187 @@
-import { useState } from 'react';
-import { Link } from 'react-router-dom';
-import { useCart } from '../hooks/useCart.js';
+import { useCallback, useEffect, useMemo, useState } from 'react';
+import { Link, NavLink, useLocation, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+
+import { useCart } from '../hooks/useCart.js';
+import { useAuth } from '../hooks/useAuth.js';
 import ThemeToggle from './ThemeToggle.jsx';
 import './Navbar.css';
+
+/**
+ * Sections that live on the home page rather than at a route of their own.
+ *
+ * These were `<a href="/#shelf">`, which is a full document navigation: the
+ * React tree is torn down and rebuilt, the cart drawer closes, the search box
+ * empties, AuthContext re-runs checkAuth() and the whole bundle is re-parsed.
+ * They are routes now, and the hash is scrolled to by the effect below —
+ * React Router does not do that on its own, which is why the old anchors did
+ * nothing at all when clicked from /book/:id. See #316.
+ */
+const HOME_SECTIONS = [
+  { hash: '#shelf', labelKey: null, fallback: 'The Shelf' },
+  { hash: '#catalog', labelKey: 'navbar.catalog', fallback: 'Browse' },
+];
+
+/** Routes shown to everyone. */
+const PUBLIC_LINKS = [
+  { to: '/wishlist', labelKey: 'navbar.wishlist', fallback: 'Wishlist' },
+  { to: '/orders', labelKey: 'navbar.orders', fallback: 'Orders' },
+  { to: '/about', labelKey: 'navbar.about', fallback: 'About' },
+];
+
+/**
+ * Total books in the cart.
+ *
+ * The badge used to render `cart.length`, which is the number of *lines*.
+ * Five copies of one book read as "1" while the drawer it opens showed
+ * quantity 5.
+ */
+export function cartItemCount(cart) {
+  if (!Array.isArray(cart)) {
+    return 0;
+  }
+
+  return cart.reduce((total, item) => {
+    const quantity = Number(item?.quantity);
+    return Number.isFinite(quantity) && quantity > 0 ? total + quantity : total;
+  }, 0);
+}
+
+function MenuIcon({ open }) {
+  return open ? (
+    <svg
+      width="20"
+      height="20"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2.2"
+      strokeLinecap="round"
+      aria-hidden="true"
+    >
+      <line x1="18" y1="6" x2="6" y2="18" />
+      <line x1="6" y1="6" x2="18" y2="18" />
+    </svg>
+  ) : (
+    <svg
+      width="20"
+      height="20"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2.2"
+      strokeLinecap="round"
+      aria-hidden="true"
+    >
+      <line x1="3" y1="6" x2="21" y2="6" />
+      <line x1="3" y1="12" x2="21" y2="12" />
+      <line x1="3" y1="18" x2="21" y2="18" />
+    </svg>
+  );
+}
 
 export default function Navbar({ searchQuery, setSearchQuery }) {
   const { t } = useTranslation();
   const [mobileOpen, setMobileOpen] = useState(false);
   const { cart, setIsCartOpen } = useCart();
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  // useAuth() reads a context with no default value, so it is undefined when
+  // the navbar is rendered outside AuthProvider — which happens in tests and
+  // in Storybook-style harnesses. The navbar is chrome; it degrades to the
+  // signed-out view rather than throwing.
+  const auth = useAuth() ?? {};
+  const { isAuthenticated = false, user = null, logout } = auth;
+
+  const itemCount = useMemo(() => cartItemCount(cart), [cart]);
+
+  /*
+   * Scroll to the hash target after a hash navigation.
+   *
+   * React Router restores neither scroll position nor hash anchors. Without
+   * this, `/#catalog` from a book page navigates home and then sits at the
+   * top of the page — the exact "clicking Browse does nothing" report.
+   *
+   * requestAnimationFrame because the target section belongs to the route
+   * that is only just mounting; querying for it synchronously finds nothing.
+   */
+  useEffect(() => {
+    if (!location.hash) {
+      return;
+    }
+
+    let frame = 0;
+
+    const scrollToTarget = () => {
+      const target = document.querySelector(location.hash);
+      if (!target) {
+        return;
+      }
+
+      const prefersReducedMotion = window.matchMedia?.(
+        '(prefers-reduced-motion: reduce)'
+      )?.matches;
+
+      target.scrollIntoView({
+        behavior: prefersReducedMotion ? 'auto' : 'smooth',
+        block: 'start',
+      });
+    };
+
+    frame = window.requestAnimationFrame(scrollToTarget);
+
+    return () => window.cancelAnimationFrame(frame);
+  }, [location.pathname, location.hash, location.key]);
+
+  const closeMobileMenu = useCallback(() => setMobileOpen(false), []);
+
+  const openCart = useCallback(() => {
+    setIsCartOpen(true);
+    setMobileOpen(false);
+  }, [setIsCartOpen]);
+
+  const handleLogout = useCallback(async () => {
+    setMobileOpen(false);
+
+    try {
+      await logout?.();
+    } catch (error) {
+      // AuthContext already drops the local session in its own finally block,
+      // so the user is signed out here regardless. Swallowing the rejection
+      // rather than letting it escape keeps a failed network call from
+      // surfacing as an unhandled promise rejection.
+      console.error('[navbar] logout failed:', error);
+    }
+
+    navigate('/');
+  }, [logout, navigate]);
+
+  const label = (key, fallback) => (key ? t(key) || fallback : fallback);
+
+  const accountLinks = isAuthenticated
+    ? [
+        { to: '/profile', label: t('navbar.profile') || 'Profile' },
+        { to: '/account/orders', label: 'My orders' },
+      ]
+    : [];
+
+  const cartLabel = t('navbar.cart') || 'Cart';
+  const cartAriaLabel =
+    itemCount === 0
+      ? 'Open cart, empty'
+      : `Open cart, ${itemCount} ${itemCount === 1 ? 'book' : 'books'}`;
 
   return (
     <div className="nav-wrapper">
       <header className="nav">
         <div className="nav__inner">
-          {/* Brand — book icon visible on desktop, hidden on mobile */}
-          <a href="/" className="nav__brand">
+          {/*
+            Was `<a href="/">`. Clicking the logo reloaded the entire
+            application — the single most-clicked element in the chrome was
+            also the most expensive.
+          */}
+          <Link to="/" className="nav__brand">
             <span className="nav__book-icon" aria-hidden="true">
               <svg
                 width="18"
@@ -32,96 +198,137 @@ export default function Navbar({ searchQuery, setSearchQuery }) {
               </svg>
             </span>
             {t('navbar.logo') || 'BookShelf'}
-          </a>
+          </Link>
 
-          {/* Desktop nav links */}
-          <nav className="nav__links">
-            <a href="/#shelf">The Shelf</a>
-            <a href="/#catalog">{t('navbar.catalog') || 'Browse'}</a>
-            <Link to="/wishlist">{t('navbar.wishlist') || 'Wishlist'}</Link>
-            <Link to="/orders">{t('navbar.orders') || 'Orders'}</Link>
-            <Link to="/about">{t('navbar.about') || 'About'}</Link>
-            <Link to="/login">Login</Link>
+          <nav className="nav__links" aria-label="Main">
+            {HOME_SECTIONS.map((section) => (
+              <Link key={section.hash} to={`/${section.hash}`}>
+                {label(section.labelKey, section.fallback)}
+              </Link>
+            ))}
+
+            {PUBLIC_LINKS.map((link) => (
+              <NavLink
+                key={link.to}
+                to={link.to}
+                className={({ isActive }) => (isActive ? 'is-active' : undefined)}
+              >
+                {label(link.labelKey, link.fallback)}
+              </NavLink>
+            ))}
+
+            {accountLinks.map((link) => (
+              <NavLink
+                key={link.to}
+                to={link.to}
+                className={({ isActive }) => (isActive ? 'is-active' : undefined)}
+              >
+                {link.label}
+              </NavLink>
+            ))}
+
+            {/*
+              The navbar rendered a hardcoded "Login" on every render and
+              never imported useAuth, so a signed-in user was still told to
+              log in and had no way to sign out or reach /profile.
+            */}
+            {isAuthenticated ? (
+              <button type="button" className="nav__logout" onClick={handleLogout}>
+                {user?.name ? `Log out (${user.name})` : 'Log out'}
+              </button>
+            ) : (
+              <NavLink
+                to="/login"
+                className={({ isActive }) => (isActive ? 'is-active' : undefined)}
+              >
+                Login
+              </NavLink>
+            )}
           </nav>
 
-          {/* Desktop actions */}
           <div className="nav__actions">
-            <input 
-              className="nav__search" 
-              type="search" 
-              placeholder={t('navbar.searchPlaceholder') || "Search titles, authors..."} 
+            <input
+              className="nav__search"
+              type="search"
+              placeholder={t('navbar.searchPlaceholder') || 'Search titles, authors...'}
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
+              aria-label={t('navbar.searchPlaceholder') || 'Search titles, authors'}
             />
-            {/*
-              The navbar used to hand-roll its own toggle button on top of its
-              own copy of the theme state, which is what put two disagreeing
-              toggles on screen. It renders the shared component now.
-            */}
+
             <ThemeToggle variant="inline" className="nav__theme-toggle" />
-            <button className="nav__cart" onClick={() => setIsCartOpen(true)} aria-label="Open cart">
-              {t('navbar.cart') || 'Cart'}
-              <span className="nav__cart-count">{cart.length}</span>
+
+            <button className="nav__cart" onClick={openCart} aria-label={cartAriaLabel}>
+              {cartLabel}
+              {/* An empty cart does not need a badge reading "0". */}
+              {itemCount > 0 && (
+                <span className="nav__cart-count" data-testid="cart-count">
+                  {itemCount}
+                </span>
+              )}
             </button>
           </div>
 
-          {/* Hamburger — mobile only */}
           <button
             className="nav__hamburger"
-            onClick={() => setMobileOpen((o) => !o)}
+            onClick={() => setMobileOpen((open) => !open)}
             aria-label="Toggle menu"
             aria-expanded={mobileOpen}
           >
-            {mobileOpen ? (
-              <svg
-                width="20"
-                height="20"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2.2"
-                strokeLinecap="round"
-              >
-                <line x1="18" y1="6" x2="6" y2="18" />
-                <line x1="6" y1="6" x2="18" y2="18" />
-              </svg>
-            ) : (
-              <svg
-                width="20"
-                height="20"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2.2"
-                strokeLinecap="round"
-              >
-                <line x1="3" y1="6" x2="21" y2="6" />
-                <line x1="3" y1="12" x2="21" y2="12" />
-                <line x1="3" y1="18" x2="21" y2="18" />
-              </svg>
-            )}
+            <MenuIcon open={mobileOpen} />
           </button>
         </div>
 
-        {/* Mobile dropdown menu */}
         {mobileOpen && (
           <div className="nav__mobile-menu">
-            <a href="/#shelf" onClick={() => setMobileOpen(false)}>The Shelf</a>
-            <a href="/#catalog" onClick={() => setMobileOpen(false)}>{t('navbar.catalog') || 'Browse'}</a>
-            <Link to="/wishlist" onClick={() => setMobileOpen(false)}>{t('navbar.wishlist') || 'Wishlist'}</Link>
-            <Link to="/orders" onClick={() => setMobileOpen(false)}>{t('navbar.orders') || 'Orders'}</Link>
-            <Link to="/about" onClick={() => setMobileOpen(false)}>{t('navbar.about') || 'About'}</Link>
-            <Link to="/login" onClick={() => setMobileOpen(false)}>Login</Link>
-            <input 
-              className="nav__search nav__search--mobile" 
-              type="search" 
-              placeholder={t('navbar.searchPlaceholder') || "Search titles, authors..."} 
+            {HOME_SECTIONS.map((section) => (
+              <Link
+                key={section.hash}
+                to={`/${section.hash}`}
+                onClick={closeMobileMenu}
+              >
+                {label(section.labelKey, section.fallback)}
+              </Link>
+            ))}
+
+            {PUBLIC_LINKS.map((link) => (
+              <Link key={link.to} to={link.to} onClick={closeMobileMenu}>
+                {label(link.labelKey, link.fallback)}
+              </Link>
+            ))}
+
+            {accountLinks.map((link) => (
+              <Link key={link.to} to={link.to} onClick={closeMobileMenu}>
+                {link.label}
+              </Link>
+            ))}
+
+            {isAuthenticated ? (
+              <button
+                type="button"
+                className="nav__logout nav__logout--mobile"
+                onClick={handleLogout}
+              >
+                Log out
+              </button>
+            ) : (
+              <Link to="/login" onClick={closeMobileMenu}>
+                Login
+              </Link>
+            )}
+
+            <input
+              className="nav__search nav__search--mobile"
+              type="search"
+              placeholder={t('navbar.searchPlaceholder') || 'Search titles, authors...'}
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
+              aria-label={t('navbar.searchPlaceholder') || 'Search titles, authors'}
             />
-            {/* Added cart button to mobile menu for completeness! */}
-            <button className="nav__mobile-cart-btn" onClick={() => { setIsCartOpen(true); setMobileOpen(false); }}>
-              {t('navbar.cart') || 'Cart'} ({cart.length})
+
+            <button className="nav__mobile-cart-btn" onClick={openCart}>
+              {cartLabel}
+              {itemCount > 0 ? ` (${itemCount})` : ''}
             </button>
           </div>
         )}
