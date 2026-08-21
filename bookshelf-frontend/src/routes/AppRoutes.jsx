@@ -2,6 +2,7 @@ import { Routes, Route, Navigate } from 'react-router-dom';
 
 import App from '../App.jsx';
 import ProtectedRoute from '../components/ProtectedRoute.jsx';
+import ErrorBoundary from '../components/ErrorBoundary.jsx';
 
 import Home from '../pages/Home.jsx';
 import BookDetail from '../pages/BookDetail.jsx';
@@ -32,7 +33,21 @@ import NotFound from '../pages/NotFound.jsx';
 export default function AppRoutes() {
   return (
     <Routes>
-      <Route path="/" element={<App />}>
+      {/*
+        The boundary wraps the layout route, so it covers the App shell —
+        navbar, footer, cart drawer — as well as every page. That matters:
+        CartDrawer is mounted on every route, so a throw inside it used to
+        blank the site rather than one page. It sits inside the router so its
+        recovery actions can still navigate.
+      */}
+      <Route
+        path="/"
+        element={
+          <ErrorBoundary>
+            <App />
+          </ErrorBoundary>
+        }
+      >
         {/* Public */}
         <Route index element={<Home />} />
         <Route path="book/:id" element={<BookDetail />} />
