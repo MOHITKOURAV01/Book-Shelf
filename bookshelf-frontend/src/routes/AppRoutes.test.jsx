@@ -30,7 +30,6 @@ vi.mock('../pages/Home.jsx', () => stub('home-page'));
 vi.mock('../pages/BookDetail.jsx', () => stub('book-detail-page'));
 vi.mock('../pages/WishlistPage.jsx', () => stub('wishlist-page'));
 vi.mock('../pages/OrderHistory.jsx', () => stub('order-history-page'));
-vi.mock('../pages/OrdersPage.jsx', () => stub('orders-page'));
 vi.mock('../pages/OrderDetailsPage.jsx', () => stub('order-details-page'));
 vi.mock('../pages/OrderConfirmation.jsx', () => stub('order-confirmation-page'));
 vi.mock('../pages/Checkout.jsx', () => stub('checkout-page'));
@@ -61,7 +60,6 @@ describe('AppRoutes', () => {
   it.each([
     ['/book/b1', 'book-detail-page'],
     ['/wishlist', 'wishlist-page'],
-    ['/orders', 'order-history-page'],
     ['/about', 'about-page'],
     ['/privacy', 'privacy-page'],
     ['/terms', 'terms-page'],
@@ -76,7 +74,7 @@ describe('AppRoutes', () => {
     ['/profile', 'profile-page'],
     ['/checkout', 'checkout-page'],
     ['/order-confirmation', 'order-confirmation-page'],
-    ['/account/orders', 'orders-page'],
+    ['/orders', 'order-history-page'],
     ['/account/orders/abc123', 'order-details-page'],
   ])('resolves %s behind ProtectedRoute', (path, expected) => {
     renderAt(path);
@@ -94,6 +92,12 @@ describe('AppRoutes', () => {
     renderAt('/wishlist');
     expect(screen.getAllByTestId('navbar')).toHaveLength(1);
     expect(screen.getAllByTestId('footer')).toHaveLength(1);
+  });
+
+  it('redirects the retired /account/orders path to the one order history', () => {
+    renderAt('/account/orders');
+    expect(screen.getByText('order-history-page')).toBeInTheDocument();
+    expect(screen.queryByText('orders-page')).not.toBeInTheDocument();
   });
 
   it('redirects the retired /signup path to /register', () => {

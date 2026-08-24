@@ -8,7 +8,6 @@ import Home from '../pages/Home.jsx';
 import BookDetail from '../pages/BookDetail.jsx';
 import WishlistPage from '../pages/WishlistPage.jsx';
 import OrderHistory from '../pages/OrderHistory.jsx';
-import OrdersPage from '../pages/OrdersPage.jsx';
 import OrderDetailsPage from '../pages/OrderDetailsPage.jsx';
 import OrderConfirmation from '../pages/OrderConfirmation.jsx';
 import Checkout from '../pages/Checkout.jsx';
@@ -52,7 +51,6 @@ export default function AppRoutes() {
         <Route index element={<Home />} />
         <Route path="book/:id" element={<BookDetail />} />
         <Route path="wishlist" element={<WishlistPage />} />
-        <Route path="orders" element={<OrderHistory />} />
         <Route path="about" element={<AboutUs />} />
         <Route path="privacy" element={<PrivacyPolicy />} />
         <Route path="terms" element={<TermsOfService />} />
@@ -92,14 +90,25 @@ export default function AppRoutes() {
             </ProtectedRoute>
           }
         />
+        {/*
+          One order history, at one route.
+
+          There were two: /orders read a localStorage key that nothing wrote
+          and was therefore always empty, and /account/orders read the API.
+          The navbar linked to the empty one. /orders is the API-backed page
+          now — which means it needs a session, because GET /api/orders/mine
+          does — and /account/orders redirects to it rather than 404ing the
+          links and bookmarks that already point there. See #326.
+        */}
         <Route
-          path="account/orders"
+          path="orders"
           element={
             <ProtectedRoute>
-              <OrdersPage />
+              <OrderHistory />
             </ProtectedRoute>
           }
         />
+        <Route path="account/orders" element={<Navigate to="/orders" replace />} />
         <Route
           path="account/orders/:id"
           element={

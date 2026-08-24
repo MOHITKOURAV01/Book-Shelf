@@ -85,3 +85,52 @@
   }
 }
 
+
+/*
+ * Line items no longer carry a cover image or an author — the server writes
+ * `{ bookId, title, price, quantity }` (see bookshelf-backend/utils/
+ * checkout.js) and never has. `.order-item-image` and `.order-item-author`
+ * styled fields that only existed on the localStorage orders this page used
+ * to read. See #326.
+ */
+.order-item-unit {
+  margin: 0.15rem 0 0;
+  font-size: 0.85rem;
+  color: #6b7280;
+}
+
+.order-item-line-total {
+  margin: 0;
+  font-weight: 600;
+}
+
+.order-details__empty {
+  color: #6b7280;
+  font-style: italic;
+}
+
+.order-details__totals {
+  margin: 1.25rem 0 0;
+  padding-top: 1rem;
+  border-top: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+.order-details__total-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  margin: 0;
+  padding: 0.2rem 0;
+}
+
+.order-details__total-row dt,
+.order-details__total-row dd {
+  margin: 0;
+}
+
+.order-details__total-row--grand {
+  margin-top: 0.5rem;
+  padding-top: 0.5rem;
+  border-top: 1px solid rgba(0, 0, 0, 0.12);
+  font-weight: 700;
+}

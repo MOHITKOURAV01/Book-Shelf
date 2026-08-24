@@ -71,3 +71,63 @@
   }
 }
 
+
+
+/*
+ * The old `.orders-meta` line reported a count that came from a localStorage
+ * key nothing wrote, so it always read "0 orders placed". The summary is a
+ * real one now — orders, books and the amount actually paid — and the page
+ * has an error state, which it never had when the data came from local
+ * storage and could not fail. See #326.
+ */
+.order-history__header {
+  margin-bottom: 1.5rem;
+}
+
+.order-history__summary {
+  margin: 0.35rem 0 0;
+  color: #6b7280;
+  font-size: 0.95rem;
+}
+
+.order-history__error {
+  padding: 2rem;
+  border: 1px solid rgba(220, 38, 38, 0.25);
+  border-radius: 12px;
+  background: rgba(254, 226, 226, 0.35);
+}
+
+.order-history__error h3 {
+  margin: 0 0 0.5rem;
+  color: #b3261e;
+}
+
+.order-history__error p {
+  margin: 0 0 1rem;
+}
+
+.order-history__error-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.order-history__retry {
+  padding: 0.55rem 1.1rem;
+  border: none;
+  border-radius: 8px;
+  background: var(--leather, #8b5a2b);
+  color: #fff;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.order-history__retry:hover {
+  filter: brightness(1.08);
+}
+
+.order-history__signin {
+  color: var(--leather, #8b5a2b);
+  font-weight: 600;
+}
