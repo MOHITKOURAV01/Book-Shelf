@@ -50,3 +50,65 @@
 .wishlist-page__browse-btn:hover {
   opacity: 0.9;
 }
+
+/*
+ * States this page could not have before.
+ *
+ * It filtered a hardcoded local array, which cannot fail and cannot 404, so
+ * there was nothing to report. Reading the real catalogue means a request
+ * that breaks, and ids the catalogue no longer has. See #328.
+ */
+.wishlist-page__error {
+  padding: 2rem;
+  margin-bottom: 1.5rem;
+  border: 1px solid rgba(220, 38, 38, 0.25);
+  border-radius: 12px;
+  background: rgba(254, 226, 226, 0.35);
+}
+
+.wishlist-page__error h2 {
+  margin: 0 0 0.5rem;
+  font-size: 1.15rem;
+  color: #b3261e;
+}
+
+.wishlist-page__error p {
+  margin: 0;
+}
+
+.wishlist-page__notice {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+  padding: 1rem 1.25rem;
+  margin-bottom: 1.5rem;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 12px;
+  background: rgba(0, 0, 0, 0.03);
+}
+
+.wishlist-page__notice p {
+  margin: 0;
+}
+
+.wishlist-page__notice--warning {
+  border-color: rgba(180, 83, 9, 0.25);
+  background: rgba(254, 243, 199, 0.4);
+}
+
+.wishlist-page__notice-btn {
+  padding: 0.5rem 1rem;
+  border: 1px solid var(--leather, #8b5a2b);
+  border-radius: 8px;
+  background: transparent;
+  color: var(--leather, #8b5a2b);
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.wishlist-page__notice-btn:hover {
+  background: var(--leather, #8b5a2b);
+  color: #fff;
+}

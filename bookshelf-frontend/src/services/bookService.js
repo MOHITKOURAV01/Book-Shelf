@@ -63,10 +63,76 @@ export async function getBooks(params = {}, { signal } = {}) {
   return response.data;
 }
 
+/**
+ * Resolve a list of book ids against the catalogue.
+ *
+ * The wishlist stores ids and nothing else, so something has to turn them
+ * into books. That used to be `books.filter(b => wishlist.includes(b.id))`
+ * against `src/data/books.js` — a hardcoded local copy that has drifted from
+ * the API and now disagrees with it on how many books exist. `filter` is a
+ * silent drop: an id the local file did not have produced no card, no
+ * message and no error. See #328.
+ *
+ * There is no bulk endpoint, so this fans out over `GET /api/books/:id`. The
+ * requests run concurrently rather than in sequence — a wishlist of twenty
+ * would otherwise be twenty round trips end to end.
+ *
+ * Ids the catalogue does not have are reported rather than dropped. A book
+ * that has been delisted is something the customer should be told about, not
+ * something that quietly vanishes from a list they curated.
+ *
+ * Order is preserved: the result follows the order of `ids`, not the order
+ * the responses happened to arrive in.
+ *
+ * @returns {Promise<{books: object[], missingIds: string[], failedIds: string[]}>}
+ */
+export async function getBooksByIds(ids, { signal } = {}) {
+  if (!Array.isArray(ids) || ids.length === 0) {
+    return { books: [], missingIds: [], failedIds: [] };
+  }
+
+  // De-duplicate while keeping first-seen order, so a list that somehow
+  // contains an id twice does not fetch it twice or render it twice.
+  const uniqueIds = [...new Set(ids.filter((id) => typeof id === 'string' && id.trim() !== ''))];
+
+  const settled = await Promise.allSettled(
+    uniqueIds.map((id) => getBookById(id, { signal }))
+  );
+
+  const books = [];
+  const missingIds = [];
+  const failedIds = [];
+
+  settled.forEach((result, index) => {
+    const id = uniqueIds[index];
+
+    if (result.status === 'fulfilled') {
+      books.push(result.value);
+      return;
+    }
+
+    const error = result.reason;
+
+    /*
+     * A 404 is a fact about the catalogue: this book is not in it. Anything
+     * else — a timeout, a 500, an aborted request — is a fact about this
+     * attempt, and saying "no longer in the catalogue" about a book that is
+     * merely unreachable would be wrong. They are reported separately.
+     */
+    if (error?.name === 'BookNotFoundError' || error?.status === 404) {
+      missingIds.push(id);
+    } else {
+      failedIds.push(id);
+    }
+  });
+
+  return { books, missingIds, failedIds };
+}
+
 /** Distinct genres with counts, from GET /api/books/genres. */
 export async function getGenres({ signal } = {}) {
   const response = await api.get('/books/genres', { signal });
   return response.data?.genres ?? [];
 }
 
-export default { getBookById, getBooks, getGenres, BookNotFoundError };
+export default { getBookById, getBooks, getBooksByIds, getGenres, BookNotFoundError };
