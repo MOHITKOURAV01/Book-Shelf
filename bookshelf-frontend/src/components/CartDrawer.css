@@ -1,3 +1,33 @@
+/*
+ * The drawer and its backdrop only exist in the DOM while the cart is open.
+ *
+ * They used to be rendered on every page and hidden with `transform:
+ * translateX(100%)`, which hides a thing from sighted mouse users and from
+ * nobody else — every page carried an aria-modal dialog and a run of
+ * invisible tab stops. See #327.
+ *
+ * That means these cannot animate with a `transition` from a closed state:
+ * there is no closed state to transition from, because the element did not
+ * exist a frame ago. An entry animation gives the same slide-in.
+ */
+@keyframes cart-drawer-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes cart-drawer-slide-in {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
 .cart-drawer-backdrop {
   position: fixed;
   top: 0;
@@ -6,15 +36,9 @@
   height: 100vh;
   background-color: rgba(0, 0, 0, 0.4);
   backdrop-filter: blur(2px);
-  opacity: 0;
-  visibility: hidden;
-  transition: opacity 0.3s ease, visibility 0.3s ease;
-  z-index: 1000;
-}
-
-.cart-drawer-backdrop.is-open {
   opacity: 1;
-  visibility: visible;
+  z-index: 1000;
+  animation: cart-drawer-fade-in 0.3s ease both;
 }
 
 .cart-drawer {
@@ -26,15 +50,27 @@
   height: 100vh;
   background-color: var(--paper);
   box-shadow: -4px 0 24px rgba(0, 0, 0, 0.15);
-  transform: translateX(100%);
-  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  transform: translateX(0);
   z-index: 1001;
   display: flex;
   flex-direction: column;
+  animation: cart-drawer-slide-in 0.4s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
-.cart-drawer.is-open {
-  transform: translateX(0);
+/*
+ * The drawer takes focus the moment it opens, and it is a panel rather than
+ * a control, so the focus ring on the container itself is noise. Its
+ * children keep theirs.
+ */
+.cart-drawer:focus {
+  outline: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cart-drawer-backdrop,
+  .cart-drawer {
+    animation-duration: 0.01ms;
+  }
 }
 
 .cart-drawer__header {
