@@ -79,3 +79,33 @@
   flex-direction: column;
   gap: 1rem;
 }
+
+/*
+ * Field-level validation messages.
+ *
+ * The API answers a bad body with one message per field (see
+ * middleware/validateBody.js); before #325 none of them reached the page, so
+ * there was nothing to style. `auth-error` stays the banner for the failure
+ * as a whole — "Invalid email or password", "Too many login attempts" — and
+ * this is the note that sits under the input it is about.
+ */
+.auth-field-error {
+  display: block;
+  margin-top: 0.35rem;
+  font-size: 0.85rem;
+  line-height: 1.35;
+  color: #b3261e;
+}
+
+.auth-form input[aria-invalid='true'] {
+  border-color: #b3261e;
+}
+
+.auth-form input[aria-invalid='true']:focus {
+  outline-color: #b3261e;
+}
+
+.auth-button:disabled {
+  cursor: not-allowed;
+  opacity: 0.65;
+}
