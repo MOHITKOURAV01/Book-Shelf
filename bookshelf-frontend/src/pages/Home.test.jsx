@@ -1,7 +1,7 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { MemoryRouter } from 'react-router-dom';
+import { MemoryRouter, Outlet, Route, Routes, useLocation } from 'react-router-dom';
 
 vi.mock('react-i18next', () => ({
   useTranslation: () => ({
@@ -81,12 +81,25 @@ function fakeApi(url) {
   };
 }
 
-function renderHome() {
+/**
+ * Reports the current location, so a test can assert what the URL says.
+ *
+ * The filters live in the query string now (#338), so "what is on screen"
+ * and "what the URL says" are the same question and both halves have to be
+ * checkable.
+ */
+function LocationProbe() {
+  const location = useLocation();
+  return <span data-testid="location">{`${location.pathname}${location.search}`}</span>;
+}
+
+function renderHome({ at = '/', searchQuery = '' } = {}) {
   return render(
-    <MemoryRouter>
+    <MemoryRouter initialEntries={[at]}>
       <WishlistContext.Provider value={wishlist}>
         <CartProvider>
-          <Home searchQuery="" />
+          <Home searchQuery={searchQuery} />
+          <LocationProbe />
         </CartProvider>
       </WishlistContext.Provider>
     </MemoryRouter>
@@ -95,6 +108,8 @@ function renderHome() {
 
 const titles = () =>
   screen.queryAllByTestId('book-card').map((card) => card.textContent);
+
+const url = () => screen.getByTestId('location').textContent;
 
 describe('Home catalogue', () => {
   beforeEach(() => {
@@ -193,5 +208,155 @@ describe('Home catalogue', () => {
 
     await user.click(screen.getByRole('button', { name: /clear all ✕/i }));
     await waitFor(() => expect(titles()).toHaveLength(4));
+  });
+
+  describe('the URL', () => {
+    /**
+     * The regression (#338): none of this reached the address bar. Every
+     * filter was `useState` here and the search box was state in App, so `/`
+     * was the URL whether the customer was looking at the whole catalogue or
+     * at page 3 of Sci-Fi under ₹300. Refresh cleared it, Back left the site,
+     * a filtered view could not be shared, and returning from a book page
+     * remounted this page with its defaults.
+     */
+
+    it('describes what is on screen', async () => {
+      const user = userEvent.setup();
+      renderHome();
+      await waitFor(() => expect(titles()).toHaveLength(4));
+
+      await user.click(screen.getByLabelText('Fiction'));
+
+      await waitFor(() => expect(url()).toBe('/?genre=Fiction'));
+    });
+
+    it('renders the filters a shared link carries', async () => {
+      // The share/bookmark/refresh case: the whole point.
+      renderHome({ at: '/?maxPrice=250' });
+
+      await waitFor(() => expect(titles()).toEqual(['Low Tide', 'Paper Trail']));
+    });
+
+    it('asks for the page a shared link names, and does not snap back to 1', async () => {
+      // The reset-to-page-1 rule used to be an effect watching six
+      // dependencies, and it ran on mount too — so a link to page 2 asked
+      // the API for page 1, which is the bug this whole change is about.
+      renderHome({ at: '/?page=2' });
+
+      await waitFor(() => expect(globalThis.fetch).toHaveBeenCalled());
+
+      const requested = new URL(
+        globalThis.fetch.mock.calls[0][0],
+        'http://x'
+      ).searchParams;
+
+      expect(requested.get('page')).toBe('2');
+      expect(url()).toContain('page=2');
+    });
+
+    it('carries the sort', async () => {
+      const user = userEvent.setup();
+      renderHome();
+      await waitFor(() => expect(titles()).toHaveLength(4));
+
+      await user.selectOptions(screen.getByLabelText('home.sortAriaLabel'), 'price_asc');
+
+      await waitFor(() => expect(url()).toBe('/?sort=price_asc'));
+    });
+
+    it('carries a rating', async () => {
+      const user = userEvent.setup();
+      renderHome();
+      await waitFor(() => expect(titles()).toHaveLength(4));
+
+      await user.click(screen.getByLabelText(/★★★★☆ & up/));
+
+      await waitFor(() => expect(url()).toBe('/?minRating=4'));
+    });
+
+    it('carries the page', async () => {
+      const user = userEvent.setup();
+      renderHome();
+      await waitFor(() => expect(titles()).toHaveLength(4));
+
+      // 4 books at 4 per page is one page; narrow it so there are two.
+      await user.type(screen.getByLabelText('Maximum price in rupees'), '299');
+      await waitFor(() => expect(titles()).toHaveLength(3));
+    });
+
+    it('returns to page 1 in the URL when a filter changes', async () => {
+      const user = userEvent.setup();
+      renderHome({ at: '/?page=3' });
+      await waitFor(() => expect(screen.queryByTestId('skeleton')).toBeNull());
+
+      await user.click(screen.getByLabelText('Fiction'));
+
+      await waitFor(() => expect(url()).toBe('/?genre=Fiction'));
+    });
+
+    it('leaves nothing behind when the last filter is cleared', async () => {
+      const user = userEvent.setup();
+      renderHome({ at: '/?genre=Fiction' });
+      await waitFor(() => expect(titles()).toEqual(['The Quiet Ones']));
+
+      await user.click(screen.getByLabelText('Fiction'));
+
+      await waitFor(() => expect(url()).toBe('/'));
+    });
+
+    it('clears the filters but keeps the search', async () => {
+      renderHome({ at: '/?search=the&genre=Fiction' });
+      await waitFor(() => expect(screen.queryByTestId('skeleton')).toBeNull());
+
+      const user = userEvent.setup();
+      // The sidebar renders a "Clear All" in its desktop header and another
+      // in its mobile footer; either does the same thing.
+      await user.click(screen.getAllByRole('button', { name: /clear all/i })[0]);
+
+      await waitFor(() => expect(url()).toBe('/?search=the'));
+    });
+
+    it('puts a shared search term back into the navbar box', async () => {
+      // The box is owned by App and reaches this page through the outlet
+      // context; a link carrying ?search= has to hydrate it, or the grid and
+      // the input disagree about what is being searched for.
+      const setSearchQuery = vi.fn();
+
+      render(
+        <MemoryRouter initialEntries={['/?search=quiet']}>
+          <WishlistContext.Provider value={wishlist}>
+            <CartProvider>
+              <Routes>
+                <Route
+                  path="/"
+                  element={<Outlet context={{ searchQuery: '', setSearchQuery }} />}
+                >
+                  <Route index element={<Home />} />
+                </Route>
+              </Routes>
+            </CartProvider>
+          </WishlistContext.Provider>
+        </MemoryRouter>
+      );
+
+      await waitFor(() => expect(setSearchQuery).toHaveBeenCalledWith('quiet'));
+    });
+
+    it('filters by a shared search term before the box is hydrated', async () => {
+      renderHome({ at: '/?search=quiet' });
+
+      await waitFor(() => expect(titles()).toEqual(['The Quiet Ones']));
+    });
+
+    it('ignores nonsense in the URL rather than sending it to the API', async () => {
+      renderHome({ at: '/?page=-1&minRating=99&sort=sideways' });
+
+      await waitFor(() => expect(titles()).toHaveLength(4));
+
+      const requested = new URL(globalThis.fetch.mock.calls[0][0], 'http://x').searchParams;
+      expect(requested.get('page')).toBe('1');
+      expect(requested.get('minRating')).toBeNull();
+      expect(requested.get('sort')).toBeNull();
+    });
   });
 });
