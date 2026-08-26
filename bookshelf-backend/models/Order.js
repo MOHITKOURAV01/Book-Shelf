@@ -52,6 +52,24 @@ const orderSchema = new mongoose.Schema(
     paidAt: {
       type: Date,
     },
+    /*
+     * Inventory is taken before the payment intent exists (see #297), so an
+     * order that is still `pending` is holding stock it has not paid for.
+     * Recording when that hold started makes the reservation a fact in the
+     * database rather than an implicit side effect, which is what lets it be
+     * swept when the customer never comes back. See #329.
+     */
+    reservedAt: {
+      type: Date,
+    },
+    /*
+     * Set when the hold has been handed back. `restoreInventory` is not
+     * idempotent — it adds units unconditionally — so this marker is what
+     * stops a second sweep restoring the same lines twice.
+     */
+    reservationReleasedAt: {
+      type: Date,
+    },
   },
   {
     timestamps: true,
@@ -59,6 +77,8 @@ const orderSchema = new mongoose.Schema(
 );
 
 orderSchema.index({ userId: 1, createdAt: -1 });
+// The sweeper's query: unreleased holds older than the TTL.
+orderSchema.index({ paymentStatus: 1, reservationReleasedAt: 1, reservedAt: 1 });
 orderSchema.index({ status: 1 });
 orderSchema.index({ paymentStatus: 1 });
 

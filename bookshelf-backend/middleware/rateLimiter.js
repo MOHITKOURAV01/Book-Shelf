@@ -187,4 +187,24 @@ export const registerLimiter = createRateLimiter({
     'Too many accounts created from this address. Please try again later.',
 });
 
+/**
+ * Creating a payment intent.
+ *
+ * This endpoint is anonymous — guests can check out — and every successful
+ * call takes inventory off the shelf before anything is paid. With 78 units
+ * across the whole catalogue, an unthrottled loop emptied the shop in under a
+ * minute. See #329.
+ *
+ * 20 an hour per address is far above what a real customer needs (a checkout
+ * is one call, retried at most a handful of times) and far below what it
+ * takes to drain the stock. It bounds the damage; the sweeper is what
+ * actually gives the stock back.
+ */
+export const checkoutLimiter = createRateLimiter({
+  windowMs: 60 * 60 * 1000,
+  max: 20,
+  message:
+    'Too many checkout attempts from this address. Please try again later.',
+});
+
 export default createRateLimiter;

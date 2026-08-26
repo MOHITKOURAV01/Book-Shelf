@@ -55,6 +55,9 @@ export const createIntent = async (req, res, next) => {
   }
 
   let reservationHeld = true;
+  // Declared before `release` so the closure can mark it; it is only
+  // assigned once the order has actually been created.
+  let savedOrder;
 
   const release = (reason) => {
     if (!reservationHeld) {
@@ -64,6 +67,13 @@ export const createIntent = async (req, res, next) => {
     reservationHeld = false;
 
     const { failed } = restoreInventory(checkout.reservation);
+
+    // If the order exists, record that its hold is gone. Without this the
+    // sweeper would find it still `pending` and restore the same lines a
+    // second time. See #329.
+    if (savedOrder && !savedOrder.reservationReleasedAt) {
+      savedOrder.reservationReleasedAt = new Date();
+    }
 
     if (failed.length > 0) {
       // Worth a loud log: the shop's stock is now understated and only a
@@ -76,8 +86,6 @@ export const createIntent = async (req, res, next) => {
     }
   };
 
-  let savedOrder;
-
   try {
     savedOrder = await orderRepository.create({
       userId: req.user ? req.user._id : null,
@@ -89,6 +97,14 @@ export const createIntent = async (req, res, next) => {
       total: checkout.total,
       status: 'pending',
       paymentStatus: 'pending',
+      /*
+       * When the hold started. The reservation above is a durable change to
+       * books.json, so it needs a durable record of when it happened —
+       * otherwise nothing can tell an abandoned checkout from one the
+       * customer is still filling in, and the stock is held forever. See
+       * #329.
+       */
+      reservedAt: new Date(),
     });
   } catch (error) {
     release('the order could not be saved');
