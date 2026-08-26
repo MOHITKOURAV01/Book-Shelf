@@ -19,12 +19,26 @@ import {
   toMajorUnits,
   toMinorUnits,
 } from './money.js';
+import { getCurrencyConfig } from '../config/currency.js';
 
 /** 5% mock tax, as before. Kept here so the number has one home. */
 export const TAX_RATE = 0.05;
 
-/** Flat shipping, in major units, as before. */
-export const SHIPPING_MAJOR_UNITS = 5.99;
+/**
+ * Flat shipping, in major units of the shop's currency.
+ *
+ * This was a hardcoded `5.99` — a dollar figure, charged unchanged next to a
+ * catalogue priced in rupees, because nothing in the pricing path knew what
+ * currency it was working in. It comes from config/currency.js now, which is
+ * the same place the payment intent gets its currency from. See #335.
+ *
+ * Read through a function rather than exported as a constant: the config is
+ * resolved lazily, and a module-scope read would fix the value at import time
+ * and defeat that.
+ */
+export function defaultShipping(currency = getCurrencyConfig()) {
+  return currency.defaultShipping;
+}
 
 /**
  * Bounds. None of these are business rules — they are the limits past which a
@@ -221,7 +235,10 @@ function describe(value) {
  * major-unit numbers (what goes on the order document and to Stripe), so a
  * caller never has to divide by 100 itself and get it subtly wrong.
  */
-export function priceOrder(items, { taxRate = TAX_RATE, shipping = SHIPPING_MAJOR_UNITS } = {}) {
+export function priceOrder(
+  items,
+  { taxRate = TAX_RATE, currency = getCurrencyConfig(), shipping = currency.defaultShipping } = {}
+) {
   const orderItems = [];
   const lineTotals = [];
 
@@ -246,6 +263,11 @@ export function priceOrder(items, { taxRate = TAX_RATE, shipping = SHIPPING_MAJO
 
   return {
     orderItems,
+    // Carried through so the caller never has to ask a second source what
+    // currency these numbers are in. The order document records it and the
+    // API response returns it, so the amount displayed and the amount
+    // charged cannot drift apart again.
+    currency: currency.code,
     minorUnits: {
       subtotal: subtotalMinor,
       tax: taxMinor,
@@ -296,7 +318,7 @@ export function prepareCheckout(rawItems, lookupBook, options) {
 
 export default {
   TAX_RATE,
-  SHIPPING_MAJOR_UNITS,
+  defaultShipping,
   MAX_LINE_ITEMS,
   MAX_QUANTITY_PER_LINE,
   CheckoutValidationError,

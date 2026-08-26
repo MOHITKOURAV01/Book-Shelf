@@ -9,6 +9,7 @@ import Pagination from '../components/Pagination.jsx';
 import SkeletonLoader from '../components/SkeletonLoader.jsx';
 import { useBookCatalog } from '../hooks/useBookCatalog.js';
 import { hasActiveFilters } from '../utils/catalogQuery.js';
+import { currencySymbol } from '../utils/currency.js';
 
 // Genre list is static because the catalogue is. GET /api/books/genres
 // exists and returns these with counts; wiring it up is a separate change.
@@ -33,6 +34,10 @@ export default function Home({ searchQuery: searchQueryProp }) {
   const [maxPrice, setMaxPrice] = useState('');
   const [minRating, setMinRating] = useState(null);
   const [sidebarOpen, setSidebarOpen] = useState(false);
+
+  // The active-filter chips said "Min ₹250" whatever the shop was priced in.
+  // See #335.
+  const symbol = currencySymbol();
 
   const filters = useMemo(
     () => ({
@@ -160,13 +165,13 @@ export default function Home({ searchQuery: searchQueryProp }) {
                   ))}
                   {minPrice !== '' && (
                     <span className="catalog__filter-tag">
-                      Min ₹{minPrice}
+                      Min {symbol}{minPrice}
                       <button onClick={() => setMinPrice('')} aria-label="Remove min price filter">✕</button>
                     </span>
                   )}
                   {maxPrice !== '' && (
                     <span className="catalog__filter-tag">
-                      Max ₹{maxPrice}
+                      Max {symbol}{maxPrice}
                       <button onClick={() => setMaxPrice('')} aria-label="Remove max price filter">✕</button>
                     </span>
                   )}

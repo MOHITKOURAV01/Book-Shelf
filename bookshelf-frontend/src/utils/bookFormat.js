@@ -12,6 +12,8 @@
  * took down the whole page rather than leaving one line blank. See #317.
  */
 
+import { formatPrice as formatCurrencyPrice } from './currency.js';
+
 /** Books whose stock is at or below this are worth warning about. */
 export const LOW_STOCK_THRESHOLD = 3;
 
@@ -36,22 +38,18 @@ export function formatRating(rating) {
   return value.toFixed(1);
 }
 
-/** Rupees, grouped the Indian way, matching the rest of the shop. */
+/**
+ * A catalogue price, in the shop's currency.
+ *
+ * This used to hardcode `₹` and `en-IN` while `utils/orderFormat.js`
+ * hardcoded `$` and `en-US` and the payment intent was created in USD — so
+ * the same book was ₹349 on its card and $349.00 in the order history, and
+ * the card was charged dollars. It delegates to `utils/currency.js` now,
+ * which is the one formatter and mirrors the backend's currency config.
+ * See #335.
+ */
 export function formatPrice(price) {
-  if (price === null || price === undefined || price === '') {
-    return null;
-  }
-
-  const value = Number(price);
-
-  if (!Number.isFinite(value)) {
-    return null;
-  }
-
-  return `₹${value.toLocaleString('en-IN', {
-    minimumFractionDigits: 0,
-    maximumFractionDigits: 2,
-  })}`;
+  return formatCurrencyPrice(price);
 }
 
 /**
