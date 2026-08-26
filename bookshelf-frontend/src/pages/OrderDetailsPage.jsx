@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import orderService from '../services/orderService';
 import { OrderStatusBadge, LoadingSkeleton } from '../components/orders/OrderComponents';
+import { describeApiError, isNotFound, isUnauthorized } from '../utils/apiError.js';
 
 export default function OrderDetailsPage() {
   const { id } = useParams();
@@ -10,20 +11,36 @@ export default function OrderDetailsPage() {
   const [error, setError] = useState(null);
 
   useEffect(() => {
+    /*
+     * `utils/api.js` normalises errors to { status, message, code, original },
+     * so the `err.response.status === 404` this branch used to test was never
+     * true and the not-found message below was dead code — a deleted or
+     * mistyped order id fell through to the generic "Unable to load order
+     * details." See #325.
+     */
     const fetchOrder = async () => {
+      setLoading(true);
+      setError(null);
+
       try {
         const data = await orderService.getOrderById(id);
         setOrder(data);
       } catch (err) {
-        if (err.response && err.response.status === 404) {
-            setError('This order could not be found.');
+        if (isNotFound(err)) {
+          setError('This order could not be found.');
+        } else if (isUnauthorized(err)) {
+          // AuthContext has already dropped the session by the time this
+          // runs — the API client notifies it on any 401 — so the useful
+          // thing to say is what to do about it.
+          setError('Your session has expired. Please sign in again to view this order.');
         } else {
-            setError('Unable to load order details.');
+          setError(describeApiError(err, 'Unable to load order details.'));
         }
       } finally {
         setLoading(false);
       }
     };
+
     fetchOrder();
   }, [id]);
 

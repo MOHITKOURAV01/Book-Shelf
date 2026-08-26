@@ -1,6 +1,7 @@
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate, useLocation, Link } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth.js';
+import { describeApiError, fieldErrors } from '../utils/apiError.js';
 import './Auth.css';
 
 const Register = () => {
@@ -9,6 +10,8 @@ const Register = () => {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [error, setError] = useState('');
+  const [fieldError, setFieldError] = useState({});
+  const [submitting, setSubmitting] = useState(false);
   const { register, isAuthenticated } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
@@ -24,24 +27,56 @@ const Register = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
+    setFieldError({});
 
     if (password !== confirmPassword) {
-      return setError('Passwords do not match');
+      // A local check, so it belongs on the field rather than in the banner.
+      setFieldError({ confirmPassword: 'Passwords do not match' });
+      return;
     }
+
+    setSubmitting(true);
 
     try {
       await register({ name, email, password });
       navigate(redirect);
     } catch (err) {
-      setError(err.response?.data?.message || 'Failed to register');
+      /*
+       * These are the failures a user can actually act on — "Email already
+       * registered", and the per-field messages from validateBody (see
+       * #275). Reading the pre-normalisation `err.response` meant all of
+       * them arrived as "Failed to register", with nothing saying which
+       * field was wrong. See #325.
+       */
+      setError(describeApiError(err, 'Failed to register'));
+      setFieldError(fieldErrors(err));
+    } finally {
+      setSubmitting(false);
     }
   };
+
+  /** Every field renders its error the same way; this keeps that in one place. */
+  const errorFor = (field) =>
+    fieldError[field] ? (
+      <span className="auth-field-error" id={`${field}-error`} role="alert">
+        {fieldError[field]}
+      </span>
+    ) : null;
+
+  const errorProps = (field) => ({
+    'aria-invalid': fieldError[field] ? 'true' : 'false',
+    'aria-describedby': fieldError[field] ? `${field}-error` : undefined,
+  });
 
   return (
     <div className="auth-container">
       <h2>Register</h2>
-      {error && <div className="auth-error">{error}</div>}
-      <form onSubmit={handleSubmit} className="auth-form">
+      {error && (
+        <div className="auth-error" role="alert">
+          {error}
+        </div>
+      )}
+      <form onSubmit={handleSubmit} className="auth-form" noValidate>
         <div className="form-group">
           <label htmlFor="name">Name</label>
           <input
@@ -50,7 +85,9 @@ const Register = () => {
             value={name}
             onChange={(e) => setName(e.target.value)}
             required
+            {...errorProps('name')}
           />
+          {errorFor('name')}
         </div>
         <div className="form-group">
           <label htmlFor="email">Email</label>
@@ -60,7 +97,9 @@ const Register = () => {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
+            {...errorProps('email')}
           />
+          {errorFor('email')}
         </div>
         <div className="form-group">
           <label htmlFor="password">Password</label>
@@ -71,7 +110,9 @@ const Register = () => {
             onChange={(e) => setPassword(e.target.value)}
             required
             minLength="8"
+            {...errorProps('password')}
           />
+          {errorFor('password')}
         </div>
         <div className="form-group">
           <label htmlFor="confirmPassword">Confirm Password</label>
@@ -82,10 +123,12 @@ const Register = () => {
             onChange={(e) => setConfirmPassword(e.target.value)}
             required
             minLength="8"
+            {...errorProps('confirmPassword')}
           />
+          {errorFor('confirmPassword')}
         </div>
-        <button type="submit" className="auth-button">
-          Register
+        <button type="submit" className="auth-button" disabled={submitting}>
+          {submitting ? 'Creating account…' : 'Register'}
         </button>
       </form>
       <p>
