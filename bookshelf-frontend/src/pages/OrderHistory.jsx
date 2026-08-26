@@ -4,7 +4,7 @@ import OrderCard from '../components/orders/OrderCard.jsx';
 import EmptyOrders from '../components/orders/EmptyOrders.jsx';
 import SkeletonLoader from '../components/SkeletonLoader.jsx';
 import { useOrders } from '../hooks/useOrders.js';
-import { countOrderItems, formatMoney } from '../utils/orderFormat.js';
+import { countOrderItems, formatTotalSpent } from '../utils/orderFormat.js';
 import './OrderHistory.css';
 import { usePageMetadata } from '../hooks/usePageMetadata.js';
 
@@ -31,17 +31,17 @@ export default function OrderHistory() {
   const orderCount = orders.length;
   const bookCount = orders.reduce((total, order) => total + countOrderItems(order), 0);
 
-  // Only orders that were actually paid for count towards what was spent.
-  // Including a failed or pending payment would tell a customer they had
-  // spent money they have not been charged.
-  const totalSpent = orders.reduce((total, order) => {
-    if (order.paymentStatus !== 'paid') {
-      return total;
-    }
-
-    const amount = Number(order.total);
-    return Number.isFinite(amount) ? total + amount : total;
-  }, 0);
+  /*
+   * Only orders that were actually paid for count towards what was spent —
+   * including a failed or pending payment would tell a customer they had
+   * spent money they have not been charged.
+   *
+   * The sum is per currency. This was a plain `reduce` adding every total
+   * together, which was correct only while the currency was hardcoded; a
+   * history spanning two currencies would have produced a number that is not
+   * an amount of anything. See #335.
+   */
+  const spent = formatTotalSpent(orders);
 
   return (
     <div className="page-container order-history-page">
@@ -51,7 +51,7 @@ export default function OrderHistory() {
           <p className="order-history__summary" data-testid="order-history-summary">
             {`${orderCount} ${orderCount === 1 ? 'order' : 'orders'}`} &middot;{' '}
             {`${bookCount} ${bookCount === 1 ? 'book' : 'books'}`} &middot;{' '}
-            {`${formatMoney(totalSpent)} paid`}
+            {`${spent} paid`}
           </p>
         )}
       </header>

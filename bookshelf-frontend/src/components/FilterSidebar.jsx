@@ -1,3 +1,4 @@
+import { currencyName, currencySymbol } from '../utils/currency.js';
 import './FilterSidebar.css';
 
 /**
@@ -31,6 +32,13 @@ export default function FilterSidebar({
   isOpen,
   onToggle,
 }) {
+  // Was a hardcoded ₹ with a comment noting it had been changed from a
+  // hardcoded $. Neither was right for a shop whose currency is configuration;
+  // it reads the configured one now. See #335.
+  const symbol = currencySymbol();
+  // A word, not the symbol — see currencyName().
+  const name = currencyName();
+
   const hasActiveFilters =
     selectedGenres.length > 0 ||
     minPrice !== '' ||
@@ -86,29 +94,28 @@ export default function FilterSidebar({
 
         {/* ── Price range ────────────────────────────────── */}
         <fieldset className="filter-group">
-          <legend className="filter-group__title">Price (₹)</legend>
+          <legend className="filter-group__title">Price ({symbol})</legend>
           <div className="filter-price-inputs">
             <label className="filter-price-input">
-              {/* Fixed: was '$', corrected to '₹' to match app currency */}
-              <span className="filter-price-input__prefix">Min ₹</span>
+              <span className="filter-price-input__prefix">Min {symbol}</span>
               <input
                 type="number"
                 min="0"
                 value={minPrice}
                 onChange={(e) => onMinPriceChange(e.target.value)}
                 placeholder="0"
-                aria-label="Minimum price in rupees"
+                aria-label={`Minimum price in ${name}`}
               />
             </label>
             <label className="filter-price-input">
-              <span className="filter-price-input__prefix">Max ₹</span>
+              <span className="filter-price-input__prefix">Max {symbol}</span>
               <input
                 type="number"
                 min="0"
                 value={maxPrice}
                 onChange={(e) => onMaxPriceChange(e.target.value)}
                 placeholder="Any"
-                aria-label="Maximum price in rupees"
+                aria-label={`Maximum price in ${name}`}
               />
             </label>
           </div>

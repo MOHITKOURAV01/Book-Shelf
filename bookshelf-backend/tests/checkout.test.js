@@ -9,7 +9,9 @@ import {
   priceOrder,
   toReservation,
   prepareCheckout,
+  defaultShipping,
 } from '../utils/checkout.js';
+import { SUPPORTED_CURRENCIES } from '../config/currency.js';
 
 /**
  * A three-book catalogue. The real one is read from disk; the lookup is
@@ -201,8 +203,43 @@ describe('priceOrder', () => {
 
     assert.equal(pricing.subtotal, 1047);
     assert.equal(pricing.tax, 52.35); // not 52.35000000000001
-    assert.equal(pricing.shipping, 5.99);
-    assert.equal(pricing.total, 1105.34);
+    // 49, not 5.99: shipping is a major-unit amount in the shop's own
+    // currency, which is INR. It used to be a hardcoded dollar figure
+    // charged next to a rupee-priced catalogue. See #335.
+    assert.equal(pricing.shipping, 49);
+    assert.equal(pricing.total, 1148.35);
+  });
+
+  test('prices in the shop currency and says which one', () => {
+    const items = validateItems([{ id: 'b1', quantity: 3 }], lookupBook);
+
+    assert.equal(priceOrder(items).currency, 'INR');
+    assert.equal(
+      priceOrder(items, { currency: SUPPORTED_CURRENCIES.USD }).currency,
+      'USD'
+    );
+  });
+
+  test('shipping follows the currency it is priced in', () => {
+    const items = validateItems([{ id: 'b1', quantity: 3 }], lookupBook);
+
+    assert.equal(priceOrder(items).shipping, 49);
+    assert.equal(
+      priceOrder(items, { currency: SUPPORTED_CURRENCIES.USD }).shipping,
+      5.99
+    );
+
+    // The helper and the default used by priceOrder are the same number.
+    assert.equal(defaultShipping(), 49);
+    assert.equal(defaultShipping(SUPPORTED_CURRENCIES.USD), 5.99);
+  });
+
+  test('an explicit shipping override still wins over the currency default', () => {
+    const items = validateItems([{ id: 'b1', quantity: 3 }], lookupBook);
+    const pricing = priceOrder(items, { shipping: 0 });
+
+    assert.equal(pricing.shipping, 0);
+    assert.equal(pricing.total, 1099.35);
   });
 
   test('reports the integer minor units alongside the major ones', () => {
@@ -212,8 +249,8 @@ describe('priceOrder', () => {
     assert.deepEqual(minorUnits, {
       subtotal: 104700,
       tax: 5235,
-      shipping: 599,
-      total: 110534,
+      shipping: 4900,
+      total: 114835,
     });
   });
 
@@ -298,7 +335,8 @@ describe('prepareCheckout', () => {
   test('returns everything the controller needs in one call', () => {
     const result = prepareCheckout([{ id: 'b1', quantity: 2 }], lookupBook);
 
-    assert.equal(result.total, 738.89);
+    assert.equal(result.total, 781.9);
+    assert.equal(result.currency, 'INR');
     assert.equal(result.orderItems.length, 1);
     assert.deepEqual(result.reservation, [
       { bookId: 'b1', quantity: 2, expectedVersion: 2 },

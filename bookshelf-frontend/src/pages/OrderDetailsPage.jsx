@@ -3,7 +3,9 @@ import { useParams, Link } from 'react-router-dom';
 import orderService from '../services/orderService';
 import { OrderStatusBadge, LoadingSkeleton } from '../components/orders/OrderComponents';
 import { describeApiError, isNotFound, isUnauthorized } from '../utils/apiError.js';
-import { orderReference } from '../utils/orderFormat.js';
+// `orderMoney` was `${order.total?.toFixed(2)}` — a bare dollar sign on a page
+// whose prices came from a rupee-priced catalogue. See #335.
+import { orderMoney, orderReference } from '../utils/orderFormat.js';
 import { usePageMetadata } from '../hooks/usePageMetadata.js';
 
 export default function OrderDetailsPage() {
@@ -69,6 +71,8 @@ export default function OrderDetailsPage() {
   }
   if (!order) return null;
 
+  const money = orderMoney(order);
+
   return (
     <div style={{ maxWidth: '1000px', margin: '2rem auto', padding: '0 1rem' }}>
       <Link to="/account/orders" style={{ display: 'inline-block', marginBottom: '1.5rem', color: 'var(--leather, #8b5a2b)', textDecoration: 'none', fontWeight: '500' }}>
@@ -94,7 +98,7 @@ export default function OrderDetailsPage() {
                     <p style={{ fontWeight: '600', margin: 0 }}>{item.title}</p>
                     <p style={{ color: '#666', fontSize: '0.875rem', margin: 0 }}>Qty: {item.quantity}</p>
                   </div>
-                  <p style={{ fontWeight: '500', margin: 0 }}>${(item.price * item.quantity).toFixed(2)}</p>
+                  <p style={{ fontWeight: '500', margin: 0 }}>{money(item.price * item.quantity)}</p>
                 </div>
               ))}
             </div>
@@ -104,11 +108,11 @@ export default function OrderDetailsPage() {
           <div style={{ background: '#fff', padding: '1.5rem', borderRadius: '12px', boxShadow: '0 1px 3px rgba(0,0,0,0.1)' }}>
             <h3 style={{ marginBottom: '1rem', borderBottom: '1px solid #e5e7eb', paddingBottom: '0.5rem' }}>Order Totals</h3>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between' }}><span>Subtotal</span><span>${order.subtotal?.toFixed(2)}</span></div>
-              <div style={{ display: 'flex', justifyContent: 'space-between' }}><span>Shipping</span><span>${order.shipping?.toFixed(2)}</span></div>
-              <div style={{ display: 'flex', justifyContent: 'space-between' }}><span>Tax</span><span>${order.tax?.toFixed(2)}</span></div>
+              <div style={{ display: 'flex', justifyContent: 'space-between' }}><span>Subtotal</span><span>{money(order.subtotal)}</span></div>
+              <div style={{ display: 'flex', justifyContent: 'space-between' }}><span>Shipping</span><span>{money(order.shipping)}</span></div>
+              <div style={{ display: 'flex', justifyContent: 'space-between' }}><span>Tax</span><span>{money(order.tax)}</span></div>
               <div style={{ display: 'flex', justifyContent: 'space-between', fontWeight: 'bold', borderTop: '1px solid #e5e7eb', paddingTop: '0.5rem', marginTop: '0.5rem' }}>
-                <span>Total</span><span>${order.total?.toFixed(2)}</span>
+                <span>Total</span><span>{money(order.total)}</span>
               </div>
             </div>
           </div>

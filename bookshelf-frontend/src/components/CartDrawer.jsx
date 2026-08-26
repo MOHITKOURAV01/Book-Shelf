@@ -3,6 +3,17 @@ import { useNavigate } from 'react-router-dom';
 
 import { useCart } from '../hooks/useCart.js';
 import { useFocusTrap, useScrollLock } from '../hooks/useFocusTrap.js';
+/*
+ * `item.price.toFixed(2)` threw on anything that was not a number, and a cart
+ * comes out of localStorage — see #309, where one malformed value took the
+ * whole app down. `formatMoney` returns an em dash for an unusable amount.
+ *
+ * It was replaced by a local `₹${amount.toFixed(2)}` helper, which was the
+ * third of four disagreeing money formatters in this app and the only one
+ * that did no digit grouping — ₹1234.00 in the drawer for the same cart the
+ * checkout summary showed as ₹1,234.00. See #335.
+ */
+import { formatMoney } from '../utils/currency.js';
 import './CartDrawer.css';
 
 /**
@@ -119,7 +130,7 @@ export default function CartDrawer() {
                   )}
                   <div className="cart-item__details">
                     <h4 className="cart-item__title">{item.title}</h4>
-                    <p className="cart-item__price">{formatPrice(item.price)}</p>
+                    <p className="cart-item__price">{formatMoney(item.price)}</p>
 
                     <div className="cart-item__actions">
                       <div className="cart-item__quantity">
@@ -151,7 +162,7 @@ export default function CartDrawer() {
                     </div>
                   </div>
                   <div className="cart-item__subtotal">
-                    {formatPrice(Number(item.price) * Number(item.quantity))}
+                    {formatMoney(lineTotal(item))}
                   </div>
                 </li>
               ))}
@@ -163,7 +174,7 @@ export default function CartDrawer() {
           <div className="cart-drawer__footer">
             <div className="cart-drawer__subtotal">
               <span>Subtotal</span>
-              <span>{formatPrice(subtotal)}</span>
+              <span>{formatMoney(subtotal)}</span>
             </div>
 
             <div className="cart-drawer__footer-actions">
@@ -186,16 +197,16 @@ export default function CartDrawer() {
 }
 
 /**
- * `item.price.toFixed(2)` threw on anything that was not a number, and a cart
- * comes out of localStorage — see #309, where one malformed value took the
- * whole app down. An unusable price renders as an em dash instead.
+ * What one line costs, or undefined when either half is unusable — so
+ * `formatMoney` shows a dash rather than claiming the line was free.
  */
-function formatPrice(value) {
-  const amount = Number(value);
+function lineTotal(item) {
+  const price = Number(item?.price);
+  const quantity = Number(item?.quantity);
 
-  if (!Number.isFinite(amount)) {
-    return '—';
+  if (!Number.isFinite(price) || !Number.isFinite(quantity)) {
+    return undefined;
   }
 
-  return `₹${amount.toFixed(2)}`;
+  return price * quantity;
 }
