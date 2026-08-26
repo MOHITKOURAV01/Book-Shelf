@@ -1,0 +1,346 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+.reading-speed-meter {
+  width: 100%;
+  max-width: 520px;
+  padding: 22px;
+  border: 1px solid #e5e7eb;
+  border-radius: 18px;
+  background: #fff;
+  color: #111827;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, .08);
+  transition:
+    transform .25s ease,
+    box-shadow .25s ease,
+    border-color .25s ease;
+}
+
+.reading-speed-meter:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 14px 32px rgba(0, 0, 0, .12);
+}
+
+/* Header */
+
+.reading-speed-meter__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.reading-speed-meter__label {
+  margin: 0 0 4px;
+  color: #6b7280;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.reading-speed-meter__value {
+  display: flex;
+  align-items: baseline;
+  gap: 7px;
+}
+
+.reading-speed-meter__value strong {
+  font-size: 36px;
+  line-height: 1;
+}
+
+.reading-speed-meter__value span {
+  color: #6b7280;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+/* Status */
+
+.reading-speed-meter__level {
+  padding: 6px 10px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: capitalize;
+}
+
+.reading-speed-meter__level--excellent {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.reading-speed-meter__level--good {
+  background: #dbeafe;
+  color: #1d4ed8;
+}
+
+.reading-speed-meter__level--average {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.reading-speed-meter__level--slow {
+  background: #fee2e2;
+  color: #b91c1c;
+}
+
+/* Progress */
+
+.reading-speed-meter__track {
+  position: relative;
+  height: 12px;
+  margin-top: 22px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: #e5e7eb;
+}
+
+.reading-speed-meter__fill {
+  width: var(--reading-speed-progress);
+  height: 100%;
+  border-radius: inherit;
+  background: #2563eb;
+  transition: width .6s ease;
+}
+
+.reading-speed-meter__marker {
+  position: absolute;
+  top: 50%;
+  right: 0;
+  width: 2px;
+  height: 18px;
+  border-radius: 2px;
+  background: #6b7280;
+  transform: translateY(-50%);
+  opacity: .7;
+}
+
+/* Footer */
+
+.reading-speed-meter__footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 10px;
+  color: #6b7280;
+  font-size: 11px;
+}
+
+.reading-speed-meter__footer strong {
+  color: #374151;
+  font-size: 12px;
+}
+
+/* Color variants */
+
+.reading-speed-meter--blue .reading-speed-meter__fill {
+  background: #2563eb;
+}
+
+.reading-speed-meter--green .reading-speed-meter__fill {
+  background: #16a34a;
+}
+
+.reading-speed-meter--purple .reading-speed-meter__fill {
+  background: #7c3aed;
+}
+
+.reading-speed-meter--orange .reading-speed-meter__fill {
+  background: #f97316;
+}
+
+.reading-speed-meter--red .reading-speed-meter__fill {
+  background: #dc2626;
+}
+
+.reading-speed-meter--teal .reading-speed-meter__fill {
+  background: #0d9488;
+}
+
+.reading-speed-meter--pink .reading-speed-meter__fill {
+  background: #db2777;
+}
+
+/* Track variants */
+
+.reading-speed-meter--soft .reading-speed-meter__track {
+  background: #f3f4f6;
+}
+
+.reading-speed-meter--gradient .reading-speed-meter__fill {
+  background: linear-gradient(90deg, #2563eb, #7c3aed);
+}
+
+.reading-speed-meter--gradient-green .reading-speed-meter__fill {
+  background: linear-gradient(90deg, #16a34a, #0d9488);
+}
+
+.reading-speed-meter--gradient-sunset .reading-speed-meter__fill {
+  background: linear-gradient(90deg, #f59e0b, #f97316, #db2777);
+}
+
+/* Sizes */
+
+.reading-speed-meter--sm {
+  max-width: 420px;
+  padding: 17px;
+}
+
+.reading-speed-meter--sm .reading-speed-meter__value strong {
+  font-size: 28px;
+}
+
+.reading-speed-meter--sm .reading-speed-meter__track {
+  height: 9px;
+  margin-top: 17px;
+}
+
+.reading-speed-meter--lg {
+  max-width: 620px;
+  padding: 26px;
+}
+
+.reading-speed-meter--lg .reading-speed-meter__value strong {
+  font-size: 44px;
+}
+
+.reading-speed-meter--lg .reading-speed-meter__track {
+  height: 15px;
+  margin-top: 26px;
+}
+
+/* Animated progress */
+
+.reading-speed-meter--animated .reading-speed-meter__fill {
+  animation: readingSpeedProgress .8s ease-out;
+}
+
+@keyframes readingSpeedProgress {
+  from {
+    width: 0;
+  }
+
+  to {
+    width: var(--reading-speed-progress);
+  }
+}
+
+/* Glow */
+
+.reading-speed-meter--glow {
+  border-color: #bfdbfe;
+}
+
+.reading-speed-meter--glow .reading-speed-meter__fill {
+  box-shadow: 0 0 12px rgba(37, 99, 235, .45);
+}
+
+/* Compact */
+
+.reading-speed-meter--compact {
+  padding: 16px;
+}
+
+.reading-speed-meter--compact .reading-speed-meter__label {
+  font-size: 11px;
+}
+
+.reading-speed-meter--compact .reading-speed-meter__value strong {
+  font-size: 28px;
+}
+
+.reading-speed-meter--compact .reading-speed-meter__track {
+  height: 8px;
+  margin-top: 15px;
+}
+
+/* Dark */
+
+.reading-speed-meter--dark {
+  border-color: #374151;
+  background: #1f2937;
+  color: #f9fafb;
+}
+
+.reading-speed-meter--dark .reading-speed-meter__label,
+.reading-speed-meter--dark .reading-speed-meter__value span,
+.reading-speed-meter--dark .reading-speed-meter__footer {
+  color: #9ca3af;
+}
+
+.reading-speed-meter--dark .reading-speed-meter__footer strong {
+  color: #e5e7eb;
+}
+
+.reading-speed-meter--dark .reading-speed-meter__track {
+  background: #374151;
+}
+
+/* Glass */
+
+.reading-speed-meter--glass {
+  border-color: rgba(255, 255, 255, .3);
+  background: rgba(255, 255, 255, .55);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+}
+
+/* Focus */
+
+.reading-speed-meter:focus-visible {
+  outline: 3px solid rgba(37, 99, 235, .35);
+  outline-offset: 4px;
+}
+
+/* Responsive */
+
+@media (max-width: 600px) {
+  .reading-speed-meter {
+    max-width: 100%;
+    padding: 18px;
+  }
+
+  .reading-speed-meter__value strong {
+    font-size: 31px;
+  }
+
+  .reading-speed-meter__header {
+    gap: 10px;
+  }
+}
+
+@media (max-width: 380px) {
+  .reading-speed-meter {
+    padding: 15px;
+  }
+
+  .reading-speed-meter__value strong {
+    font-size: 27px;
+  }
+
+  .reading-speed-meter__level {
+    padding: 5px 8px;
+    font-size: 10px;
+  }
+}
+
+/* Reduced motion */
+
+@media (prefers-reduced-motion: reduce) {
+  .reading-speed-meter,
+  .reading-speed-meter__fill {
+    transition: none;
+  }
+
+  .reading-speed-meter--animated .reading-speed-meter__fill {
+    animation: none;
+  }
+
+  .reading-speed-meter:hover {
+    transform: none;
+  }
+}
