@@ -3,6 +3,7 @@ import {
   MAX_ENTRIES,
   STORAGE_KEY,
   clearRecentlyViewed,
+  forgetBookViews,
   readRecentlyViewed,
   readRecentlyViewedExcept,
   recordBookView,
@@ -151,5 +152,75 @@ describe('recentlyViewed', () => {
       clearRecentlyViewed();
       expect(readRecentlyViewed()).toEqual([]);
     });
+  });
+});
+
+describe('forgetBookViews', () => {
+  beforeEach(() => {
+    window.localStorage.clear();
+  });
+
+  /**
+   * Added with #336. Ids the catalogue answers 404 for are dropped, so a
+   * delisted book is not re-requested on every page load for as long as the
+   * browser keeps the value. Ids whose request merely *failed* are not
+   * touched — see the tests in RecentlyViewed.test.jsx for that half.
+   */
+
+  it('drops the ids it is given and keeps the rest', () => {
+    window.localStorage.setItem(STORAGE_KEY, JSON.stringify(['b1', 'b2', 'b3']));
+
+    expect(forgetBookViews(['b2'])).toEqual(['b1', 'b3']);
+    expect(readRecentlyViewed()).toEqual(['b1', 'b3']);
+  });
+
+  it('accepts a single id as well as a list', () => {
+    window.localStorage.setItem(STORAGE_KEY, JSON.stringify(['b1', 'b2']));
+
+    expect(forgetBookViews('b1')).toEqual(['b2']);
+  });
+
+  it('coerces a numeric id, because the app compares with String() on both sides', () => {
+    window.localStorage.setItem(STORAGE_KEY, JSON.stringify(['1', '2']));
+
+    expect(forgetBookViews([1])).toEqual(['2']);
+  });
+
+  it('is a no-op for an empty list rather than clearing everything', () => {
+    window.localStorage.setItem(STORAGE_KEY, JSON.stringify(['b1', 'b2']));
+
+    expect(forgetBookViews([])).toEqual(['b1', 'b2']);
+    expect(forgetBookViews(null)).toEqual(['b1', 'b2']);
+    expect(readRecentlyViewed()).toEqual(['b1', 'b2']);
+  });
+
+  it('ignores ids that are not there', () => {
+    window.localStorage.setItem(STORAGE_KEY, JSON.stringify(['b1']));
+
+    expect(forgetBookViews(['nope', 'also-nope'])).toEqual(['b1']);
+  });
+
+  it('drops every id when every id is gone', () => {
+    window.localStorage.setItem(STORAGE_KEY, JSON.stringify(['b1', 'b2']));
+
+    expect(forgetBookViews(['b1', 'b2'])).toEqual([]);
+    expect(readRecentlyViewed()).toEqual([]);
+  });
+
+  it('does not throw when storage refuses the write', () => {
+    // Safari private browsing throws on every setItem. Losing the pruning is
+    // not a reason to take the page down.
+    vi.spyOn(console, 'error').mockImplementation(() => {});
+    window.localStorage.setItem(STORAGE_KEY, JSON.stringify(['b1', 'b2']));
+
+    const setItem = vi
+      .spyOn(Storage.prototype, 'setItem')
+      .mockImplementation(() => {
+        throw new Error('QuotaExceededError');
+      });
+
+    expect(() => forgetBookViews(['b1'])).not.toThrow();
+
+    setItem.mockRestore();
   });
 });
