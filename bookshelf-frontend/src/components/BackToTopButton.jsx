@@ -1,9 +1,20 @@
 import { useEffect, useState } from 'react';
-import './ScrollToTop.css';
+import './BackToTopButton.css';
 
+/**
+ * The floating "back to top" button.
+ *
+ * Renamed from `ScrollToTop`. That name said this component reset the scroll
+ * position on navigation, and App.jsx rendered it at the top of the layout
+ * exactly as though it did — but it never read the location and had no
+ * route-change effect at all. Nothing in the app reset scroll, so opening a
+ * book from the bottom of the catalogue landed on the book page already
+ * scrolled past its own title. See #339, where `RouteChangeHandler` now does
+ * the thing this was named after.
+ */
 const SCROLL_THRESHOLD = 400;
 
-export default function ScrollToTop() {
+export default function BackToTopButton() {
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
@@ -32,7 +43,7 @@ export default function ScrollToTop() {
   return (
     <button
       type="button"
-      className={`scroll-to-top ${visible ? 'scroll-to-top--visible' : ''}`}
+      className={`back-to-top ${visible ? 'back-to-top--visible' : ''}`}
       onClick={handleClick}
       aria-label="Scroll back to top"
       aria-hidden={!visible}
