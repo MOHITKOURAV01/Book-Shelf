@@ -31,11 +31,44 @@ export function resetStripeClient() {
   client = null;
 }
 
-export const createPaymentIntent = async (amount, currency = 'usd', metadata = {}) => {
+/**
+ * Create a payment intent.
+ *
+ * `minorUnits` is an integer number of the currency's smallest unit — paise,
+ * cents — and it is passed to Stripe untouched. This used to take a
+ * major-unit amount and do its own conversion:
+ *
+ *   amount: Math.round(amount * 100), // Stripe expects amounts in cents
+ *
+ * which was wrong twice. It re-rounded a value `utils/money.js` had already
+ * rounded exactly once, deliberately, from an integer it was holding — and it
+ * assumed every currency has two decimal places, so a zero-decimal currency
+ * would have been charged a hundred times the price.
+ *
+ * `currency` has no default. It used to default to 'usd' while the shop
+ * displayed rupees, so a customer saw ₹349 and was charged $349.00. The
+ * caller reads it from config/currency.js; there is no safe guess to make
+ * here. See #335.
+ */
+export const createPaymentIntent = async (minorUnits, currency, metadata = {}) => {
+  if (!Number.isSafeInteger(minorUnits) || minorUnits < 0) {
+    throw new Error(
+      `Stripe PaymentIntent Error: amount must be a non-negative integer ` +
+        `number of minor units, received ${minorUnits}`
+    );
+  }
+
+  if (typeof currency !== 'string' || currency.trim() === '') {
+    throw new Error(
+      'Stripe PaymentIntent Error: currency is required. Read it from ' +
+        'config/currency.js rather than defaulting it.'
+    );
+  }
+
   try {
     const paymentIntent = await getStripeClient().paymentIntents.create({
-      amount: Math.round(amount * 100), // Stripe expects amounts in cents
-      currency,
+      amount: minorUnits,
+      currency: currency.trim().toLowerCase(),
       automatic_payment_methods: {
         enabled: true,
       },

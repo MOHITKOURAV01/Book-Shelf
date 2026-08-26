@@ -6,7 +6,7 @@ import {
   restoreInventory,
 } from '../repositories/bookRepository.js';
 import { prepareCheckout, CheckoutValidationError } from '../utils/checkout.js';
-import { format } from '../utils/money.js';
+import { getCurrencyConfig, formatAmount } from '../config/currency.js';
 
 /**
  * @desc    Create a payment intent for a cart
@@ -31,10 +31,18 @@ import { format } from '../utils/money.js';
 export const createIntent = async (req, res, next) => {
   const { items, shippingAddress } = req.body ?? {};
 
+  /*
+   * One currency, read once, used for the price, for the payment intent and
+   * for the record kept on the order. The intent used to be created with a
+   * hardcoded 'usd' while the shop displayed every price with a `₹` sign, so
+   * a customer saw ₹349 and was charged $349.00. See #335.
+   */
+  const currency = getCurrencyConfig();
+
   let checkout;
 
   try {
-    checkout = prepareCheckout(items, getBookById);
+    checkout = prepareCheckout(items, getBookById, { currency });
   } catch (error) {
     if (error instanceof CheckoutValidationError) {
       return res.status(400).json({
@@ -91,6 +99,13 @@ export const createIntent = async (req, res, next) => {
       userId: req.user ? req.user._id : null,
       items: checkout.orderItems,
       shippingAddress: shippingAddress || {},
+      /*
+       * Recorded on the order rather than resolved at render time. An order
+       * placed before the shop changed currency was charged in the currency
+       * it was placed in, and its history must keep saying so — reading the
+       * *current* setting would silently relabel every historical total.
+       */
+      currency: checkout.currency,
       subtotal: checkout.subtotal,
       tax: checkout.tax,
       shipping: checkout.shipping,
@@ -112,10 +127,22 @@ export const createIntent = async (req, res, next) => {
   }
 
   try {
-    const paymentIntent = await createPaymentIntent(checkout.total, 'usd', {
-      orderId: savedOrder._id.toString(),
-      userId: req.user ? req.user._id.toString() : 'guest',
-    });
+    /*
+     * The integer minor-unit total goes to Stripe directly. Handing over the
+     * major-unit number meant stripeService did its own `Math.round(x * 100)`
+     * on a value money.js had already rounded exactly once — a second
+     * rounding of an already-exact number, and one that assumed two decimal
+     * places for every currency in the world.
+     */
+    const paymentIntent = await createPaymentIntent(
+      checkout.minorUnits.total,
+      currency.stripeCode,
+      {
+        orderId: savedOrder._id.toString(),
+        userId: req.user ? req.user._id.toString() : 'guest',
+        currency: currency.code,
+      }
+    );
 
     savedOrder.stripePaymentIntentId = paymentIntent.id;
     await orderRepository.save(savedOrder);
@@ -128,7 +155,12 @@ export const createIntent = async (req, res, next) => {
     return res.status(200).json({
       clientSecret: paymentIntent.client_secret,
       orderId: savedOrder._id,
+      // The currency is part of the amount, not a separate fact the frontend
+      // is expected to already know. The checkout summary renders what this
+      // says rather than what it assumes.
+      currency: checkout.currency,
       amount: {
+        currency: checkout.currency,
         subtotal: checkout.subtotal,
         tax: checkout.tax,
         shipping: checkout.shipping,
@@ -153,7 +185,7 @@ export const createIntent = async (req, res, next) => {
 
     console.error(
       `[checkout] payment intent failed for order ${savedOrder._id} ` +
-        `(total ${format(checkout.minorUnits.total)}):`,
+        `(total ${formatAmount(checkout.total, currency)}):`,
       error.message
     );
 

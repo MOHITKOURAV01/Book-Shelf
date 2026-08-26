@@ -49,6 +49,18 @@ function readApiBaseUrl() {
 
 export const API_BASE_URL = readApiBaseUrl();
 
+/**
+ * The currency this deployment trades in.
+ *
+ * Must match `CURRENCY` in the backend's environment — the backend is what
+ * actually prices the order and creates the payment intent, so a mismatch
+ * means displaying one currency and charging another, which is the bug #335
+ * was filed for. Left unvalidated here on purpose: `utils/currency.js`
+ * resolves it against the supported table and falls back rather than
+ * throwing, because a formatter runs during render.
+ */
+export const CURRENCY_CODE = (import.meta.env?.VITE_CURRENCY ?? '').trim();
+
 export const IS_PRODUCTION = import.meta.env?.PROD === true;
 
 /**
@@ -62,4 +74,4 @@ if (IS_PRODUCTION && API_BASE_URL.includes('localhost')) {
   );
 }
 
-export default { API_BASE_URL, IS_PRODUCTION, normaliseBaseUrl };
+export default { API_BASE_URL, CURRENCY_CODE, IS_PRODUCTION, normaliseBaseUrl };

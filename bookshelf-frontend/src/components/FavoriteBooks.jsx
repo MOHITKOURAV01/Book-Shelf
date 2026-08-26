@@ -1,4 +1,5 @@
 import React, { useMemo, useState } from "react";
+import { formatMoney } from "../utils/currency.js";
 import "./FavoriteBooksEmpty.css";
 
 export default function FavoriteBooks({
@@ -197,7 +198,7 @@ export default function FavoriteBooks({
 
                             <span>
 
-                                ₹ {book.price || 0}
+                                {formatMoney(book.price ?? 0)}
 
                             </span>
 
