@@ -1,48 +1,90 @@
-import { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
+
 import OrderCard from '../components/orders/OrderCard.jsx';
 import EmptyOrders from '../components/orders/EmptyOrders.jsx';
 import SkeletonLoader from '../components/SkeletonLoader.jsx';
-import { getOrders } from '../utils/orderStorage.js';
+import { useOrders } from '../hooks/useOrders.js';
+import { countOrderItems, formatMoney } from '../utils/orderFormat.js';
 import './OrderHistory.css';
 
+/**
+ * The order history.
+ *
+ * This page used to read a `localStorage` key called `orders`. Nothing wrote
+ * that key — `saveOrder()` was exported and never imported — because checkout
+ * has been server-side since #315. So the page the navbar links to reported
+ * "0 orders placed" no matter how many orders the customer had actually
+ * placed, while the same orders sat in the database behind a second, almost
+ * identical page at `/account/orders`. There is one order history now, and it
+ * reads the API. See #326.
+ */
 export default function OrderHistory() {
-  const [orders, setOrders] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const { orders, loading, error, refetch } = useOrders();
 
-  useEffect(() => {
-    // Brief artificial delay so the skeleton loader is visible and
-    // the page doesn't feel like it flashes — mirrors the previous behaviour.
-    const timer = setTimeout(() => {
-      setOrders(getOrders());
-      setLoading(false);
-    }, 500);
+  const orderCount = orders.length;
+  const bookCount = orders.reduce((total, order) => total + countOrderItems(order), 0);
 
-    return () => clearTimeout(timer);
-  }, []);
+  // Only orders that were actually paid for count towards what was spent.
+  // Including a failed or pending payment would tell a customer they had
+  // spent money they have not been charged.
+  const totalSpent = orders.reduce((total, order) => {
+    if (order.paymentStatus !== 'paid') {
+      return total;
+    }
+
+    const amount = Number(order.total);
+    return Number.isFinite(amount) ? total + amount : total;
+  }, 0);
 
   return (
     <div className="page-container order-history-page">
-      <h2>Your Order History</h2>
+      <header className="order-history__header">
+        <h2>Your Order History</h2>
+        {!loading && !error && orderCount > 0 && (
+          <p className="order-history__summary" data-testid="order-history-summary">
+            {`${orderCount} ${orderCount === 1 ? 'order' : 'orders'}`} &middot;{' '}
+            {`${bookCount} ${bookCount === 1 ? 'book' : 'books'}`} &middot;{' '}
+            {`${formatMoney(totalSpent)} paid`}
+          </p>
+        )}
+      </header>
 
-      <div className="orders-meta">
-        <span className="orders-meta-count">{loading ? '…' : orders.length}</span>
-        {loading
-          ? 'Loading orders…'
-          : `${orders.length === 1 ? 'order' : 'orders'} placed`}
-      </div>
-
-      {loading ? (
-        <div className="orders-list">
+      {loading && (
+        <div className="orders-list" aria-busy="true" aria-label="Loading orders">
           <SkeletonLoader variant="order" count={3} />
         </div>
-      ) : orders.length > 0 ? (
+      )}
+
+      {/*
+        An error is not an empty list. Showing "No orders yet" when the
+        request failed tells a customer their orders are gone, which is the
+        most alarming thing this page could possibly say.
+      */}
+      {!loading && error && (
+        <div className="order-history__error" role="alert">
+          <h3>We could not load your orders</h3>
+          <p>{error.message || 'Something went wrong. Please try again.'}</p>
+          <div className="order-history__error-actions">
+            <button type="button" className="order-history__retry" onClick={refetch}>
+              Try again
+            </button>
+            {error.status === 401 && (
+              <Link className="order-history__signin" to="/login?redirect=/orders">
+                Sign in
+              </Link>
+            )}
+          </div>
+        </div>
+      )}
+
+      {!loading && !error && orderCount === 0 && <EmptyOrders />}
+
+      {!loading && !error && orderCount > 0 && (
         <div className="orders-list">
           {orders.map((order) => (
-            <OrderCard key={order.id} order={order} />
+            <OrderCard key={order._id ?? order.id} order={order} />
           ))}
         </div>
-      ) : (
-        <EmptyOrders />
       )}
     </div>
   );

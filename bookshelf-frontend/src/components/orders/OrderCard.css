@@ -12,19 +12,19 @@
 }
 
 /* ── Summary row (clickable) ────────────────────────────── */
+/*
+ * No `cursor: pointer` and no hover state any more: the summary row used to
+ * carry the onClick that expanded the card, which meant the only way to open
+ * an order was with a mouse. The control is the "View Details" button now,
+ * so the row must not look clickable. See #326.
+ */
 .order-summary {
   display: flex;
   justify-content: space-between;
   align-items: center;
   gap: 1rem;
   padding: 1.25rem 1.5rem;
-  cursor: pointer;
   background: var(--paper);
-  transition: background 0.18s ease;
-}
-
-.order-summary:hover {
-  background: var(--paper-dim);
 }
 
 /* ── Order info (left column) ───────────────────────────── */
@@ -67,32 +67,53 @@
   text-transform: uppercase;
 }
 
-.status-badge.paid {
-  background: #dcfce7;
-  color: #166534;
+/*
+ * Badge colour is keyed on a *tone*, not on a status name.
+ *
+ * These used to be .status-badge.paid / .pending / .shipped / .delivered /
+ * .cancelled — the vocabulary of the localStorage orders this page used to
+ * read. The server model has different names again (`canceled` with one l,
+ * `payment_failed`, `confirmed`, `processing`), so half of them never
+ * matched anything and a new enum value would have rendered an unstyled
+ * badge. utils/orderFormat.js maps any status, known or not, onto one of
+ * four tones. See #326.
+ */
+.status-badge--success {
+  background: #d1fae5;
+  color: #059669;
 }
 
-.status-badge.pending {
-  background: #fef9c3;
-  color: #854d0e;
-}
-
-.status-badge.shipped {
+.status-badge--info {
   background: #dbeafe;
-  color: #1e40af;
+  color: #2563eb;
 }
 
-.status-badge.delivered {
-  background: #f3e8ff;
-  color: #6b21a8;
+.status-badge--warning {
+  background: #fef3c7;
+  color: #b45309;
 }
 
-.status-badge.cancelled {
+.status-badge--danger {
   background: #fee2e2;
-  color: #991b1b;
+  color: #dc2626;
 }
 
-/* ── Order total ────────────────────────────────────────── */
+.order-item-count {
+  font-size: 0.85rem;
+  color: #6b7280;
+}
+
+.order-card__full-link {
+  margin: 0;
+  padding: 0 1.25rem 1.25rem;
+  font-size: 0.9rem;
+}
+
+.order-card__full-link a {
+  color: var(--leather, #8b5a2b);
+  font-weight: 500;
+}
+
 .order-total p {
   font-weight: 700;
   font-size: 1.05rem;

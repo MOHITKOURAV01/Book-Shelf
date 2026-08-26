@@ -26,22 +26,14 @@ export const OrderStatusBadge = ({ status }) => {
   );
 };
 
-export const EmptyOrders = () => (
-  <div style={{ textAlign: 'center', padding: '4rem 2rem', background: '#fff', borderRadius: '12px', boxShadow: '0 1px 3px rgba(0,0,0,0.1)' }}>
-    <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>📦</div>
-    <h3 style={{ fontSize: '1.5rem', marginBottom: '0.5rem', color: '#221e19' }}>No orders yet</h3>
-    <p style={{ color: '#666', marginBottom: '1.5rem' }}>Looks like you haven’t purchased any books yet.</p>
-    <a href="/" style={{
-      display: 'inline-block',
-      padding: '10px 20px',
-      backgroundColor: 'var(--leather, #8b5a2b)',
-      color: '#fff',
-      textDecoration: 'none',
-      borderRadius: '8px',
-      fontWeight: '600'
-    }}>Browse Books</a>
-  </div>
-);
+/*
+ * `EmptyOrders` used to live here too, with an `<a href="/">` that tore down
+ * and re-parsed the whole SPA — the defect #316 fixed in the navbar, in a
+ * file that PR did not reach. Its only caller was pages/OrdersPage.jsx, which
+ * is gone now that there is one order history; the routed empty state is
+ * components/orders/EmptyOrders.jsx, which has always used a router <Link>.
+ * See #326.
+ */
 
 export const LoadingSkeleton = () => (
   <div style={{ padding: '2rem', textAlign: 'center' }}>
