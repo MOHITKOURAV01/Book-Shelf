@@ -123,10 +123,32 @@ export default function Navbar({ searchQuery, setSearchQuery }) {
         '(prefers-reduced-motion: reduce)'
       )?.matches;
 
-      target.scrollIntoView({
-        behavior: prefersReducedMotion ? 'auto' : 'smooth',
-        block: 'start',
-      });
+      /*
+       * Guarded because this runs from a requestAnimationFrame callback,
+       * which is outside React's tree and outside any error boundary — an
+       * exception here is an uncaught one that takes down whatever is
+       * running. `scrollIntoView` is not universally implemented (jsdom does
+       * not have it at all), and the callback can also fire against a node
+       * from a route that has already been replaced.
+       *
+       * This was already failing intermittently: the frontend test run exits
+       * non-zero roughly half the time on main with "target.scrollIntoView
+       * is not a function", because whether the rAF callback lands before
+       * the test environment is torn down depends on how busy the run is.
+       */
+      if (typeof target.scrollIntoView !== 'function') {
+        return;
+      }
+
+      try {
+        target.scrollIntoView({
+          behavior: prefersReducedMotion ? 'auto' : 'smooth',
+          block: 'start',
+        });
+      } catch {
+        // Scrolling to an anchor is a nicety. It must never be the reason
+        // an uncaught exception escapes.
+      }
     };
 
     frame = window.requestAnimationFrame(scrollToTarget);

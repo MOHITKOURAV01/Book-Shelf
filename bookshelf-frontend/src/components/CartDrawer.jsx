@@ -1,114 +1,108 @@
-import { useEffect, useRef } from 'react';
+import { useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
+
 import { useCart } from '../hooks/useCart.js';
+import { useFocusTrap, useScrollLock } from '../hooks/useFocusTrap.js';
 import './CartDrawer.css';
 
+/**
+ * The cart, as a slide-over dialog.
+ *
+ * This component is mounted by the App layout on every route, and it used to
+ * render its markup unconditionally — open and closed were a CSS distinction
+ * only, with the panel pushed off-screen by a transform. That hid it from
+ * sighted mouse users and from nobody else:
+ *
+ *   - `aria-modal="true"` was on an element present on every page, so a
+ *     screen reader user landed on the site already inside a dialog called
+ *     "Shopping Cart" that they had not opened, with the real page treated
+ *     as background.
+ *   - An off-screen transform does not remove anything from the tab order.
+ *     Tabbing past the footer walked into the invisible drawer — Close, then
+ *     every quantity control, every Remove, then Clear Cart and Proceed to
+ *     Checkout. Focus vanished, and Enter could clear the cart or navigate
+ *     to /checkout from a control the user could not see.
+ *
+ * Nothing renders when the cart is closed. See #327.
+ */
 export default function CartDrawer() {
-  const { cart, isCartOpen, setIsCartOpen, updateQuantity, removeFromCart, clearCart } = useCart();
+  const {
+    cart,
+    isCartOpen,
+    setIsCartOpen,
+    updateQuantity,
+    removeFromCart,
+    clearCart,
+  } = useCart();
   const navigate = useNavigate();
-  const drawerRef = useRef(null);
-  const previousFocusRef = useRef(null);
 
-  const subtotal = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
+  const closeCart = useCallback(() => setIsCartOpen(false), [setIsCartOpen]);
+
+  const drawerRef = useFocusTrap({ active: isCartOpen, onEscape: closeCart });
+  useScrollLock(isCartOpen);
 
   const handleStartShopping = () => {
-    setIsCartOpen(false);
+    closeCart();
     navigate('/');
   };
 
   const handleCheckout = () => {
-    setIsCartOpen(false);
+    closeCart();
     navigate('/checkout');
   };
 
-  useEffect(() => {
-    if (isCartOpen) {
-      previousFocusRef.current = document.activeElement;
-      
-      const focusableElements = drawerRef.current.querySelectorAll(
-        'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
-      );
-      
-      const firstElement = focusableElements[0];
-      const lastElement = focusableElements[focusableElements.length - 1];
+  if (!isCartOpen) {
+    return null;
+  }
 
-      // Focus the first element (close button usually)
-      if (firstElement) {
-        firstElement.focus();
-      }
+  const subtotal = cart.reduce((sum, item) => {
+    const price = Number(item?.price);
+    const quantity = Number(item?.quantity);
 
-      const handleKeyDown = (e) => {
-        if (e.key === 'Escape') {
-          setIsCartOpen(false);
-          return;
-        }
-
-        if (e.key === 'Tab') {
-          if (focusableElements.length === 0) {
-            e.preventDefault();
-            return;
-          }
-
-          if (e.shiftKey) {
-            if (document.activeElement === firstElement) {
-              e.preventDefault();
-              lastElement.focus();
-            }
-          } else {
-            if (document.activeElement === lastElement) {
-              e.preventDefault();
-              firstElement.focus();
-            }
-          }
-        }
-      };
-
-      document.addEventListener('keydown', handleKeyDown);
-      document.body.style.overflow = 'hidden';
-
-      return () => {
-        document.removeEventListener('keydown', handleKeyDown);
-        document.body.style.overflow = 'unset';
-        if (previousFocusRef.current) {
-          previousFocusRef.current.focus();
-        }
-      };
-    }
-  }, [isCartOpen, setIsCartOpen]);
+    return Number.isFinite(price) && Number.isFinite(quantity)
+      ? sum + price * quantity
+      : sum;
+  }, 0);
 
   return (
     <>
-      <div 
-        className={`cart-drawer-backdrop ${isCartOpen ? 'is-open' : ''}`} 
-        onClick={() => setIsCartOpen(false)} 
-        aria-hidden="true"
-      />
-      
-      <div 
+      <div className="cart-drawer-backdrop is-open" onClick={closeCart} aria-hidden="true" />
+
+      <div
         ref={drawerRef}
-        className={`cart-drawer ${isCartOpen ? 'is-open' : ''}`} 
+        className="cart-drawer is-open"
         role="dialog"
         aria-modal="true"
-        aria-label="Shopping Cart"
+        aria-labelledby="cart-drawer-title"
+        // So the dialog can still receive focus if it somehow contains
+        // nothing focusable; see useFocusTrap.
+        tabIndex={-1}
       >
         <div className="cart-drawer__header">
-          <h2>Your Cart</h2>
-          <button 
-            className="cart-drawer__close" 
-            onClick={() => setIsCartOpen(false)} 
+          <h2 id="cart-drawer-title">Your Cart</h2>
+          <button
+            type="button"
+            className="cart-drawer__close"
+            onClick={closeCart}
             aria-label="Close cart drawer"
           >
             ✕
           </button>
         </div>
-        
+
         <div className="cart-drawer__content">
           {cart.length === 0 ? (
             <div className="cart-drawer__empty">
-              <span className="cart-drawer__empty-icon" role="img" aria-label="Shopping bag">🛍️</span>
+              <span className="cart-drawer__empty-icon" role="img" aria-label="Shopping bag">
+                🛍️
+              </span>
               <h3>Your cart is empty</h3>
               <p>Browse our collection and add your favorite books.</p>
-              <button className="cart-drawer__shop-btn" onClick={handleStartShopping}>
+              <button
+                type="button"
+                className="cart-drawer__shop-btn"
+                onClick={handleStartShopping}
+              >
                 Start Shopping
               </button>
             </div>
@@ -117,30 +111,37 @@ export default function CartDrawer() {
               {cart.map((item) => (
                 <li key={item.id} className="cart-drawer__item">
                   {item.cover && (
-                    <img src={item.cover} alt={`Cover of ${item.title}`} className="cart-item__cover" />
+                    <img
+                      src={item.cover}
+                      alt={`Cover of ${item.title}`}
+                      className="cart-item__cover"
+                    />
                   )}
                   <div className="cart-item__details">
                     <h4 className="cart-item__title">{item.title}</h4>
-                    <p className="cart-item__price">₹{item.price.toFixed(2)}</p>
-                    
+                    <p className="cart-item__price">{formatPrice(item.price)}</p>
+
                     <div className="cart-item__actions">
                       <div className="cart-item__quantity">
-                        <button 
+                        <button
+                          type="button"
                           onClick={() => updateQuantity(item.id, item.quantity - 1)}
                           aria-label={`Decrease quantity of ${item.title}`}
                         >
                           -
                         </button>
                         <span>{item.quantity}</span>
-                        <button 
+                        <button
+                          type="button"
                           onClick={() => updateQuantity(item.id, item.quantity + 1)}
                           aria-label={`Increase quantity of ${item.title}`}
                         >
                           +
                         </button>
                       </div>
-                      
-                      <button 
+
+                      <button
+                        type="button"
                         className="cart-item__remove"
                         onClick={() => removeFromCart(item.id)}
                         aria-label={`Remove ${item.title} from cart`}
@@ -150,7 +151,7 @@ export default function CartDrawer() {
                     </div>
                   </div>
                   <div className="cart-item__subtotal">
-                    ₹{(item.price * item.quantity).toFixed(2)}
+                    {formatPrice(Number(item.price) * Number(item.quantity))}
                   </div>
                 </li>
               ))}
@@ -162,14 +163,18 @@ export default function CartDrawer() {
           <div className="cart-drawer__footer">
             <div className="cart-drawer__subtotal">
               <span>Subtotal</span>
-              <span>₹{subtotal.toFixed(2)}</span>
+              <span>{formatPrice(subtotal)}</span>
             </div>
-            
+
             <div className="cart-drawer__footer-actions">
-              <button className="cart-drawer__clear-btn" onClick={clearCart}>
+              <button type="button" className="cart-drawer__clear-btn" onClick={clearCart}>
                 Clear Cart
               </button>
-              <button className="cart-drawer__checkout-btn" onClick={handleCheckout}>
+              <button
+                type="button"
+                className="cart-drawer__checkout-btn"
+                onClick={handleCheckout}
+              >
                 Proceed to Checkout
               </button>
             </div>
@@ -178,4 +183,19 @@ export default function CartDrawer() {
       </div>
     </>
   );
+}
+
+/**
+ * `item.price.toFixed(2)` threw on anything that was not a number, and a cart
+ * comes out of localStorage — see #309, where one malformed value took the
+ * whole app down. An unusable price renders as an em dash instead.
+ */
+function formatPrice(value) {
+  const amount = Number(value);
+
+  if (!Number.isFinite(amount)) {
+    return '—';
+  }
+
+  return `₹${amount.toFixed(2)}`;
 }
