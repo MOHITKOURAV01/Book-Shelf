@@ -1,7 +1,14 @@
 import { Link } from 'react-router-dom';
 import './NotFound.css';
+import { usePageMetadata } from '../hooks/usePageMetadata.js';
 
 export default function NotFound() {
+  usePageMetadata({
+    title: 'Page not found',
+    description:
+      'That page does not exist. Head back to the BookShelf catalogue to keep browsing.',
+  });
+
   return (
     <main className="not-found-page">
       <div className="not-found-container">

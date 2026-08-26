@@ -54,6 +54,14 @@ async function submitCredentials(user) {
 }
 
 describe('Login', () => {
+  it('names itself in the browser tab', () => {
+    // Every route used to render the same title, so a screen reader announced
+    // the same page name on every navigation. See #337.
+    renderLogin(vi.fn());
+
+    expect(document.title).toBe('Log in — BookShelf');
+  });
+
   beforeEach(() => {
     navigate.mockClear();
   });

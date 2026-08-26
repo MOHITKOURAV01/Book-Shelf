@@ -16,6 +16,8 @@ import {
   formatRating,
   isInStock,
 } from '../utils/bookFormat.js';
+import { usePageMetadata } from '../hooks/usePageMetadata.js';
+import { bookDescription, bookTitle } from '../utils/pageTitle.js';
 import './BookDetail.css';
 
 /**
@@ -36,6 +38,27 @@ export default function BookDetail() {
   const { book, loading, notFound, error, reload } = useBook(id);
   const { addToCart } = useCart();
   const { isWishlisted, toggleWishlist } = useWishlist();
+
+  /*
+   * The title follows the fetch rather than being set once on mount.
+   *
+   * While the book is loading there is nothing true to say, so `null` leaves
+   * the site default in place; the real title lands with the record, which is
+   * also the moment the <h1> appears, so the tab and the page agree. A 404
+   * says so, because a tab reading "The Quiet Ones" over a "Book Not Found"
+   * page is worse than no title at all.
+   *
+   * It also settles what `ShareButton` shares. That component defaults its
+   * share title to `document.title`, which was the site tagline on every
+   * route — so wherever it is mounted on a book page it would offer
+   * "BookShelf — Find your next read" attached to that specific book's URL.
+   * It is not rendered anywhere yet; with a real title here it will be right
+   * when it is. See #337.
+   */
+  usePageMetadata({
+    title: notFound ? 'Book not found' : book ? bookTitle(book) : null,
+    description: notFound ? 'That book is not in the BookShelf catalogue.' : bookDescription(book),
+  });
 
   const [rating, setRating] = useState(0);
   const [reviewText, setReviewText] = useState('');

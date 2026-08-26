@@ -6,6 +6,7 @@ import SkeletonLoader from '../components/SkeletonLoader.jsx';
 import { useOrders } from '../hooks/useOrders.js';
 import { countOrderItems, formatMoney } from '../utils/orderFormat.js';
 import './OrderHistory.css';
+import { usePageMetadata } from '../hooks/usePageMetadata.js';
 
 /**
  * The order history.
@@ -19,6 +20,12 @@ import './OrderHistory.css';
  * reads the API. See #326.
  */
 export default function OrderHistory() {
+  usePageMetadata({
+    title: 'Your orders',
+    description:
+      'Every order you have placed with BookShelf, with its status, contents and total.',
+  });
+
   const { orders, loading, error, refetch } = useOrders();
 
   const orderCount = orders.length;

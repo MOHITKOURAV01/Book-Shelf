@@ -17,6 +17,7 @@ import {
   validateAddress,
 } from '../utils/checkoutValidation.js';
 import './Checkout.css';
+import { usePageMetadata } from '../hooks/usePageMetadata.js';
 
 /**
  * loadStripe is called once at module scope, not per render — the Stripe
@@ -47,6 +48,12 @@ const formatRupees = (amount) =>
  * not have had a cart. See #315.
  */
 export default function Checkout() {
+  usePageMetadata({
+    title: 'Checkout',
+    description:
+      'Complete your BookShelf order — shipping details and secure card payment.',
+  });
+
   const { cart, clearCart } = useCart();
   const navigate = useNavigate();
 

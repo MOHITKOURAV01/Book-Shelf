@@ -1,7 +1,14 @@
 import { useAuth } from '../hooks/useAuth.js';
 import './Auth.css';
+import { usePageMetadata } from '../hooks/usePageMetadata.js';
 
 const Profile = () => {
+  usePageMetadata({
+    title: 'Your profile',
+    description:
+      'Your BookShelf account details.',
+  });
+
   const { user } = useAuth();
 
   return (
