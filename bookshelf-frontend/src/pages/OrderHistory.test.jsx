@@ -75,11 +75,13 @@ describe('OrderHistory', () => {
 
     renderPage();
 
-    // 2 orders; 2 + 1 + 1 = 4 books; only the paid order's 947.84 counts.
+    // 2 orders; 2 + 1 + 1 = 4 books; only the paid order's 947.84 counts,
+    // rendered in the shop's currency rather than the `$` this used to
+    // assert while the catalogue was priced in rupees. See #335.
     const summary = await screen.findByTestId('order-history-summary');
     expect(summary).toHaveTextContent('2 orders');
     expect(summary).toHaveTextContent('4 books');
-    expect(summary).toHaveTextContent('$947.84 paid');
+    expect(summary).toHaveTextContent('₹947.84 paid');
   });
 
   it('shows the empty state only when the request actually succeeded', async () => {
@@ -180,7 +182,7 @@ describe('OrderHistory', () => {
     expect(screen.getByText('The Quiet Ones')).toBeInTheDocument();
     expect(screen.getByText('Field Notes')).toBeInTheDocument();
     // 349 x 2
-    expect(screen.getByText('$698.00')).toBeInTheDocument();
+    expect(screen.getByText('₹698.00')).toBeInTheDocument();
     expect(toggle).toHaveAttribute('aria-expanded', 'true');
   });
 

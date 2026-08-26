@@ -16,6 +16,7 @@ import {
   toOrderItems,
   validateAddress,
 } from '../utils/checkoutValidation.js';
+import { formatMoney } from '../utils/currency.js';
 import './Checkout.css';
 
 /**
@@ -30,11 +31,19 @@ import './Checkout.css';
 const publishableKey = import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY;
 const stripePromise = publishableKey ? loadStripe(publishableKey) : null;
 
-const formatRupees = (amount) =>
-  `₹${Number(amount ?? 0).toLocaleString('en-IN', {
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
-  })}`;
+/**
+ * The summary renders in the currency the *server* priced the order in, not
+ * in one this page assumes.
+ *
+ * This used to be a local `formatRupees`, while the payment intent behind the
+ * card form was created in USD — so the panel said ₹1,157.84 and the Stripe
+ * element next to it said $1,157.84. `POST /api/payments/create-intent`
+ * returns the currency now, and it is what the totals below are labelled
+ * with. Before the call has been made there is nothing authoritative to go
+ * on, so the deployment's own currency stands in. See #335.
+ */
+const money = (amount, currency) =>
+  formatMoney(amount ?? 0, { currency, fallback: formatMoney(0, { currency }) });
 
 /**
  * Checkout, in two steps.
@@ -58,6 +67,9 @@ export default function Checkout() {
   const [clientSecret, setClientSecret] = useState('');
   const [orderId, setOrderId] = useState('');
   const [amount, setAmount] = useState(null);
+  // Only known once the server has priced the cart; until then the summary
+  // labels its subtotal with this deployment's configured currency.
+  const [currency, setCurrency] = useState(undefined);
 
   const items = useMemo(() => toOrderItems(cart), [cart]);
   const bookCount = useMemo(() => countItems(cart), [cart]);
@@ -113,6 +125,7 @@ export default function Checkout() {
       setClientSecret(data.clientSecret);
       setOrderId(data.orderId ?? '');
       setAmount(data.amount ?? null);
+      setCurrency(data.currency ?? data.amount?.currency);
     } catch (error) {
       // The old page swallowed this into console.error and left the customer
       // on a spinner forever. Say what happened and let them retry.
@@ -243,7 +256,7 @@ export default function Checkout() {
                   <span className="checkout__line-qty"> × {item.quantity}</span>
                 </span>
                 <span className="checkout__line-price">
-                  {formatRupees(Number(item.price ?? 0) * Number(item.quantity ?? 0))}
+                  {money(Number(item.price ?? 0) * Number(item.quantity ?? 0), currency)}
                 </span>
               </li>
             ))}
@@ -252,7 +265,7 @@ export default function Checkout() {
           <dl className="checkout__totals">
             <div className="checkout__total-row">
               <dt>Subtotal ({bookCount} {bookCount === 1 ? 'book' : 'books'})</dt>
-              <dd>{formatRupees(amount ? amount.subtotal : subtotal)}</dd>
+              <dd>{money(amount ? amount.subtotal : subtotal, currency)}</dd>
             </div>
 
             {/*
@@ -264,15 +277,15 @@ export default function Checkout() {
               <>
                 <div className="checkout__total-row">
                   <dt>Tax</dt>
-                  <dd>{formatRupees(amount.tax)}</dd>
+                  <dd>{money(amount.tax, currency)}</dd>
                 </div>
                 <div className="checkout__total-row">
                   <dt>Shipping</dt>
-                  <dd>{formatRupees(amount.shipping)}</dd>
+                  <dd>{money(amount.shipping, currency)}</dd>
                 </div>
                 <div className="checkout__total-row checkout__total-row--grand">
                   <dt>Total</dt>
-                  <dd>{formatRupees(amount.total)}</dd>
+                  <dd>{money(amount.total, currency)}</dd>
                 </div>
               </>
             )}

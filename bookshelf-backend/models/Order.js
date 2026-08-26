@@ -22,6 +22,20 @@ const orderSchema = new mongoose.Schema(
       postalCode: { type: String },
       country: { type: String },
     },
+    /*
+     * The currency the order was priced and charged in.
+     *
+     * Not optional in spirit, but not `required` either: orders written before
+     * #335 have no such field, and refusing to load them would turn a display
+     * bug into a broken order history. `orderFormat.js` on the frontend falls
+     * back for exactly those documents.
+     */
+    currency: {
+      type: String,
+      uppercase: true,
+      trim: true,
+      default: 'INR',
+    },
     subtotal: { type: Number, required: true },
     tax: { type: Number, required: true, default: 0 },
     shipping: { type: Number, required: true, default: 0 },

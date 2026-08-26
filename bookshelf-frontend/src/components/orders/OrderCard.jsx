@@ -4,8 +4,8 @@ import { Link } from 'react-router-dom';
 import OrderDetails from './OrderDetails.jsx';
 import {
   countOrderItems,
-  formatMoney,
   formatOrderDate,
+  orderMoney,
   orderReference,
   primaryStatus,
 } from '../../utils/orderFormat.js';
@@ -25,6 +25,10 @@ import './OrderCard.css';
 export default function OrderCard({ order }) {
   const [expanded, setExpanded] = useState(false);
 
+  // Bound to this order's recorded currency rather than to whatever the shop
+  // is configured for today — an order charged in one currency must not be
+  // relabelled with another. See #335.
+  const money = orderMoney(order);
   const status = primaryStatus(order);
   const reference = orderReference(order);
   const bookCount = countOrderItems(order);
@@ -46,7 +50,7 @@ export default function OrderCard({ order }) {
         </div>
 
         <div className="order-total">
-          <p>Total: {formatMoney(order?.total)}</p>
+          <p>Total: {money(order?.total)}</p>
         </div>
 
         <div className="order-expand">

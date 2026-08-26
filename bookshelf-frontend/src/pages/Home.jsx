@@ -10,6 +10,7 @@ import SkeletonLoader from '../components/SkeletonLoader.jsx';
 import { useBookCatalog } from '../hooks/useBookCatalog.js';
 import { useCatalogFilters } from '../hooks/useCatalogFilters.js';
 import { hasActiveFilters } from '../utils/catalogQuery.js';
+import { currencySymbol } from '../utils/currency.js';
 
 // Genre list is static because the catalogue is. GET /api/books/genres
 // exists and returns these with counts; wiring it up is a separate change.
@@ -98,6 +99,10 @@ export default function Home({ searchQuery: searchQueryProp }) {
   // The search the *grid* is filtered by is the URL's, so a shared link shows
   // the shared results even before the box has been hydrated.
   const [sidebarOpen, setSidebarOpen] = useState(false);
+
+  // The active-filter chips said "Min ₹250" whatever the shop was priced in.
+  // See #335.
+  const symbol = currencySymbol();
 
   const catalogFilters = useMemo(
     () => ({
@@ -217,13 +222,13 @@ export default function Home({ searchQuery: searchQueryProp }) {
                   ))}
                   {filters.minPrice !== '' && (
                     <span className="catalog__filter-tag">
-                      Min ₹{filters.minPrice}
+                      Min {symbol}{filters.minPrice}
                       <button onClick={() => setMinPrice('')} aria-label="Remove min price filter">✕</button>
                     </span>
                   )}
                   {filters.maxPrice !== '' && (
                     <span className="catalog__filter-tag">
-                      Max ₹{filters.maxPrice}
+                      Max {symbol}{filters.maxPrice}
                       <button onClick={() => setMaxPrice('')} aria-label="Remove max price filter">✕</button>
                     </span>
                   )}

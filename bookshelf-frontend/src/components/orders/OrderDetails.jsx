@@ -1,4 +1,4 @@
-import { formatMoney, lineTotal } from '../../utils/orderFormat.js';
+import { lineTotal, orderMoney } from '../../utils/orderFormat.js';
 import './OrderDetails.css';
 
 /**
@@ -14,6 +14,10 @@ import './OrderDetails.css';
  * `item.price.toFixed(2)` unguarded. See #326.
  */
 export default function OrderDetails({ order }) {
+  // Every amount on this panel is labelled with the currency the order was
+  // charged in, taken from the order document. See #335.
+  const money = orderMoney(order);
+
   const items = Array.isArray(order?.items) ? order.items : [];
 
   return (
@@ -32,10 +36,10 @@ export default function OrderDetails({ order }) {
             <div key={`${item?.bookId ?? 'item'}-${index}`} className="order-item">
               <div className="order-item-info">
                 <h5>{item?.title || 'Untitled book'}</h5>
-                <p className="order-item-unit">{formatMoney(item?.price)} each</p>
+                <p className="order-item-unit">{money(item?.price)} each</p>
               </div>
               <div className="order-item-price-qty">
-                <p className="order-item-line-total">{formatMoney(lineTotal(item))}</p>
+                <p className="order-item-line-total">{money(lineTotal(item))}</p>
                 <p>Qty: {item?.quantity ?? '—'}</p>
               </div>
             </div>
@@ -46,19 +50,19 @@ export default function OrderDetails({ order }) {
       <dl className="order-details__totals">
         <div className="order-details__total-row">
           <dt>Subtotal</dt>
-          <dd>{formatMoney(order?.subtotal)}</dd>
+          <dd>{money(order?.subtotal)}</dd>
         </div>
         <div className="order-details__total-row">
           <dt>Tax</dt>
-          <dd>{formatMoney(order?.tax)}</dd>
+          <dd>{money(order?.tax)}</dd>
         </div>
         <div className="order-details__total-row">
           <dt>Shipping</dt>
-          <dd>{formatMoney(order?.shipping)}</dd>
+          <dd>{money(order?.shipping)}</dd>
         </div>
         <div className="order-details__total-row order-details__total-row--grand">
           <dt>Total</dt>
-          <dd>{formatMoney(order?.total)}</dd>
+          <dd>{money(order?.total)}</dd>
         </div>
       </dl>
     </div>

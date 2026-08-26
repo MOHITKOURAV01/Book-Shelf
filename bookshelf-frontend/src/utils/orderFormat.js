@@ -14,6 +14,8 @@
  * input. See #326.
  */
 
+import { formatMoney as formatCurrency } from './currency.js';
+
 /**
  * `status` on the model, which tracks fulfilment.
  * Matches the enum in bookshelf-backend/models/Order.js.
@@ -91,36 +93,36 @@ function formatUnknownStatus(status) {
 /**
  * Money, as the server means it.
  *
- * Totals are major units of the currency the payment intent is created in,
- * which is USD (`createPaymentIntent(checkout.total, 'usd')`). A missing or
- * non-numeric amount renders as an em dash rather than as "$NaN" — an order
- * still being written by the webhook is a normal thing to catch mid-flight.
+ * Totals are major units of the currency the order was *charged* in, which
+ * this hardcoded as USD while every other price in the app was rendered with
+ * a `₹`. The card was charged dollars for a rupee-priced catalogue. See #335.
+ *
+ * `currency` is a code from the order document. Passing it matters for an
+ * order placed before the shop's currency was ever changed: the amount was
+ * charged in whatever was configured at the time, and relabelling it with the
+ * current setting would make the history lie. Orders written before #335 have
+ * no such field, so the fallback is the deployment's own currency — which is
+ * the right guess, because it is the only one that has ever been used.
+ *
+ * A missing or non-numeric amount renders as an em dash rather than as
+ * "₹NaN" — an order still being written by the webhook is a normal thing to
+ * catch mid-flight.
  */
-export function formatMoney(amount) {
-  /*
-   * `Number(null)` and `Number('')` are both 0, and `Number(true)` is 1, so
-   * coercing first would render a *missing* total as "$0.00" — a customer
-   * being told their order was free. Only a number, or a string that is
-   * meant to be one, gets past here.
-   */
-  if (typeof amount !== 'number' && typeof amount !== 'string') {
-    return '—';
-  }
+export function formatMoney(amount, currency) {
+  return formatCurrency(amount, { currency, fallback: '—' });
+}
 
-  if (typeof amount === 'string' && amount.trim() === '') {
-    return '—';
-  }
+/** The currency an order was charged in, or this deployment's. */
+export function orderCurrency(order) {
+  return typeof order?.currency === 'string' && order.currency.trim() !== ''
+    ? order.currency
+    : undefined;
+}
 
-  const value = Number(amount);
-
-  if (!Number.isFinite(value)) {
-    return '—';
-  }
-
-  return `$${value.toLocaleString('en-US', {
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
-  })}`;
+/** `formatMoney` bound to one order's currency. */
+export function orderMoney(order) {
+  const currency = orderCurrency(order);
+  return (amount) => formatMoney(amount, currency);
 }
 
 /** A date the customer can read, or an em dash if the value is unusable. */
@@ -193,6 +195,67 @@ export function lineTotal(item) {
  * Anything can come back from the network. A card needs an id to key on and
  * to link to; without one there is nothing to render and nothing to click.
  */
+/**
+ * What a customer has actually paid, and in what.
+ *
+ * Adding up `order.total` across the history was safe only while every order
+ * was in the same currency — which was true by accident, because the currency
+ * was hardcoded. Now that it is configuration, a shop that switches has a
+ * history containing both, and 1047 + 12.99 is not a number that means
+ * anything.
+ *
+ * So this sums per currency and reports whether the history spans more than
+ * one. A caller with `mixed: true` should show the per-currency breakdown
+ * rather than a single figure. See #335.
+ *
+ * Only paid orders count: including a failed or pending payment would tell a
+ * customer they had spent money they have not been charged.
+ *
+ * @returns {{ totals: Array<{currency: string|undefined, amount: number}>,
+ *             mixed: boolean }}
+ */
+export function totalSpent(orders) {
+  const byCurrency = new Map();
+
+  for (const order of Array.isArray(orders) ? orders : []) {
+    if (order?.paymentStatus !== 'paid') {
+      continue;
+    }
+
+    const amount = Number(order?.total);
+
+    if (!Number.isFinite(amount)) {
+      continue;
+    }
+
+    // `undefined` is its own key: an order written before the currency was
+    // recorded is not evidence of a second currency, so it groups with the
+    // other unlabelled ones and renders in the deployment's own.
+    const key = orderCurrency(order);
+    byCurrency.set(key, (byCurrency.get(key) ?? 0) + amount);
+  }
+
+  if (byCurrency.size === 0) {
+    return { totals: [{ currency: undefined, amount: 0 }], mixed: false };
+  }
+
+  const totals = [...byCurrency.entries()].map(([currency, amount]) => ({
+    currency,
+    amount,
+  }));
+
+  return { totals, mixed: totals.length > 1 };
+}
+
+/** `totalSpent` rendered as text: one figure, or one per currency. */
+export function formatTotalSpent(orders) {
+  const { totals } = totalSpent(orders);
+
+  return totals
+    .map(({ currency, amount }) => formatMoney(amount, currency))
+    .join(' + ');
+}
+
 export function isRenderableOrder(order) {
   return Boolean(order && typeof order === 'object' && (order._id || order.id));
 }
@@ -202,7 +265,11 @@ export default {
   PAYMENT_STATUS_LABELS,
   countOrderItems,
   formatMoney,
+  formatTotalSpent,
+  orderCurrency,
+  orderMoney,
   formatOrderDate,
+  totalSpent,
   isRenderableOrder,
   lineTotal,
   orderReference,
