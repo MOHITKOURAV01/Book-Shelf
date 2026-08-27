@@ -21,6 +21,29 @@ class UserRepository {
     return await user.matchPassword(password);
   }
 
+  async updateProfile(userId, profileData) {
+    const allowedUpdates = {};
+    if (profileData.name !== undefined) allowedUpdates.name = profileData.name;
+    if (profileData.bio !== undefined) allowedUpdates.bio = profileData.bio;
+    if (profileData.avatar !== undefined) allowedUpdates.avatar = profileData.avatar;
+    if (profileData.readingGoal !== undefined) allowedUpdates.readingGoal = profileData.readingGoal;
+    if (profileData.preferredGenres !== undefined) allowedUpdates.preferredGenres = profileData.preferredGenres;
+
+    return await User.findByIdAndUpdate(
+      userId,
+      { $set: allowedUpdates },
+      { new: true, runValidators: true }
+    ).select('-password');
+  }
+
+  async updatePassword(userId, newPassword) {
+    const user = await User.findById(userId);
+    if (!user) return null;
+    user.password = newPassword;
+    await user.save();
+    return await User.findById(userId).select('-password');
+  }
+
   /**
    * Replace a user's wishlist.
    *

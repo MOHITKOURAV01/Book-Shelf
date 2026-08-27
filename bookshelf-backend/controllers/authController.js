@@ -109,3 +109,52 @@ export const getUserProfile = async (req, res, next) => {
     next(error);
   }
 };
+
+// @desc    Update user profile
+// @route   PUT /api/auth/profile
+// @access  Private
+export const updateUserProfile = async (req, res, next) => {
+  try {
+    const updatedUser = await userRepository.updateProfile(req.user._id, req.body);
+
+    if (!updatedUser) {
+      res.status(404);
+      throw new Error('User not found');
+    }
+
+    res.status(200).json({
+      message: 'Profile updated successfully',
+      user: updatedUser,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// @desc    Update user password
+// @route   PUT /api/auth/password
+// @access  Private
+export const updateUserPassword = async (req, res, next) => {
+  try {
+    const { currentPassword, newPassword } = req.body;
+
+    const user = await userRepository.findById(req.user._id);
+
+    if (!user) {
+      res.status(404);
+      throw new Error('User not found');
+    }
+
+    const isMatch = await userRepository.matchPassword(user, currentPassword);
+    if (!isMatch) {
+      res.status(401);
+      throw new Error('Current password is incorrect');
+    }
+
+    await userRepository.updatePassword(user._id, newPassword);
+
+    res.status(200).json({ message: 'Password updated successfully' });
+  } catch (error) {
+    next(error);
+  }
+};
