@@ -1,4 +1,5 @@
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 
 import { useWishlist } from '../hooks/useWishlist.js';
 import { useWishlistBooks } from '../hooks/useWishlistBooks.js';
@@ -6,20 +7,8 @@ import BookCard from '../components/BookCard.jsx';
 import SkeletonLoader from '../components/SkeletonLoader.jsx';
 import './WishlistPage.css';
 
-/*
- * The wishlist, resolved against the catalogue the rest of the app reads.
- *
- * This page used to filter `src/data/books.js` — the hardcoded local copy
- * that says in its own header it is a frontend-only draft, and which has
- * drifted from the API: 16 books there (`s1`–`s8`, `b1`–`b8`) against 8 the
- * API serves (`b1`–`b8`). The book detail page was moved onto the API in
- * #317 and the catalogue in #319; this was the last page still reading the
- * stale file. See #328.
- *
- * The navbar, footer and page wrapper come from the App layout, so this
- * renders only its own content.
- */
 export default function WishlistPage() {
+  const { t } = useTranslation();
   const { toggleWishlist } = useWishlist();
   const { books, missingIds, failedIds, loading, error } = useWishlistBooks();
   const navigate = useNavigate();
@@ -27,7 +16,6 @@ export default function WishlistPage() {
   const count = books.length;
 
   const removeMissing = () => {
-    // toggleWishlist on an id that is in the list removes it.
     missingIds.forEach((id) => toggleWishlist(id));
   };
 
@@ -35,9 +23,9 @@ export default function WishlistPage() {
     <main className="wishlist-page">
       <div className="wishlist-page__inner">
         <header className="wishlist-page__header">
-          <h1 className="wishlist-page__title">Your Wishlist</h1>
+          <h1 className="wishlist-page__title">{t('wishlist.title', 'Your Wishlist')}</h1>
           <p className="wishlist-page__subtitle">
-            {loading ? 'Loading…' : `${count} ${count === 1 ? 'item' : 'items'}`}
+            {loading ? t('common.loading', 'Loading…') : `${count} ${count === 1 ? 'item' : 'items'}`}
           </p>
         </header>
 
@@ -47,11 +35,6 @@ export default function WishlistPage() {
           </div>
         )}
 
-        {/*
-          An error is not an empty wishlist. "Your wishlist is currently
-          empty" when the request failed tells a customer the list they
-          curated has been lost.
-        */}
         {!loading && error && (
           <div className="wishlist-page__error" role="alert">
             <h2>We could not load your wishlist</h2>
@@ -59,11 +42,6 @@ export default function WishlistPage() {
           </div>
         )}
 
-        {/*
-          Ids the catalogue answered 404 for. Silently dropping them is what
-          the old page did, and it is why a book could disappear from a
-          wishlist with nothing on screen to explain it.
-        */}
         {!loading && !error && missingIds.length > 0 && (
           <div className="wishlist-page__notice" role="status">
             <p>
@@ -81,10 +59,6 @@ export default function WishlistPage() {
           </div>
         )}
 
-        {/*
-          A book that could not be fetched is a different case: it may well
-          still exist, so it must not be offered for removal.
-        */}
         {!loading && !error && failedIds.length > 0 && (
           <div className="wishlist-page__notice wishlist-page__notice--warning" role="status">
             <p>
@@ -97,13 +71,13 @@ export default function WishlistPage() {
 
         {!loading && !error && count === 0 && missingIds.length === 0 && (
           <div className="wishlist-page__empty">
-            <p>Your wishlist is currently empty.</p>
+            <p>{t('wishlist.emptyTitle', 'Your wishlist is currently empty.')}</p>
             <button
               type="button"
               className="wishlist-page__browse-btn"
               onClick={() => navigate('/#catalog')}
             >
-              Browse Books
+              {t('wishlist.browseBooks', 'Browse Books')}
             </button>
           </div>
         )}
