@@ -1,18 +1,15 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo } from 'react';
 import { matchPath, useLocation } from 'react-router-dom';
 
 import BookCard from './BookCard.jsx';
-import { books } from '../data/books.js';
-import {
-  readRecentlyViewedExcept,
-  recordBookView,
-} from '../utils/recentlyViewed.js';
+import { useRecentlyViewedBooks } from '../hooks/useRecentlyViewedBooks.js';
+import { recordBookView } from '../utils/recentlyViewed.js';
 import './RecentlyViewed.css';
 
 /**
  * A strip of books the reader has looked at recently.
  *
- * Two things were wrong with this component (#318).
+ * Two things were wrong with this component originally (#318).
  *
  * The list it reads was never written. `grep -rn recentlyViewed src` found a
  * single `getItem` and no `setItem` anywhere in the application, so `stored`
@@ -28,10 +25,14 @@ import './RecentlyViewed.css';
  *
  * Rather than move the mount into each page, the component gates itself: one
  * mount point in the shell, an explicit allow-list of routes, and the current
- * book id derived from the path. That keeps the whole feature — the read, the
- * write and the visibility rule — in one file that can be tested on its own,
- * and it leaves BookDetail and Home untouched, which matters while #317 and
- * #319 are open against both of them.
+ * book id derived from the path.
+ *
+ * The third thing, fixed here (#336): the ids were resolved against
+ * `src/data/books.js`, the deprecated local snapshot of the catalogue. That
+ * meant stale prices next to fresh ones on the same page, a missing
+ * `inventory` field reading as "in stock", and a book added to the backend
+ * silently dropped from a history the reader had just made. It reads the API
+ * now, through the same hook the wishlist uses.
  *
  * Props:
  *   currentBookId  optional override; normally derived from the route
@@ -54,7 +55,6 @@ export default function RecentlyViewed({
   title = 'Recently Viewed',
 }) {
   const location = useLocation();
-  const [recentBooks, setRecentBooks] = useState([]);
 
   const bookRouteMatch = useMemo(
     () => matchPath(BOOK_ROUTE, location.pathname),
@@ -83,26 +83,44 @@ export default function RecentlyViewed({
     }
   }, [currentBookId]);
 
-  useEffect(() => {
-    if (!isVisibleRoute) {
-      setRecentBooks([]);
-      return;
-    }
+  /*
+   * `location.key` changes on every navigation, which is what re-reads the
+   * stored ids: `recordBookView` above writes to localStorage from a sibling
+   * effect, so a list read once at mount would be one navigation behind.
+   *
+   * The hook is called unconditionally, because hooks cannot be called
+   * conditionally — `enabled` is how the visibility rule reaches it. Without
+   * that the checkout page would fetch a strip it never renders, once per
+   * navigation.
+   */
+  const { books, loading, error } = useRecentlyViewedBooks({
+    excludeId: currentBookId,
+    locationKey: location.key,
+    enabled: isVisibleRoute,
+  });
 
-    const ids = readRecentlyViewedExcept(currentBookId);
+  if (!isVisibleRoute) {
+    return null;
+  }
 
-    // Ids are resolved against the local catalogue copy. Unknown ids are
-    // dropped rather than rendered as gaps — see #317 for why that copy still
-    // exists and what should replace it.
-    setRecentBooks(
-      ids
-        .map((id) => books.find((book) => String(book.id) === id))
-        .filter(Boolean)
-    );
-  }, [isVisibleRoute, currentBookId, location.key]);
-
-  // Nothing to show — render nothing rather than a heading over an empty row.
-  if (!isVisibleRoute || recentBooks.length === 0) {
+  /*
+   * Nothing to show — render nothing rather than a heading over an empty row.
+   *
+   * Three cases collapse to the same answer here, and they collapse
+   * deliberately:
+   *
+   *   - Nothing viewed yet. Always was this.
+   *   - Still loading. The strip used to appear fully formed because the
+   *     lookup was synchronous; it is a request now, and a heading over a
+   *     row that is about to have an unknown number of cards in it would
+   *     push the footer around as the response lands. It appears when it is
+   *     ready.
+   *   - The request failed. This is a nicety at the bottom of a page the
+   *     reader came for something else — an error panel under "Recently
+   *     Viewed" would be louder than the feature is worth. The wishlist page,
+   *     where the list *is* the page, reports its failures; this does not.
+   */
+  if (loading || error || books.length === 0) {
     return null;
   }
 
@@ -113,7 +131,7 @@ export default function RecentlyViewed({
           {title}
         </h2>
         <div className="recently-viewed__scroll">
-          {recentBooks.map((book) => (
+          {books.map((book) => (
             <div key={book.id} className="recently-viewed__item">
               <BookCard book={book} />
             </div>

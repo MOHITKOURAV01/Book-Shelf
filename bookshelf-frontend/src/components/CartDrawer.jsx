@@ -1,42 +1,14 @@
 import { useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 
 import { useCart } from '../hooks/useCart.js';
 import { useFocusTrap, useScrollLock } from '../hooks/useFocusTrap.js';
-/*
- * `item.price.toFixed(2)` threw on anything that was not a number, and a cart
- * comes out of localStorage — see #309, where one malformed value took the
- * whole app down. `formatMoney` returns an em dash for an unusable amount.
- *
- * It was replaced by a local `₹${amount.toFixed(2)}` helper, which was the
- * third of four disagreeing money formatters in this app and the only one
- * that did no digit grouping — ₹1234.00 in the drawer for the same cart the
- * checkout summary showed as ₹1,234.00. See #335.
- */
 import { formatMoney } from '../utils/currency.js';
 import './CartDrawer.css';
 
-/**
- * The cart, as a slide-over dialog.
- *
- * This component is mounted by the App layout on every route, and it used to
- * render its markup unconditionally — open and closed were a CSS distinction
- * only, with the panel pushed off-screen by a transform. That hid it from
- * sighted mouse users and from nobody else:
- *
- *   - `aria-modal="true"` was on an element present on every page, so a
- *     screen reader user landed on the site already inside a dialog called
- *     "Shopping Cart" that they had not opened, with the real page treated
- *     as background.
- *   - An off-screen transform does not remove anything from the tab order.
- *     Tabbing past the footer walked into the invisible drawer — Close, then
- *     every quantity control, every Remove, then Clear Cart and Proceed to
- *     Checkout. Focus vanished, and Enter could clear the cart or navigate
- *     to /checkout from a control the user could not see.
- *
- * Nothing renders when the cart is closed. See #327.
- */
 export default function CartDrawer() {
+  const { t } = useTranslation();
   const {
     cart,
     isCartOpen,
@@ -85,12 +57,10 @@ export default function CartDrawer() {
         role="dialog"
         aria-modal="true"
         aria-labelledby="cart-drawer-title"
-        // So the dialog can still receive focus if it somehow contains
-        // nothing focusable; see useFocusTrap.
         tabIndex={-1}
       >
         <div className="cart-drawer__header">
-          <h2 id="cart-drawer-title">Your Cart</h2>
+          <h2 id="cart-drawer-title">{t('cart.title', 'Your Cart')}</h2>
           <button
             type="button"
             className="cart-drawer__close"
@@ -107,14 +77,14 @@ export default function CartDrawer() {
               <span className="cart-drawer__empty-icon" role="img" aria-label="Shopping bag">
                 🛍️
               </span>
-              <h3>Your cart is empty</h3>
-              <p>Browse our collection and add your favorite books.</p>
+              <h3>{t('cart.emptyTitle', 'Your cart is empty')}</h3>
+              <p>{t('cart.emptySubtitle', 'Browse our collection and add your favorite books.')}</p>
               <button
                 type="button"
                 className="cart-drawer__shop-btn"
                 onClick={handleStartShopping}
               >
-                Start Shopping
+                {t('cart.continueShopping', 'Start Shopping')}
               </button>
             </div>
           ) : (
@@ -157,7 +127,7 @@ export default function CartDrawer() {
                         onClick={() => removeFromCart(item.id)}
                         aria-label={`Remove ${item.title} from cart`}
                       >
-                        Remove
+                        {t('cart.remove', 'Remove')}
                       </button>
                     </div>
                   </div>
@@ -173,20 +143,20 @@ export default function CartDrawer() {
         {cart.length > 0 && (
           <div className="cart-drawer__footer">
             <div className="cart-drawer__subtotal">
-              <span>Subtotal</span>
+              <span>{t('cart.subtotal', 'Subtotal')}</span>
               <span>{formatMoney(subtotal)}</span>
             </div>
 
             <div className="cart-drawer__footer-actions">
               <button type="button" className="cart-drawer__clear-btn" onClick={clearCart}>
-                Clear Cart
+                {t('cart.clearCart', 'Clear Cart')}
               </button>
               <button
                 type="button"
                 className="cart-drawer__checkout-btn"
                 onClick={handleCheckout}
               >
-                Proceed to Checkout
+                {t('cart.checkout', 'Proceed to Checkout')}
               </button>
             </div>
           </div>

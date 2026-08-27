@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import './PrivacyPolicy.css';
+import { usePageMetadata } from '../hooks/usePageMetadata.js';
 
 /*
  * Renders page content only — the theme toggle, navbar and footer come from
@@ -8,6 +9,12 @@ import './PrivacyPolicy.css';
  * toggle on the page, each with its own copy of the theme state. See #296.
  */
 export default function PrivacyPolicy() {
+  usePageMetadata({
+    title: 'Privacy policy',
+    description:
+      'How BookShelf collects, uses and protects your personal information.',
+  });
+
   /* Scroll to top on mount */
   useEffect(() => {
     window.scrollTo(0, 0);

@@ -1,18 +1,19 @@
-// Sample catalog — in the real app this is served by the Node backend
-// from data/books.json. Kept local here for the frontend-only draft.
+// Local data for the frontend.
 //
-// DEPRECATED for anything with an API behind it. `books` below is a snapshot
-// of bookshelf-backend/data/books.json that nothing keeps in sync: it has no
-// `inventory`, its prices go stale the moment the catalogue is edited, and a
-// book added to the backend does not exist here at all. Home (#274) and the
-// book detail page (#317) read the API instead.
+// This file used to also export `books` — a snapshot of
+// bookshelf-backend/data/books.json that nothing kept in sync. Its own header
+// called it deprecated and listed what was wrong with it: no `inventory`
+// field, prices that went stale the moment the catalogue was edited, and no
+// record at all for a book added to the backend.
 //
-// Still imported by pages/Wishlist.jsx, pages/WishlistPage.jsx and
-// components/RecentlyViewed.jsx, which resolve stored book ids to records.
-// Those should move to the API too; until they do, this file stays.
+// Every consumer has moved to the API: Home in #274, the book detail page in
+// #317, the wishlist in #328 and the Recently Viewed strip in #336. The
+// snapshot is gone with the last of them, along with the `genres` list, which
+// GET /api/books/genres serves with counts.
 //
-// `spines` has no API behind it — it drives the decorative shelf strip in
-// Hero.jsx and is genuinely local data.
+// `spines` stays, because it has no API behind it. It drives the decorative
+// shelf strip in Hero.jsx and is genuinely local: colours and heights for a
+// row of book spines, not a catalogue.
 
 export const spines = [
   {
@@ -70,89 +71,5 @@ export const spines = [
     author: 'N. Basu',
     color: '#7A5C2E',
     height: 218,
-  },
-];
-
-export const genres = [
-  'All',
-  'Fiction',
-  'Sci-Fi',
-  'Mystery',
-  'Self-Help',
-  'Poetry',
-];
-
-export const books = [
-  {
-    id: 'b1',
-    title: 'The Quiet Ones',
-    author: 'M. Arora',
-    genre: 'Fiction',
-    price: 349,
-    rating: 4.5,
-    cover: '#7A2E2E',
-  },
-  {
-    id: 'b2',
-    title: 'Field Notes',
-    author: 'D. Kapoor',
-    genre: 'Self-Help',
-    price: 299,
-    rating: 4.2,
-    cover: '#1F4B43',
-  },
-  {
-    id: 'b3',
-    title: 'Half Moon Bay',
-    author: 'S. Rhee',
-    genre: 'Mystery',
-    price: 399,
-    rating: 4.7,
-    cover: '#B85C2C',
-  },
-  {
-    id: 'b4',
-    title: 'Static',
-    author: 'A. Voss',
-    genre: 'Sci-Fi',
-    price: 449,
-    rating: 4.3,
-    cover: '#3A3F63',
-  },
-  {
-    id: 'b5',
-    title: 'Low Tide',
-    author: 'R. Menon',
-    genre: 'Poetry',
-    price: 249,
-    rating: 4.6,
-    cover: '#5F7A61',
-  },
-  {
-    id: 'b6',
-    title: 'The Long Corridor',
-    author: 'K. Iyer',
-    genre: 'Mystery',
-    price: 379,
-    rating: 4.1,
-    cover: '#93461F',
-  },
-  {
-    id: 'b7',
-    title: 'Paper Moths',
-    author: 'L. Fischer',
-    genre: 'Fiction',
-    price: 329,
-    rating: 4.4,
-    cover: '#2E4057',
-  },
-  {
-    id: 'b8',
-    title: 'Ordinary Weather',
-    author: 'N. Basu',
-    genre: 'Self-Help',
-    price: 279,
-    rating: 4.0,
-    cover: '#7A5C2E',
   },
 ];

@@ -11,6 +11,7 @@ import { useBookCatalog } from '../hooks/useBookCatalog.js';
 import { useCatalogFilters } from '../hooks/useCatalogFilters.js';
 import { hasActiveFilters } from '../utils/catalogQuery.js';
 import { currencySymbol } from '../utils/currency.js';
+import { usePageMetadata } from '../hooks/usePageMetadata.js';
 
 // Genre list is static because the catalogue is. GET /api/books/genres
 // exists and returns these with counts; wiring it up is a separate change.
@@ -100,6 +101,41 @@ export default function Home({ searchQuery: searchQueryProp }) {
   // the shared results even before the box has been hydrated.
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
+  // Sync state to URL search parameters whenever filters change
+  useEffect(() => {
+    if (!setSearchParams) return;
+
+    const currentQuery = buildCatalogQuery({
+      search: searchQuery,
+      genres: selectedGenres,
+      minPrice,
+      maxPrice,
+      minRating,
+      sort: activeSort,
+      page: currentPage,
+      limit: PAGE_SIZE,
+    });
+
+    const currentQueryStr = currentQuery.toString();
+    if (currentQueryStr !== searchParams.toString()) {
+      setSearchParams(currentQuery, { replace: true });
+    }
+  }, [searchQuery, selectedGenres, minPrice, maxPrice, minRating, activeSort, currentPage, setSearchParams, searchParams]);
+
+  // Handle external searchParams updates (e.g., browser Back/Forward navigation)
+  useEffect(() => {
+    const parsed = parseCatalogParams(searchParams);
+    setSelectedGenres((prev) => (JSON.stringify(prev) !== JSON.stringify(parsed.genres) ? parsed.genres : prev));
+    setMinPrice((prev) => (prev !== parsed.minPrice ? parsed.minPrice : prev));
+    setMaxPrice((prev) => (prev !== parsed.maxPrice ? parsed.maxPrice : prev));
+    setMinRating((prev) => (prev !== parsed.minRating ? parsed.minRating : prev));
+    setActiveSort((prev) => (prev !== parsed.sort ? parsed.sort : prev));
+    setCurrentPage((prev) => (prev !== parsed.page ? parsed.page : prev));
+    if (outletContext?.setSearchQuery && parsed.search !== outletContext.searchQuery && searchQueryProp === undefined) {
+      outletContext.setSearchQuery(parsed.search);
+    }
+  }, [searchParams]);
+
   // The active-filter chips said "Min ₹250" whatever the shop was priced in.
   // See #335.
   const symbol = currencySymbol();
@@ -135,6 +171,16 @@ export default function Home({ searchQuery: searchQueryProp }) {
    */
   const { books, totalBooks, totalPages, loading, error, reload } =
     useBookCatalog(catalogFilters);
+
+  /*
+   * Home keeps the site's own title when nothing is being searched for — it
+   * is the default, and "BookShelf — BookShelf" would be silly. A search
+   * names itself, so a reader with several tabs open can tell them apart.
+   */
+  usePageMetadata({
+    title: searchQuery.trim() === '' ? null : `${searchQuery.trim()} — search results`,
+    description: null,
+  });
 
   const filtersActive = hasActiveFilters({
     genres: filters.genres,

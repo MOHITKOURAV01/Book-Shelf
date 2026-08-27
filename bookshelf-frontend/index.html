@@ -4,6 +4,20 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>BookShelf — Find your next read</title>
+    <!--
+      The document default, for the moment before React mounts and for any
+      route that has nothing more specific to say. Every page sets its own
+      through usePageMetadata(); this is what they restore to.
+
+      Kept in step with DEFAULT_TITLE and DEFAULT_DESCRIPTION in
+      src/utils/pageTitle.js — src/utils/pageTitle.test.js reads this file and
+      asserts the two agree, because a default that lives in two places and is
+      never compared is a default that will diverge.
+    -->
+    <meta
+      name="description"
+      content="Browse and buy books from the BookShelf catalogue — fiction, mystery, sci-fi, poetry and more, with a wishlist and a fast checkout."
+    />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link

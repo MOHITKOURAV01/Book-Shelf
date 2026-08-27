@@ -5,6 +5,7 @@ import {
   buildCatalogQuery,
   hasActiveFilters,
   normaliseCatalogFilters,
+  parseCatalogParams,
 } from './catalogQuery.js';
 
 const query = (filters) => buildCatalogQuery(filters).toString();
@@ -150,5 +151,41 @@ describe('hasActiveFilters', () => {
 
   it('does not count sort or pagination as a filter', () => {
     expect(hasActiveFilters({ sort: 'price_asc', page: 3, limit: 4 })).toBe(false);
+  });
+});
+
+describe('parseCatalogParams', () => {
+  it('parses empty search params with default values', () => {
+    const parsed = parseCatalogParams(new URLSearchParams(''));
+    expect(parsed).toEqual({
+      search: '',
+      genres: [],
+      minPrice: '',
+      maxPrice: '',
+      minRating: null,
+      sort: '',
+      page: 1,
+    });
+  });
+
+  it('parses full URL query parameters correctly', () => {
+    const params = new URLSearchParams('search=clean&genre=Fiction&genre=Mystery&minPrice=100&maxPrice=500&minRating=4&sort=price_asc&page=2');
+    const parsed = parseCatalogParams(params);
+
+    expect(parsed).toEqual({
+      search: 'clean',
+      genres: ['Fiction', 'Mystery'],
+      minPrice: '100',
+      maxPrice: '500',
+      minRating: 4,
+      sort: 'price_asc',
+      page: 2,
+    });
+  });
+
+  it('supports comma-separated genres string and query string parameter q', () => {
+    const parsed = parseCatalogParams('q=harry&genres=Fiction,Sci-Fi');
+    expect(parsed.search).toBe('harry');
+    expect(parsed.genres).toEqual(['Fiction', 'Sci-Fi']);
   });
 });

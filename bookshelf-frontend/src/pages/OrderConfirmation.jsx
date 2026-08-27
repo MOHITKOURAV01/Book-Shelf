@@ -5,6 +5,7 @@ import { useSearchParams, Link } from 'react-router-dom';
 
 import { useCart } from '../hooks/useCart.js';
 import './Checkout.css';
+import { usePageMetadata } from '../hooks/usePageMetadata.js';
 
 const STATUS_MESSAGES = {
   succeeded: 'Payment succeeded. Thank you for your order.',
@@ -96,6 +97,16 @@ const publishableKey = import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY;
 const stripePromise = publishableKey ? loadStripe(publishableKey) : null;
 
 export default function OrderConfirmation() {
+  /*
+   * On the outer component, not on OrderConfirmationContent — that one is
+   * only mounted when Stripe is configured, and the "payments are not
+   * configured" branch below is still a page that needs a name.
+   */
+  usePageMetadata({
+    title: 'Order confirmation',
+    description: 'Your BookShelf order confirmation and payment status.',
+  });
+
   if (!stripePromise) {
     return (
       <main className="checkout">

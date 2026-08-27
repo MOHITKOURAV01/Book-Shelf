@@ -62,6 +62,26 @@ export function minLength(field, min) {
   };
 }
 
+export function isNumber(field) {
+  return (value) => {
+    if (isMissing(value)) return null;
+    if (typeof value !== 'number' || !Number.isFinite(value)) {
+      return `${field} must be a number`;
+    }
+    return null;
+  };
+}
+
+export function minNumber(field, min) {
+  return (value) => {
+    if (typeof value !== 'number') return null;
+    if (value < min) {
+      return `${field} must be at least ${min}`;
+    }
+    return null;
+  };
+}
+
 export function isEmail(field = 'email') {
   return (value) => {
     if (typeof value !== 'string' || value.trim() === '') return null;

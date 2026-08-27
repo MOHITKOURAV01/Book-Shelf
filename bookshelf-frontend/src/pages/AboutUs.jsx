@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import './AboutUs.css';
+import { usePageMetadata } from '../hooks/usePageMetadata.js';
 
 /*
  * Renders page content only. The theme toggle, navbar and spacer used to be
@@ -8,6 +9,12 @@ import './AboutUs.css';
  * state. Footer was imported but never rendered. See #296.
  */
 export default function AboutUs() {
+  usePageMetadata({
+    title: 'About us',
+    description:
+      'Who runs BookShelf, and why we built a bookshop that reads like one.',
+  });
+
   return (
     <div className="about-page">
       {/* ── Hero section ── */}

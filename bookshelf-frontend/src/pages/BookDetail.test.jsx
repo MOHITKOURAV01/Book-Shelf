@@ -192,6 +192,61 @@ describe('BookDetail', () => {
     expect(await screen.findByRole('heading', { name: 'The Quiet Ones' })).toBeInTheDocument();
   });
 
+  describe('the document title', () => {
+    /**
+     * Every route in the app used to render "BookShelf — Find your next
+     * read". A screen reader announced the same page name on every
+     * navigation, browser history was N identical entries, and ShareButton —
+     * which defaults its share title to `document.title` — had nothing better
+     * to attach to a specific book's URL. See #337.
+     */
+    it('names the book and its author once it has loaded', async () => {
+      getBookById.mockResolvedValue(BOOK);
+
+      renderDetail();
+
+      await waitFor(() =>
+        expect(document.title).toBe('The Quiet Ones by M. Arora — BookShelf')
+      );
+    });
+
+    it('leaves the site default in place while the book is loading', () => {
+      getBookById.mockReturnValue(new Promise(() => {}));
+
+      renderDetail();
+
+      // Not "— BookShelf" with a dangling separator, and not the previous
+      // book's name either.
+      expect(document.title).toBe('BookShelf — Find your next read');
+    });
+
+    it('says so for a 404 rather than titling the page after a book that is not there', async () => {
+      getBookById.mockRejectedValue(new BookNotFoundError('nope'));
+
+      renderDetail('nope');
+
+      await waitFor(() =>
+        expect(document.title).toBe('Book not found — BookShelf')
+      );
+    });
+
+    it('describes the book for a link preview', async () => {
+      getBookById.mockResolvedValue(BOOK);
+
+      renderDetail();
+
+      await waitFor(() => {
+        const description = document
+          .querySelector('meta[name="description"]')
+          ?.getAttribute('content');
+
+        expect(description).toContain('The Quiet Ones');
+        expect(description).toContain('M. Arora');
+        expect(description).toContain('Fiction');
+      });
+    });
+  });
+
   it('requires a star rating before a review can be submitted', async () => {
     getBookById.mockResolvedValue(BOOK);
     const user = userEvent.setup();
