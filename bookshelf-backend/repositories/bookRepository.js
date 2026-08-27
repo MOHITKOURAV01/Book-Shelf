@@ -171,3 +171,86 @@ export const restoreInventory = (itemsToRestore) => {
         };
     }
 };
+
+export const addBook = (bookData) => {
+    const books = getBooks();
+    const newId = bookData.id || `b${Date.now()}`;
+    
+    const newBook = {
+        id: newId,
+        title: bookData.title,
+        author: bookData.author,
+        genre: bookData.genre,
+        price: Number(bookData.price),
+        rating: bookData.rating !== undefined ? Number(bookData.rating) : 0,
+        reviewsCount: bookData.reviewsCount !== undefined ? Number(bookData.reviewsCount) : 0,
+        inventory: bookData.inventory !== undefined ? Number(bookData.inventory) : 0,
+        description: bookData.description || '',
+        coverImage: bookData.coverImage || '',
+        pages: bookData.pages !== undefined ? Number(bookData.pages) : 0,
+        __v: 0,
+    };
+
+    const updatedBooks = [...books, newBook];
+    fs.writeFileSync(booksFilePath, JSON.stringify(updatedBooks, null, 2), 'utf8');
+    cacheManager.del('books');
+
+    return newBook;
+};
+
+export const updateBook = (id, updateData) => {
+    const books = getBooks();
+    const index = books.findIndex(b => b.id === id);
+    if (index === -1) {
+        return null;
+    }
+
+    const currentBook = books[index];
+    const updatedBook = {
+        ...currentBook,
+        ...updateData,
+        id: currentBook.id, // prevent changing id
+        price: updateData.price !== undefined ? Number(updateData.price) : currentBook.price,
+        rating: updateData.rating !== undefined ? Number(updateData.rating) : currentBook.rating,
+        inventory: updateData.inventory !== undefined ? Number(updateData.inventory) : currentBook.inventory,
+        pages: updateData.pages !== undefined ? Number(updateData.pages) : currentBook.pages,
+        __v: (currentBook.__v || 0) + 1,
+    };
+
+    books[index] = updatedBook;
+    fs.writeFileSync(booksFilePath, JSON.stringify(books, null, 2), 'utf8');
+    cacheManager.del('books');
+
+    return updatedBook;
+};
+
+export const deleteBook = (id) => {
+    const books = getBooks();
+    const index = books.findIndex(b => b.id === id);
+    if (index === -1) {
+        return false;
+    }
+
+    const filteredBooks = books.filter(b => b.id !== id);
+    fs.writeFileSync(booksFilePath, JSON.stringify(filteredBooks, null, 2), 'utf8');
+    cacheManager.del('books');
+
+    return true;
+};
+
+export const updateBookStock = (id, newInventory) => {
+    return updateBook(id, { inventory: Number(newInventory) });
+};
+
+const bookRepository = {
+    getBooks,
+    getBookById,
+    updateInventoryWithOCC,
+    restoreInventory,
+    addBook,
+    updateBook,
+    deleteBook,
+    updateBookStock,
+};
+
+export default bookRepository;

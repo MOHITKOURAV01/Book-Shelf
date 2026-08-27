@@ -1,4 +1,4 @@
-import { getBooks, getBookById } from '../repositories/bookRepository.js';
+import bookRepository from '../repositories/bookRepository.js';
 import {
   parseBookQuery,
   queryBooks,
@@ -12,7 +12,7 @@ import {
 export const getAllBooks = (req, res, next) => {
   try {
     const filters = parseBookQuery(req.query);
-    const result = queryBooks(getBooks(), filters);
+    const result = queryBooks(bookRepository.getBooks(), filters);
 
     res.status(200).json(result);
   } catch (error) {
@@ -35,7 +35,7 @@ export const getAllBooks = (req, res, next) => {
 // @access  Public
 export const getBookGenres = (req, res, next) => {
   try {
-    res.status(200).json({ genres: collectGenres(getBooks()) });
+    res.status(200).json({ genres: collectGenres(bookRepository.getBooks()) });
   } catch (error) {
     next(error);
   }
@@ -46,7 +46,7 @@ export const getBookGenres = (req, res, next) => {
 // @access  Public
 export const getBook = (req, res, next) => {
   try {
-    const book = getBookById(req.params.id);
+    const book = bookRepository.getBookById(req.params.id);
 
     if (!book) {
       return res.status(404).json({
@@ -55,6 +55,83 @@ export const getBook = (req, res, next) => {
     }
 
     res.status(200).json(book);
+  } catch (error) {
+    next(error);
+  }
+};
+
+// @desc    Create a new book
+// @route   POST /api/books
+// @access  Admin
+export const createBook = (req, res, next) => {
+  try {
+    const newBook = bookRepository.addBook(req.body);
+    res.status(201).json({
+      message: 'Book created successfully',
+      book: newBook,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// @desc    Update an existing book
+// @route   PUT /api/books/:id
+// @access  Admin
+export const updateBook = (req, res, next) => {
+  try {
+    const updated = bookRepository.updateBook(req.params.id, req.body);
+    if (!updated) {
+      return res.status(404).json({
+        message: `Book not found: ${req.params.id}`,
+      });
+    }
+
+    res.status(200).json({
+      message: 'Book updated successfully',
+      book: updated,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// @desc    Delete a book
+// @route   DELETE /api/books/:id
+// @access  Admin
+export const deleteBook = (req, res, next) => {
+  try {
+    const success = bookRepository.deleteBook(req.params.id);
+    if (!success) {
+      return res.status(404).json({
+        message: `Book not found: ${req.params.id}`,
+      });
+    }
+
+    res.status(200).json({
+      message: 'Book deleted successfully',
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// @desc    Update book stock / inventory level
+// @route   PATCH /api/books/:id/stock
+// @access  Admin
+export const updateBookStock = (req, res, next) => {
+  try {
+    const updated = bookRepository.updateBookStock(req.params.id, req.body.inventory);
+    if (!updated) {
+      return res.status(404).json({
+        message: `Book not found: ${req.params.id}`,
+      });
+    }
+
+    res.status(200).json({
+      message: 'Stock updated successfully',
+      book: updated,
+    });
   } catch (error) {
     next(error);
   }
