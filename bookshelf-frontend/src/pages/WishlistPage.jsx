@@ -6,9 +6,15 @@ import { useWishlistBooks } from '../hooks/useWishlistBooks.js';
 import BookCard from '../components/BookCard.jsx';
 import SkeletonLoader from '../components/SkeletonLoader.jsx';
 import './WishlistPage.css';
+import { usePageMetadata } from '../hooks/usePageMetadata.js';
 
 export default function WishlistPage() {
-  const { t } = useTranslation();
+  usePageMetadata({
+    title: 'Your wishlist',
+    description:
+      'The books you have saved to read or buy later, from the BookShelf catalogue.',
+  });
+
   const { toggleWishlist } = useWishlist();
   const { books, missingIds, failedIds, loading, error } = useWishlistBooks();
   const navigate = useNavigate();

@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import './TermsOfService.css';
+import { usePageMetadata } from '../hooks/usePageMetadata.js';
 
 /*
  * Renders page content only — the theme toggle, navbar and footer come from
@@ -8,6 +9,12 @@ import './TermsOfService.css';
  * toggle on the page, each with its own copy of the theme state. See #296.
  */
 export default function TermsOfService() {
+  usePageMetadata({
+    title: 'Terms of service',
+    description:
+      'The terms you agree to when you use BookShelf.',
+  });
+
   /* Scroll to top on mount */
   useEffect(() => {
     window.scrollTo(0, 0);

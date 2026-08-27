@@ -3,8 +3,15 @@ import { useNavigate, useLocation, Link } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth.js';
 import { describeApiError, fieldErrors } from '../utils/apiError.js';
 import './Auth.css';
+import { usePageMetadata } from '../hooks/usePageMetadata.js';
 
 const Register = () => {
+  usePageMetadata({
+    title: 'Create an account',
+    description:
+      'Create a BookShelf account to save a wishlist and keep track of your orders.',
+  });
+
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');

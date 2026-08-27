@@ -3,15 +3,26 @@ import { useParams, Link } from 'react-router-dom';
 import orderService from '../services/orderService';
 import { OrderStatusBadge, LoadingSkeleton } from '../components/orders/OrderComponents';
 import { describeApiError, isNotFound, isUnauthorized } from '../utils/apiError.js';
-// Was `${order.total?.toFixed(2)}` — a bare dollar sign on a page whose
-// prices came from a rupee-priced catalogue. See #335.
-import { orderMoney } from '../utils/orderFormat.js';
+// `orderMoney` was `${order.total?.toFixed(2)}` — a bare dollar sign on a page
+// whose prices came from a rupee-priced catalogue. See #335.
+import { orderMoney, orderReference } from '../utils/orderFormat.js';
+import { usePageMetadata } from '../hooks/usePageMetadata.js';
 
 export default function OrderDetailsPage() {
   const { id } = useParams();
   const [order, setOrder] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+
+  /*
+   * Named by the order's short reference once it has loaded — the same
+   * six-character handle the card in the history shows, so a reader with two
+   * order tabs open can tell which is which.
+   */
+  usePageMetadata({
+    title: order ? `Order ${orderReference(order)}` : 'Order details',
+    description: 'The contents, totals and delivery address of your BookShelf order.',
+  });
 
   useEffect(() => {
     /*

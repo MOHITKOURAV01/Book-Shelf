@@ -3,8 +3,15 @@ import { useNavigate, useLocation, Link } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth.js';
 import { describeApiError, fieldErrors } from '../utils/apiError.js';
 import './Auth.css'; // We'll need some basic CSS for forms
+import { usePageMetadata } from '../hooks/usePageMetadata.js';
 
 const Login = () => {
+  usePageMetadata({
+    title: 'Log in',
+    description:
+      'Sign in to your BookShelf account to see your orders and your wishlist.',
+  });
+
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');

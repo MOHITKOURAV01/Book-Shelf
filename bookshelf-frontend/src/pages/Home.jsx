@@ -10,6 +10,7 @@ import SkeletonLoader from '../components/SkeletonLoader.jsx';
 import { useBookCatalog } from '../hooks/useBookCatalog.js';
 import { buildCatalogQuery, hasActiveFilters, parseCatalogParams } from '../utils/catalogQuery.js';
 import { currencySymbol } from '../utils/currency.js';
+import { usePageMetadata } from '../hooks/usePageMetadata.js';
 
 // Genre list is static because the catalogue is. GET /api/books/genres
 // exists and returns these with counts; wiring it up is a separate change.
@@ -98,6 +99,16 @@ export default function Home({ searchQuery: searchQueryProp }) {
    */
   const { books, totalBooks, totalPages, loading, error, reload } =
     useBookCatalog(filters);
+
+  /*
+   * Home keeps the site's own title when nothing is being searched for — it
+   * is the default, and "BookShelf — BookShelf" would be silly. A search
+   * names itself, so a reader with several tabs open can tell them apart.
+   */
+  usePageMetadata({
+    title: searchQuery.trim() === '' ? null : `${searchQuery.trim()} — search results`,
+    description: null,
+  });
 
   const filtersActive = hasActiveFilters({
     search: searchQuery,

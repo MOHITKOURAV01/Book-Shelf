@@ -3,116 +3,17 @@ import { useNavigate, Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 
 import { useAuth } from '../hooks/useAuth.js';
-import { useWishlist } from '../hooks/useWishlist.js';
-import { useOrders } from '../hooks/useOrders.js';
-import ReadingGoalRing from '../components/ReadingGoalRing.jsx';
-import ReadingStreak from '../components/ReadingStreak.jsx';
-import RecentlyViewed from '../components/RecentlyViewed.jsx';
-import FavoriteBooks from '../components/FavoriteBooks.jsx';
+import './Auth.css';
+import { usePageMetadata } from '../hooks/usePageMetadata.js';
 
-import './Profile.css';
-
-const LOCAL_STORAGE_KEY = 'bookshelf_user_profile';
-const ALL_GENRES = ['Fiction', 'Non-Fiction', 'Mystery', 'Sci-Fi', 'Fantasy', 'Romance', 'Biography', 'History'];
-const AVATAR_OPTIONS = ['📖', '🦉', '🧙‍♂️', '📚', '✍️', '🌟', '🚀', '☕'];
-
-export default function Profile() {
-  const { t } = useTranslation();
-  const { user, logout } = useAuth();
-  const { count: wishlistCount } = useWishlist();
-  const { orders = [] } = useOrders();
-  const navigate = useNavigate();
-
-  const [activeTab, setActiveTab] = useState('overview');
-
-  // Stored Profile Customization
-  const [profileData, setProfileData] = useState(() => {
-    try {
-      const saved = localStorage.getItem(LOCAL_STORAGE_KEY);
-      if (saved) return JSON.parse(saved);
-    } catch (err) {
-      console.error('Failed to parse profile data:', err);
-    }
-    return {
-      bio: 'A room without books is like a body without a soul.',
-      annualGoal: 24,
-      avatar: '📖',
-      preferredGenres: ['Fiction', 'Mystery', 'Sci-Fi'],
-    };
+const Profile = () => {
+  usePageMetadata({
+    title: 'Your profile',
+    description:
+      'Your BookShelf account details.',
   });
 
-  // Settings form local state
-  const [formName, setFormName] = useState(user?.name || 'Reader');
-  const [formBio, setFormBio] = useState(profileData.bio);
-  const [formGoal, setFormGoal] = useState(profileData.annualGoal);
-  const [formAvatar, setFormAvatar] = useState(profileData.avatar);
-  const [formGenres, setFormGenres] = useState(profileData.preferredGenres);
-
-  // Security Form local state
-  const [currentPassword, setCurrentPassword] = useState('');
-  const [newPassword, setNewPassword] = useState('');
-
-  // Notifications
-  const [saveMessage, setSaveMessage] = useState(null);
-  const [securityMessage, setSecurityMessage] = useState(null);
-
-  useEffect(() => {
-    if (user?.name) {
-      setFormName(user.name);
-    }
-  }, [user]);
-
-  const handleSaveProfile = (e) => {
-    e.preventDefault();
-    const updated = {
-      ...profileData,
-      bio: formBio,
-      annualGoal: Number(formGoal) || 20,
-      avatar: formAvatar,
-      preferredGenres: formGenres,
-    };
-    setProfileData(updated);
-    try {
-      localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(updated));
-    } catch (err) {
-      console.error('Failed to save profile to localStorage:', err);
-    }
-    setSaveMessage(t('profile.updateSuccess', 'Profile updated successfully!'));
-    setTimeout(() => setSaveMessage(null), 4000);
-  };
-
-  const handleUpdatePassword = (e) => {
-    e.preventDefault();
-    if (!currentPassword || !newPassword) {
-      setSecurityMessage({ type: 'error', text: 'Please fill out both password fields.' });
-      return;
-    }
-    if (newPassword.length < 8) {
-      setSecurityMessage({ type: 'error', text: 'New password must be at least 8 characters long.' });
-      return;
-    }
-    setSecurityMessage({ type: 'success', text: t('profile.security.passwordSuccess', 'Password updated successfully!') });
-    setCurrentPassword('');
-    setNewPassword('');
-    setTimeout(() => setSecurityMessage(null), 4000);
-  };
-
-  const toggleGenre = (genre) => {
-    if (formGenres.includes(genre)) {
-      setFormGenres(formGenres.filter((g) => g !== genre));
-    } else {
-      setFormGenres([...formGenres, genre]);
-    }
-  };
-
-  const handleLogout = async () => {
-    await logout();
-    navigate('/login');
-  };
-
-  const booksReadCount = 18; // Default mock stats
-  const pagesReadCount = 5840;
-  const readingHoursCount = 96;
+  const { user } = useAuth();
 
   return (
     <main className="profile-page">

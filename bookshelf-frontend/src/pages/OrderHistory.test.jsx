@@ -84,6 +84,15 @@ describe('OrderHistory', () => {
     expect(summary).toHaveTextContent('₹947.84 paid');
   });
 
+  it('names itself in the browser tab', async () => {
+    // Every route used to render "BookShelf — Find your next read". See #337.
+    orderService.getMyOrders.mockResolvedValue([]);
+
+    renderPage();
+
+    await waitFor(() => expect(document.title).toBe('Your orders — BookShelf'));
+  });
+
   it('shows the empty state only when the request actually succeeded', async () => {
     orderService.getMyOrders.mockResolvedValue([]);
 
