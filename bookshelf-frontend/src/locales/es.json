@@ -153,14 +153,43 @@
     "logout": "Cerrar Sesión"
   },
   "profile": {
-    "title": "Mi Perfil",
-    "name": "Nombre:",
-    "email": "Correo:",
-    "role": "Rol:",
-    "memberSince": "Miembro Desde:",
+    "title": "Mi Portal de Lectura",
+    "subtitle": "Gestiona tu perfil, análisis de lectura y objetivos anuales",
+    "name": "Nombre Completo",
+    "email": "Correo Electrónico",
+    "role": "Rol de Cuenta",
+    "memberSince": "Miembro Desde",
+    "bio": "Lema de Lectura y Biografía",
+    "bioPlaceholder": "Comparte tu filosofía de lectura o cita favorita...",
+    "preferredGenres": "Géneros Favoritos",
+    "annualGoal": "Objetivo de Lectura Anual 2026",
+    "booksTarget": "objetivo de libros",
     "editProfile": "Editar Perfil",
+    "saveChanges": "Guardar Cambios",
     "updateSuccess": "¡Perfil actualizado con éxito!",
-    "preferences": "Preferencias"
+    "preferences": "Preferencias de Lectura",
+    "tabs": {
+      "overview": "Visión General y Análisis",
+      "goals": "Objetivos de Lectura",
+      "settings": "Ajustes de Cuenta",
+      "library": "Mi Actividad"
+    },
+    "stats": {
+      "booksRead": "Libros Leídos",
+      "pagesRead": "Páginas Leídas",
+      "readingHours": "Horas de Lectura",
+      "currentStreak": "Racha Actual",
+      "longestStreak": "Racha Más Larga",
+      "avgRating": "Calificación Promedio",
+      "days": "Días"
+    },
+    "security": {
+      "title": "Seguridad y Credenciales",
+      "currentPassword": "Contraseña Actual",
+      "newPassword": "Nueva Contraseña",
+      "updatePassword": "Actualizar Contraseña",
+      "passwordSuccess": "¡Contraseña actualizada con éxito!"
+    }
   },
   "footer": {
     "slogan": "Tu destino definitivo para descubrir libros extraordinarios.",

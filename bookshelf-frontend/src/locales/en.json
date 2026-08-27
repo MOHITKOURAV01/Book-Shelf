@@ -153,14 +153,43 @@
     "logout": "Log Out"
   },
   "profile": {
-    "title": "My Profile",
-    "name": "Name:",
-    "email": "Email:",
-    "role": "Role:",
-    "memberSince": "Member Since:",
+    "title": "My Reading Portal",
+    "subtitle": "Manage your profile, reading analytics, and annual goals",
+    "name": "Full Name",
+    "email": "Email Address",
+    "role": "Account Role",
+    "memberSince": "Member Since",
+    "bio": "Reading Motto & Bio",
+    "bioPlaceholder": "Share your reading philosophy or favorite quote...",
+    "preferredGenres": "Favorite Genres",
+    "annualGoal": "2026 Annual Reading Goal",
+    "booksTarget": "books target",
     "editProfile": "Edit Profile",
+    "saveChanges": "Save Changes",
     "updateSuccess": "Profile updated successfully!",
-    "preferences": "Preferences"
+    "preferences": "Reading Preferences",
+    "tabs": {
+      "overview": "Overview & Analytics",
+      "goals": "Reading Goals",
+      "settings": "Account Settings",
+      "library": "My Activity"
+    },
+    "stats": {
+      "booksRead": "Books Read",
+      "pagesRead": "Pages Read",
+      "readingHours": "Reading Hours",
+      "currentStreak": "Current Streak",
+      "longestStreak": "Longest Streak",
+      "avgRating": "Average Rating",
+      "days": "Days"
+    },
+    "security": {
+      "title": "Security & Credentials",
+      "currentPassword": "Current Password",
+      "newPassword": "New Password",
+      "updatePassword": "Update Password",
+      "passwordSuccess": "Password updated successfully!"
+    }
   },
   "footer": {
     "slogan": "Your ultimate destination for discovering extraordinary books.",
