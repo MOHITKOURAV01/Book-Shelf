@@ -153,14 +153,43 @@
     "logout": "Se Déconnecter"
   },
   "profile": {
-    "title": "Mon Profil",
-    "name": "Nom:",
-    "email": "E-mail:",
-    "role": "Rôle:",
-    "memberSince": "Membre Depuis:",
+    "title": "Mon Portail de Lecture",
+    "subtitle": "Gérez votre profil, vos statistiques de lecture et vos objectifs annuels",
+    "name": "Nom Complet",
+    "email": "Adresse E-mail",
+    "role": "Rôle du Compte",
+    "memberSince": "Membre Depuis",
+    "bio": "Devise de Lecture & Bio",
+    "bioPlaceholder": "Partagez votre philosophie de lecture ou votre citation préférée...",
+    "preferredGenres": "Genres Préférés",
+    "annualGoal": "Objectif de Lecture Annuel 2026",
+    "booksTarget": "objectif de livres",
     "editProfile": "Modifier le Profil",
+    "saveChanges": "Enregistrer les Modifications",
     "updateSuccess": "Profil mis à jour avec succès!",
-    "preferences": "Préférences"
+    "preferences": "Préférences de Lecture",
+    "tabs": {
+      "overview": "Aperçu & Statistiques",
+      "goals": "Objectifs de Lecture",
+      "settings": "Paramètres du Compte",
+      "library": "Mon Activité"
+    },
+    "stats": {
+      "booksRead": "Livres Lus",
+      "pagesRead": "Pages Lues",
+      "readingHours": "Heures de Lecture",
+      "currentStreak": "Série Actuelle",
+      "longestStreak": "Plus Longue Série",
+      "avgRating": "Note Moyenne",
+      "days": "Jours"
+    },
+    "security": {
+      "title": "Sécurité & Identifiants",
+      "currentPassword": "Mot de Passe Actuel",
+      "newPassword": "Nouveau Mot de Passe",
+      "updatePassword": "Mettre à Jour le Mot de Passe",
+      "passwordSuccess": "Mot de passe mis à jour avec succès!"
+    }
   },
   "footer": {
     "slogan": "Votre destination ultime pour découvrir des livres extraordinaires.",
