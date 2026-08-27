@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { useOutletContext } from 'react-router-dom';
+import { useOutletContext, useSearchParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 
 import Hero from '../components/Hero.jsx';
@@ -8,7 +8,7 @@ import BookCard from '../components/BookCard.jsx';
 import Pagination from '../components/Pagination.jsx';
 import SkeletonLoader from '../components/SkeletonLoader.jsx';
 import { useBookCatalog } from '../hooks/useBookCatalog.js';
-import { hasActiveFilters } from '../utils/catalogQuery.js';
+import { buildCatalogQuery, hasActiveFilters, parseCatalogParams } from '../utils/catalogQuery.js';
 import { currencySymbol } from '../utils/currency.js';
 
 // Genre list is static because the catalogue is. GET /api/books/genres
@@ -19,21 +19,57 @@ const PAGE_SIZE = 4;
 
 export default function Home({ searchQuery: searchQueryProp }) {
   const { t } = useTranslation();
-
-  // The search box lives in the navbar, which the App layout renders, so the
-  // query reaches this page through the outlet context. The prop is kept as
-  // an override so Home can still be rendered standalone in tests.
   const outletContext = useOutletContext();
-  const searchQuery = searchQueryProp ?? outletContext?.searchQuery ?? '';
+  const [searchParams, setSearchParams] = useSearchParams();
 
-  const [currentPage, setCurrentPage] = useState(1);
-  const [activeSort, setActiveSort] = useState('');
+  // Parse initial parameters from URL
+  const initialFromUrl = useMemo(() => parseCatalogParams(searchParams), []);
 
-  const [selectedGenres, setSelectedGenres] = useState([]);
-  const [minPrice, setMinPrice] = useState('');
-  const [maxPrice, setMaxPrice] = useState('');
-  const [minRating, setMinRating] = useState(null);
+  const searchQuery = searchQueryProp ?? outletContext?.searchQuery ?? initialFromUrl.search;
+
+  const [currentPage, setCurrentPage] = useState(initialFromUrl.page);
+  const [activeSort, setActiveSort] = useState(initialFromUrl.sort);
+
+  const [selectedGenres, setSelectedGenres] = useState(initialFromUrl.genres);
+  const [minPrice, setMinPrice] = useState(initialFromUrl.minPrice);
+  const [maxPrice, setMaxPrice] = useState(initialFromUrl.maxPrice);
+  const [minRating, setMinRating] = useState(initialFromUrl.minRating);
   const [sidebarOpen, setSidebarOpen] = useState(false);
+
+  // Sync state to URL search parameters whenever filters change
+  useEffect(() => {
+    if (!setSearchParams) return;
+
+    const currentQuery = buildCatalogQuery({
+      search: searchQuery,
+      genres: selectedGenres,
+      minPrice,
+      maxPrice,
+      minRating,
+      sort: activeSort,
+      page: currentPage,
+      limit: PAGE_SIZE,
+    });
+
+    const currentQueryStr = currentQuery.toString();
+    if (currentQueryStr !== searchParams.toString()) {
+      setSearchParams(currentQuery, { replace: true });
+    }
+  }, [searchQuery, selectedGenres, minPrice, maxPrice, minRating, activeSort, currentPage, setSearchParams, searchParams]);
+
+  // Handle external searchParams updates (e.g., browser Back/Forward navigation)
+  useEffect(() => {
+    const parsed = parseCatalogParams(searchParams);
+    setSelectedGenres((prev) => (JSON.stringify(prev) !== JSON.stringify(parsed.genres) ? parsed.genres : prev));
+    setMinPrice((prev) => (prev !== parsed.minPrice ? parsed.minPrice : prev));
+    setMaxPrice((prev) => (prev !== parsed.maxPrice ? parsed.maxPrice : prev));
+    setMinRating((prev) => (prev !== parsed.minRating ? parsed.minRating : prev));
+    setActiveSort((prev) => (prev !== parsed.sort ? parsed.sort : prev));
+    setCurrentPage((prev) => (prev !== parsed.page ? parsed.page : prev));
+    if (outletContext?.setSearchQuery && parsed.search !== outletContext.searchQuery && searchQueryProp === undefined) {
+      outletContext.setSearchQuery(parsed.search);
+    }
+  }, [searchParams]);
 
   // The active-filter chips said "Min ₹250" whatever the shop was priced in.
   // See #335.
@@ -64,6 +100,7 @@ export default function Home({ searchQuery: searchQueryProp }) {
     useBookCatalog(filters);
 
   const filtersActive = hasActiveFilters({
+    search: searchQuery,
     genres: selectedGenres,
     minPrice,
     maxPrice,
@@ -95,7 +132,10 @@ export default function Home({ searchQuery: searchQueryProp }) {
     setMinPrice('');
     setMaxPrice('');
     setMinRating(null);
-  }, []);
+    if (outletContext?.setSearchQuery) {
+      outletContext.setSearchQuery('');
+    }
+  }, [outletContext]);
 
   const handlePageChange = useCallback((page) => {
     setCurrentPage(page);
