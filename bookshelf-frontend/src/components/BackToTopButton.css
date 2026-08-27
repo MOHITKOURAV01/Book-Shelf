@@ -1,4 +1,4 @@
-.scroll-to-top {
+.back-to-top {
   position: fixed;
   right: 24px;
   bottom: 24px;
@@ -26,19 +26,19 @@
   z-index: 900;
 }
 
-.scroll-to-top--visible {
+.back-to-top--visible {
   opacity: 1;
   visibility: visible;
   transform: translateY(0);
 }
 
-.scroll-to-top:hover,
-.scroll-to-top:focus-visible {
+.back-to-top:hover,
+.back-to-top:focus-visible {
   background: var(--leather-deep);
 }
 
 @media (max-width: 640px) {
-  .scroll-to-top {
+  .back-to-top {
     right: 16px;
     bottom: 16px;
     width: 40px;
