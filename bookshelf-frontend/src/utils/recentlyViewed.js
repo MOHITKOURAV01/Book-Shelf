@@ -143,6 +143,42 @@ export function readRecentlyViewedExcept(excludeId) {
   return readRecentlyViewed().filter((id) => id !== excluded);
 }
 
+/**
+ * Drop ids from the list.
+ *
+ * Used for the ids the catalogue answered 404 for. A book that has been
+ * delisted is not coming back, and leaving its id in storage means asking the
+ * API about it on every page load for as long as the browser keeps the value
+ * — eight ids, one request each, forever.
+ *
+ * Only a 404 should reach this. An id whose request merely *failed* must stay:
+ * that book probably still exists, and forgetting a reader's history because
+ * their connection dropped is a worse bug than the one this fixes.
+ *
+ * Returns the new list.
+ */
+export function forgetBookViews(ids) {
+  const doomed = new Set(
+    (Array.isArray(ids) ? ids : [ids])
+      .filter((id) => typeof id === 'string' || typeof id === 'number')
+      .map((id) => String(id))
+  );
+
+  if (doomed.size === 0) {
+    return readRecentlyViewed();
+  }
+
+  const next = readRecentlyViewed().filter((id) => !doomed.has(id));
+
+  try {
+    window.localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
+  } catch (error) {
+    console.error('[recentlyViewed] could not save to storage:', error);
+  }
+
+  return next;
+}
+
 export function clearRecentlyViewed() {
   try {
     window.localStorage.removeItem(STORAGE_KEY);
@@ -157,5 +193,6 @@ export default {
   readRecentlyViewed,
   readRecentlyViewedExcept,
   recordBookView,
+  forgetBookViews,
   clearRecentlyViewed,
 };
