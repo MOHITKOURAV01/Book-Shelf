@@ -1,5 +1,5 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
-import { useOutletContext, useSearchParams } from 'react-router-dom';
+import { useEffect, useMemo, useRef, useState } from 'react';
+import { useOutletContext } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 
 import Hero from '../components/Hero.jsx';
@@ -8,7 +8,8 @@ import BookCard from '../components/BookCard.jsx';
 import Pagination from '../components/Pagination.jsx';
 import SkeletonLoader from '../components/SkeletonLoader.jsx';
 import { useBookCatalog } from '../hooks/useBookCatalog.js';
-import { buildCatalogQuery, hasActiveFilters, parseCatalogParams } from '../utils/catalogQuery.js';
+import { useCatalogFilters } from '../hooks/useCatalogFilters.js';
+import { hasActiveFilters } from '../utils/catalogQuery.js';
 import { currencySymbol } from '../utils/currency.js';
 import { usePageMetadata } from '../hooks/usePageMetadata.js';
 
@@ -20,21 +21,84 @@ const PAGE_SIZE = 4;
 
 export default function Home({ searchQuery: searchQueryProp }) {
   const { t } = useTranslation();
+
+  /*
+   * The filters live in the URL now, not in `useState` here.
+   *
+   * They used to be six pieces of component state, so the address bar read
+   * `/` whether the customer was looking at the whole catalogue or at page 3
+   * of Sci-Fi under ₹300 rated 4 and up. A refresh cleared everything, Back
+   * left the site rather than undoing a filter, a filtered view could not be
+   * shared, and — worst of the four — opening a book and pressing Back
+   * remounted this page with its defaults, so the search text and the page
+   * were gone. See #338.
+   *
+   * There is deliberately no mirrored copy in state. The URL being the only
+   * source of truth is what makes Back and Forward work with nothing to keep
+   * in sync.
+   */
+  const { filters, setGenre, setMinPrice, setMaxPrice, setMinRating, setSort, setPage, setSearch, clearFilters } =
+    useCatalogFilters();
+
+  /*
+   * The search box lives in the navbar, which the App layout renders, so its
+   * value reaches this page through the outlet context. The prop is kept as
+   * an override so Home can still be rendered standalone in tests.
+   *
+   * Two directions to reconcile, and they are not symmetric:
+   *
+   *   - URL to box, once. Landing on `/?search=mystery` — a bookmark, a
+   *     shared link, a Back — has to put the text back in the input, which
+   *     App owns.
+   *   - Box to URL, on every change. Typing is what drives the search, and it
+   *     is written with `replace: true` so seven keystrokes are one history
+   *     entry rather than seven.
+   */
   const outletContext = useOutletContext();
-  const [searchParams, setSearchParams] = useSearchParams();
+  const setSearchQuery = outletContext?.setSearchQuery;
+  const searchQuery = searchQueryProp ?? outletContext?.searchQuery ?? '';
 
-  // Parse initial parameters from URL
-  const initialFromUrl = useMemo(() => parseCatalogParams(searchParams), []);
+  const hydrated = useRef(false);
+  const lastTyped = useRef(searchQuery);
 
-  const searchQuery = searchQueryProp ?? outletContext?.searchQuery ?? initialFromUrl.search;
+  useEffect(() => {
+    if (hydrated.current) {
+      return;
+    }
 
-  const [currentPage, setCurrentPage] = useState(initialFromUrl.page);
-  const [activeSort, setActiveSort] = useState(initialFromUrl.sort);
+    hydrated.current = true;
 
-  const [selectedGenres, setSelectedGenres] = useState(initialFromUrl.genres);
-  const [minPrice, setMinPrice] = useState(initialFromUrl.minPrice);
-  const [maxPrice, setMaxPrice] = useState(initialFromUrl.maxPrice);
-  const [minRating, setMinRating] = useState(initialFromUrl.minRating);
+    // Only when the URL has something to say. An empty parameter must not
+    // clear a box the customer has already typed into — which is what
+    // happens on a client-side navigation back to `/`.
+    if (filters.search !== '' && filters.search !== searchQuery && setSearchQuery) {
+      lastTyped.current = filters.search;
+      setSearchQuery(filters.search);
+    }
+  }, [filters.search, searchQuery, setSearchQuery]);
+
+  /*
+   * Box to URL, on a *change* to the box rather than on any divergence
+   * between the two.
+   *
+   * The difference matters. Writing whenever they differ makes the box
+   * authoritative, so an empty box overwrites a `?search=` that arrived in a
+   * shared link — and "Clear filters", which deliberately keeps the search,
+   * would have it wiped a render later by a box that never caught up. The
+   * URL is the source of truth; the box only pushes when the customer types
+   * into it.
+   */
+  useEffect(() => {
+    if (searchQuery === lastTyped.current) {
+      return;
+    }
+
+    lastTyped.current = searchQuery;
+    setSearch(searchQuery.trim());
+  }, [searchQuery, setSearch]);
+
+  // The search the *grid* is filtered by is the URL's, so a shared link shows
+  // the shared results even before the box has been hydrated.
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   // Sync state to URL search parameters whenever filters change
@@ -76,29 +140,37 @@ export default function Home({ searchQuery: searchQueryProp }) {
   // See #335.
   const symbol = currencySymbol();
 
-  const filters = useMemo(
+  const catalogFilters = useMemo(
     () => ({
-      search: searchQuery,
-      genres: selectedGenres,
-      minPrice,
-      maxPrice,
-      minRating,
-      sort: activeSort,
-      page: currentPage,
+      search: filters.search,
+      genres: filters.genres,
+      minPrice: filters.minPrice,
+      maxPrice: filters.maxPrice,
+      minRating: filters.minRating,
+      sort: filters.sort,
+      page: filters.page,
       limit: PAGE_SIZE,
     }),
-    [searchQuery, selectedGenres, minPrice, maxPrice, minRating, activeSort, currentPage]
+    [
+      filters.search,
+      filters.genres,
+      filters.minPrice,
+      filters.maxPrice,
+      filters.minRating,
+      filters.sort,
+      filters.page,
+    ]
   );
 
   /*
-   * Every filter now goes to the API, which filters the whole catalogue and
-   * then paginates it. Previously the price, rating and multi-genre filters
-   * ran in a useMemo over the four books the server had already paged down
-   * to — so "Max ₹250" showed "No books found." while a ₹249 book sat on
-   * page 2, and the header still read "16 titles total" above it. See #319.
+   * Every filter goes to the API, which filters the whole catalogue and then
+   * paginates it. Previously the price, rating and multi-genre filters ran in
+   * a useMemo over the four books the server had already paged down to — so
+   * "Max ₹250" showed "No books found." while a ₹249 book sat on page 2, and
+   * the header still read "16 titles total" above it. See #319.
    */
   const { books, totalBooks, totalPages, loading, error, reload } =
-    useBookCatalog(filters);
+    useBookCatalog(catalogFilters);
 
   /*
    * Home keeps the site's own title when nothing is being searched for — it
@@ -111,47 +183,27 @@ export default function Home({ searchQuery: searchQueryProp }) {
   });
 
   const filtersActive = hasActiveFilters({
-    search: searchQuery,
-    genres: selectedGenres,
-    minPrice,
-    maxPrice,
-    minRating,
+    genres: filters.genres,
+    minPrice: filters.minPrice,
+    maxPrice: filters.maxPrice,
+    minRating: filters.minRating,
   });
 
   /*
-   * Any change to what is being asked for returns to page 1.
+   * Returning to page 1 when the query changes is `useCatalogFilters`'s job
+   * now, applied at the point of change rather than by an effect watching six
+   * dependencies afterwards.
    *
-   * The old effect listed only search, genre and sort, so changing a price
-   * filter left the reader on page 3 of a result set that no longer had
-   * three pages — and the API answers a page past the end with an empty
-   * slice, not an error, so the symptom was a blank grid.
+   * That matters here: an effect would run on mount too, and stamp on the
+   * page number that came out of the URL. `/?search=mystery&page=2` would
+   * render page 2 for one frame and then jump to page 1, which is exactly the
+   * bug this whole change is about.
    */
-  useEffect(() => {
-    setCurrentPage(1);
-  }, [searchQuery, selectedGenres, minPrice, maxPrice, minRating, activeSort]);
 
-  const handleGenreChange = useCallback((genre, checked) => {
-    setSelectedGenres((previous) =>
-      checked
-        ? [...previous, genre]
-        : previous.filter((entry) => entry !== genre)
-    );
-  }, []);
-
-  const handleClearFilters = useCallback(() => {
-    setSelectedGenres([]);
-    setMinPrice('');
-    setMaxPrice('');
-    setMinRating(null);
-    if (outletContext?.setSearchQuery) {
-      outletContext.setSearchQuery('');
-    }
-  }, [outletContext]);
-
-  const handlePageChange = useCallback((page) => {
-    setCurrentPage(page);
+  const handlePageChange = (page) => {
+    setPage(page);
     window.scrollTo({ top: 0, behavior: 'smooth' });
-  }, []);
+  };
 
   return (
     <>
@@ -171,15 +223,15 @@ export default function Home({ searchQuery: searchQueryProp }) {
 
             <FilterSidebar
               genres={ALL_GENRES}
-              selectedGenres={selectedGenres}
-              onGenreChange={handleGenreChange}
-              minPrice={minPrice}
+              selectedGenres={filters.genres}
+              onGenreChange={setGenre}
+              minPrice={filters.minPrice}
               onMinPriceChange={setMinPrice}
-              maxPrice={maxPrice}
+              maxPrice={filters.maxPrice}
               onMaxPriceChange={setMaxPrice}
-              minRating={minRating}
+              minRating={filters.minRating}
               onMinRatingChange={setMinRating}
-              onClearFilters={handleClearFilters}
+              onClearFilters={clearFilters}
               isOpen={sidebarOpen}
               onToggle={() => setSidebarOpen((open) => !open)}
             />
@@ -190,8 +242,8 @@ export default function Home({ searchQuery: searchQueryProp }) {
                 <select
                   id="sort-select"
                   className="catalog__sort-select"
-                  value={activeSort}
-                  onChange={(event) => setActiveSort(event.target.value)}
+                  value={filters.sort}
+                  onChange={(event) => setSort(event.target.value)}
                   aria-label={t('home.sortAriaLabel')}
                 >
                   <option value="">{t('home.sortDefault')}</option>
@@ -205,34 +257,34 @@ export default function Home({ searchQuery: searchQueryProp }) {
               {filtersActive && (
                 <div className="catalog__filter-summary">
                   <span>Active filters:</span>
-                  {selectedGenres.map((genre) => (
+                  {filters.genres.map((genre) => (
                     <span key={genre} className="catalog__filter-tag">
                       {genre}
                       <button
-                        onClick={() => handleGenreChange(genre, false)}
+                        onClick={() => setGenre(genre, false)}
                         aria-label={`Remove ${genre} filter`}
                       >✕</button>
                     </span>
                   ))}
-                  {minPrice !== '' && (
+                  {filters.minPrice !== '' && (
                     <span className="catalog__filter-tag">
-                      Min {symbol}{minPrice}
+                      Min {symbol}{filters.minPrice}
                       <button onClick={() => setMinPrice('')} aria-label="Remove min price filter">✕</button>
                     </span>
                   )}
-                  {maxPrice !== '' && (
+                  {filters.maxPrice !== '' && (
                     <span className="catalog__filter-tag">
-                      Max {symbol}{maxPrice}
+                      Max {symbol}{filters.maxPrice}
                       <button onClick={() => setMaxPrice('')} aria-label="Remove max price filter">✕</button>
                     </span>
                   )}
-                  {minRating !== null && (
+                  {filters.minRating !== null && (
                     <span className="catalog__filter-tag">
-                      {'★'.repeat(minRating)} & up
+                      {'★'.repeat(filters.minRating)} & up
                       <button onClick={() => setMinRating(null)} aria-label="Remove rating filter">✕</button>
                     </span>
                   )}
-                  <button className="catalog__filter-tag" onClick={handleClearFilters}>
+                  <button className="catalog__filter-tag" onClick={clearFilters}>
                     Clear all ✕
                   </button>
                 </div>
@@ -254,7 +306,7 @@ export default function Home({ searchQuery: searchQueryProp }) {
                 <div className="catalog__empty">
                   <h3>{t('home.noBooksFound')}</h3>
                   {filtersActive && (
-                    <button className="catalog__empty-btn" onClick={handleClearFilters}>
+                    <button className="catalog__empty-btn" onClick={clearFilters}>
                       Clear filters
                     </button>
                   )}
@@ -269,7 +321,7 @@ export default function Home({ searchQuery: searchQueryProp }) {
                   {/* totalPages describes the filtered set now, so the pager
                       no longer offers pages that render empty. */}
                   <Pagination
-                    currentPage={currentPage}
+                    currentPage={filters.page}
                     totalPages={totalPages}
                     onPageChange={handlePageChange}
                   />
