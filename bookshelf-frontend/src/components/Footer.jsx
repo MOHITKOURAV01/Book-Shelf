@@ -1,13 +1,16 @@
 import { Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import './Footer.css';
 
 export default function Footer() {
+  const { t } = useTranslation();
+
   return (
     <footer className="footer" id="about">
       <div className="footer__inner">
         {/* ── Left: Brand block ── */}
         <div className="footer__brand-block">
-          <a href="/" className="footer__logo">
+          <Link to="/" className="footer__logo">
             <span className="footer__logo-icon" aria-hidden="true">
               <svg
                 width="22"
@@ -23,11 +26,10 @@ export default function Footer() {
                 <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" />
               </svg>
             </span>
-            BookShelf
-          </a>
+            {t('navbar.logo') || 'BookShelf'}
+          </Link>
           <p className="footer__desc">
-            A small, honest storefront for people who read. No algorithms, no
-            noise — just great books waiting to be discovered.
+            {t('footer.slogan')}
           </p>
         </div>
 
@@ -35,64 +37,45 @@ export default function Footer() {
         <div className="footer__columns">
           {/* Column 0 — Discover */}
           <div className="footer__col">
-            <h4 className="footer__col-title">Discover</h4>
+            <h4 className="footer__col-title">{t('footer.quickLinks')}</h4>
             <ul className="footer__col-links">
               <li>
-                <a href="#catalog">New Arrivals</a>
+                <a href="#catalog">{t('navbar.catalog')}</a>
               </li>
               <li>
-                <a href="#catalog">Best Sellers</a>
+                <Link to="/wishlist">{t('navbar.wishlist')}</Link>
               </li>
               <li>
-                <a href="#catalog">Reading Lists</a>
-              </li>
-              <li>
-                <a href="#catalog">Gift Cards</a>
+                <Link to="/orders">{t('navbar.orders')}</Link>
               </li>
             </ul>
           </div>
 
-          {/* Column 1 — Trending Genres */}
+          {/* Column 1 — Legal */}
           <div className="footer__col">
-            <h4 className="footer__col-title">Trending Genres</h4>
+            <h4 className="footer__col-title">{t('footer.legal')}</h4>
             <ul className="footer__col-links">
               <li>
-                <a href="#catalog">Literary Fiction</a>
+                <Link to="/about">{t('navbar.about')}</Link>
               </li>
               <li>
-                <a href="#catalog">Dark Fantasy</a>
+                <Link to="/privacy">{t('footer.privacy')}</Link>
               </li>
               <li>
-                <a href="#catalog">Historical Noir</a>
+                <Link to="/terms">{t('footer.terms')}</Link>
               </li>
             </ul>
           </div>
 
-          {/* Column 2 — Pages */}
+          {/* Column 2 — Access */}
           <div className="footer__col">
-            <h4 className="footer__col-title">Pages</h4>
+            <h4 className="footer__col-title">{t('navbar.profile')}</h4>
             <ul className="footer__col-links">
               <li>
-                <Link to="/about">About</Link>
+                <Link to="/login">{t('navbar.login')}</Link>
               </li>
               <li>
-                <Link to="/privacy">Privacy Policy</Link>
-              </li>
-              <li>
-                <Link to="/terms">Terms of Service</Link>
-              </li>
-            </ul>
-          </div>
-
-          {/* Column 3 — Access */}
-          <div className="footer__col">
-            <h4 className="footer__col-title">Access</h4>
-            <ul className="footer__col-links">
-              <li>
-                <a href="#login">Login</a>
-              </li>
-              <li>
-                <a href="#signup">Sign Up</a>
+                <Link to="/register">{t('navbar.register')}</Link>
               </li>
             </ul>
           </div>
@@ -102,10 +85,10 @@ export default function Footer() {
       {/* Bottom bar */}
       <div className="footer__bottom">
         <p className="footer__copy">
-          © {new Date().getFullYear()} BookShelf. All rights reserved.
+          {t('footer.copyright')}
         </p>
-        <p className="footer__built">Built with React &amp; Node</p>
       </div>
     </footer>
   );
+}
 }

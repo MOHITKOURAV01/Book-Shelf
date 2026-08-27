@@ -1,23 +1,23 @@
+import { useTranslation } from 'react-i18next';
 import { spines } from '../data/books.js';
 import './Hero.css';
 
 export default function Hero() {
+  const { t } = useTranslation();
+
   return (
     <section className="hero" id="shelf">
       <div className="hero__inner">
         <div className="hero__copy">
-          <p className="hero__eyebrow">A shelf, not a warehouse</p>
+          <p className="hero__eyebrow">{t('home.heroTitle')}</p>
           <h1 className="hero__title">
-            Pull a book out.
-            <br />
-            See where it takes you.
+            {t('home.heroTitle')}
           </h1>
           <p className="hero__sub">
-            BookShelf is a small, honest storefront — no algorithms deciding
-            what you should read next. Browse by spine, not by suggestion.
+            {t('home.heroSubtitle')}
           </p>
           <a className="hero__cta" href="#catalog">
-            Browse the catalog →
+            {t('home.heroCTA')} →
           </a>
         </div>
 
