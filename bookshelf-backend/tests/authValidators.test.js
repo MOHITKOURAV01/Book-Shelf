@@ -3,7 +3,12 @@ import assert from 'node:assert/strict';
 
 import { validate } from '../utils/validators.js';
 import { validateBody } from '../middleware/validateBody.js';
-import { registerSchema, loginSchema } from '../validators/authValidators.js';
+import {
+  registerSchema,
+  loginSchema,
+  updateProfileSchema,
+  updatePasswordSchema,
+} from '../validators/authValidators.js';
 
 const VALID_REGISTRATION = {
   name: 'Alice Kapoor',
@@ -231,5 +236,62 @@ describe('validateBody middleware', () => {
 
     assert.equal(nextCalled, false);
     assert.equal(res.statusCode, 400);
+  });
+});
+
+describe('updateProfileSchema', () => {
+  test('accepts valid profile updates', () => {
+    const { errors, values } = validate(
+      {
+        name: '  Jane Doe ',
+        bio: 'Avid reader and collector',
+        avatar: '📖',
+        readingGoal: 20,
+        preferredGenres: ['Fiction', 'Sci-Fi'],
+      },
+      updateProfileSchema
+    );
+    assert.deepEqual(errors, []);
+    assert.equal(values.name, 'Jane Doe');
+    assert.equal(values.bio, 'Avid reader and collector');
+    assert.equal(values.avatar, '📖');
+    assert.equal(values.readingGoal, 20);
+    assert.deepEqual(values.preferredGenres, ['Fiction', 'Sci-Fi']);
+  });
+
+  test('rejects an invalid readingGoal', () => {
+    const { errors } = validate({ readingGoal: -5 }, updateProfileSchema);
+    assert.deepEqual(fieldsWithErrors(errors), ['readingGoal']);
+  });
+
+  test('rejects non-array preferredGenres', () => {
+    const { errors } = validate({ preferredGenres: 'Sci-Fi' }, updateProfileSchema);
+    assert.deepEqual(fieldsWithErrors(errors), ['preferredGenres']);
+  });
+});
+
+describe('updatePasswordSchema', () => {
+  test('accepts valid password update', () => {
+    const { errors } = validate(
+      { currentPassword: 'old-password-123', newPassword: 'new-secure-password-456' },
+      updatePasswordSchema
+    );
+    assert.deepEqual(errors, []);
+  });
+
+  test('rejects missing currentPassword', () => {
+    const { errors } = validate(
+      { newPassword: 'new-secure-password-456' },
+      updatePasswordSchema
+    );
+    assert.deepEqual(fieldsWithErrors(errors), ['currentPassword']);
+  });
+
+  test('rejects short newPassword', () => {
+    const { errors } = validate(
+      { currentPassword: 'old-password-123', newPassword: 'short' },
+      updatePasswordSchema
+    );
+    assert.deepEqual(fieldsWithErrors(errors), ['newPassword']);
   });
 });

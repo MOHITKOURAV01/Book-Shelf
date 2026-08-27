@@ -67,3 +67,60 @@ export const loginSchema = {
     rules: [required('password'), isString('password')],
   },
 };
+
+/**
+ * PUT /api/auth/profile
+ */
+export const updateProfileSchema = {
+  name: {
+    normalise: trim,
+    rules: [
+      isString('name'),
+      maxLength('name', MAX_NAME_LENGTH),
+    ],
+  },
+  bio: {
+    normalise: trim,
+    rules: [
+      isString('bio'),
+      maxLength('bio', 500),
+    ],
+  },
+  avatar: {
+    normalise: trim,
+    rules: [
+      isString('avatar'),
+      maxLength('avatar', 50),
+    ],
+  },
+  readingGoal: {
+    rules: [
+      (val) => (val !== undefined && val !== null && (typeof val !== 'number' || val < 1) ? 'readingGoal must be a positive number' : null),
+    ],
+  },
+  preferredGenres: {
+    rules: [
+      (val) => (val !== undefined && val !== null && !Array.isArray(val) ? 'preferredGenres must be an array' : null),
+    ],
+  },
+};
+
+/**
+ * PUT /api/auth/password
+ */
+export const updatePasswordSchema = {
+  currentPassword: {
+    rules: [
+      required('currentPassword'),
+      isString('currentPassword'),
+    ],
+  },
+  newPassword: {
+    rules: [
+      required('newPassword'),
+      isString('newPassword'),
+      minLength('newPassword', MIN_PASSWORD_LENGTH),
+      maxLength('newPassword', MAX_PASSWORD_LENGTH),
+    ],
+  },
+};

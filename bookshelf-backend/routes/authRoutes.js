@@ -4,6 +4,8 @@ import {
   registerUser,
   logoutUser,
   getUserProfile,
+  updateUserProfile,
+  updateUserPassword,
 } from '../controllers/authController.js';
 import { protect } from '../middleware/authMiddleware.js';
 import { validateBody } from '../middleware/validateBody.js';
@@ -12,7 +14,12 @@ import {
   loginIpLimiter,
   registerLimiter,
 } from '../middleware/rateLimiter.js';
-import { registerSchema, loginSchema } from '../validators/authValidators.js';
+import {
+  registerSchema,
+  loginSchema,
+  updateProfileSchema,
+  updatePasswordSchema,
+} from '../validators/authValidators.js';
 
 const router = express.Router();
 
@@ -50,5 +57,7 @@ router.post(
 );
 router.post('/logout', logoutUser);
 router.get('/me', protect, getUserProfile);
+router.put('/profile', protect, validateBody(updateProfileSchema), updateUserProfile);
+router.put('/password', protect, validateBody(updatePasswordSchema), updateUserPassword);
 
 export default router;
