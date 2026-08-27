@@ -274,8 +274,19 @@ export default function Navbar({ searchQuery, setSearchQuery }) {
               className="nav__search"
               type="search"
               placeholder={t('navbar.searchPlaceholder') || 'Search titles, authors...'}
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
+              value={searchQuery || ''}
+              onChange={(e) => {
+                const val = e.target.value;
+                setSearchQuery?.(val);
+                if (location.pathname !== '/' && val.trim()) {
+                  navigate(`/?search=${encodeURIComponent(val.trim())}`);
+                }
+              }}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' && location.pathname !== '/') {
+                  navigate(`/?search=${encodeURIComponent(searchQuery || '')}`);
+                }
+              }}
               aria-label={t('navbar.searchPlaceholder') || 'Search titles, authors'}
             />
 
