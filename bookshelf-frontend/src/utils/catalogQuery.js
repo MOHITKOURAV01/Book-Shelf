@@ -161,10 +161,52 @@ export function hasActiveFilters(filters = {}) {
   );
 }
 
+/**
+ * Parse URLSearchParams or query string into a normalized filter state object.
+ */
+export function parseCatalogParams(searchParams) {
+  const params =
+    typeof searchParams === 'string'
+      ? new URLSearchParams(searchParams)
+      : searchParams instanceof URLSearchParams
+      ? searchParams
+      : new URLSearchParams();
+
+  const search = params.get('search') || params.get('q') || '';
+
+  // Handle repeated genre params ?genre=Fiction&genre=Poetry OR comma-separated ?genre=Fiction,Poetry
+  let genres = params.getAll('genre');
+  if (genres.length === 0 && params.has('genres')) {
+    genres = (params.get('genres') || '').split(',').map((g) => g.trim());
+  }
+
+  const minPrice = params.get('minPrice') || '';
+  const maxPrice = params.get('maxPrice') || '';
+  const minRatingParam = params.get('minRating');
+  const minRating =
+    minRatingParam !== null && minRatingParam !== '' && !isNaN(Number(minRatingParam))
+      ? Number(minRatingParam)
+      : null;
+  const sort = params.get('sort') || '';
+  const pageParam = params.get('page');
+  const page = pageParam && !isNaN(Number(pageParam)) ? Math.max(Number(pageParam), 1) : 1;
+
+  return {
+    search,
+    genres,
+    minPrice,
+    maxPrice,
+    minRating,
+    sort,
+    page,
+  };
+}
+
 export default {
   DEFAULT_LIMIT,
   MAX_LIMIT,
   normaliseCatalogFilters,
   buildCatalogQuery,
+  parseCatalogParams,
   hasActiveFilters,
 };

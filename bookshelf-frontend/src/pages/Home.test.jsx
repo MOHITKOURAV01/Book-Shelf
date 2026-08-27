@@ -194,4 +194,23 @@ describe('Home catalogue', () => {
     await user.click(screen.getByRole('button', { name: /clear all ✕/i }));
     await waitFor(() => expect(titles()).toHaveLength(4));
   });
+
+  it('initializes filters from URL search parameters on mount', async () => {
+    render(
+      <MemoryRouter initialEntries={['/?genre=Poetry&maxPrice=250']}>
+        <WishlistContext.Provider value={wishlist}>
+          <CartProvider>
+            <Home />
+          </CartProvider>
+        </WishlistContext.Provider>
+      </MemoryRouter>
+    );
+
+    await waitFor(() => {
+      const url = globalThis.fetch.mock.calls.at(-1)[0];
+      expect(url).toContain('genre=Poetry');
+      expect(url).toContain('maxPrice=250');
+    });
+    await waitFor(() => expect(titles()).toEqual(['Low Tide']));
+  });
 });

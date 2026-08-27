@@ -24,6 +24,22 @@ const userSchema = new mongoose.Schema(
     wishlist: [{
       type: String,
     }],
+    bio: {
+      type: String,
+      default: '',
+    },
+    avatar: {
+      type: String,
+      default: '📚',
+    },
+    readingGoal: {
+      type: Number,
+      default: 12,
+      min: 1,
+    },
+    preferredGenres: [{
+      type: String,
+    }],
   },
   {
     timestamps: true,

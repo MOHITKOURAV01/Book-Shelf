@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next';
 import { useCart } from '../hooks/useCart.js';
 import { useAuth } from '../hooks/useAuth.js';
 import ThemeToggle from './ThemeToggle.jsx';
+import LanguageSwitcher from './LanguageSwitcher.jsx';
 import './Navbar.css';
 
 /**
@@ -256,14 +257,14 @@ export default function Navbar({ searchQuery, setSearchQuery }) {
             */}
             {isAuthenticated ? (
               <button type="button" className="nav__logout" onClick={handleLogout}>
-                {user?.name ? `Log out (${user.name})` : 'Log out'}
+                {user?.name ? `${t('navbar.logout') || 'Log out'} (${user.name})` : t('navbar.logout') || 'Log out'}
               </button>
             ) : (
               <NavLink
                 to="/login"
                 className={({ isActive }) => (isActive ? 'is-active' : undefined)}
               >
-                Login
+                {t('navbar.login') || 'Login'}
               </NavLink>
             )}
           </nav>
@@ -273,10 +274,23 @@ export default function Navbar({ searchQuery, setSearchQuery }) {
               className="nav__search"
               type="search"
               placeholder={t('navbar.searchPlaceholder') || 'Search titles, authors...'}
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
+              value={searchQuery || ''}
+              onChange={(e) => {
+                const val = e.target.value;
+                setSearchQuery?.(val);
+                if (location.pathname !== '/' && val.trim()) {
+                  navigate(`/?search=${encodeURIComponent(val.trim())}`);
+                }
+              }}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' && location.pathname !== '/') {
+                  navigate(`/?search=${encodeURIComponent(searchQuery || '')}`);
+                }
+              }}
               aria-label={t('navbar.searchPlaceholder') || 'Search titles, authors'}
             />
+
+            <LanguageSwitcher />
 
             <ThemeToggle variant="inline" className="nav__theme-toggle" />
 

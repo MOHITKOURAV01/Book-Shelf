@@ -1,0 +1,229 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+.book-recommendation-card {
+  width: 100%;
+  max-width: 620px;
+  display: grid;
+  grid-template-columns: 150px minmax(0, 1fr);
+  gap: 22px;
+  padding: 20px;
+  border: 1px solid #e5e7eb;
+  border-radius: 18px;
+  background: #fff;
+  color: #111827;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.book-recommendation-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 16px 34px rgba(0, 0, 0, 0.12);
+}
+
+.book-recommendation-card__cover-wrap {
+  width: 150px;
+  aspect-ratio: 2 / 3;
+  overflow: hidden;
+  border-radius: 12px;
+  background: #f3f4f6;
+}
+
+.book-recommendation-card__cover,
+.book-recommendation-card__cover-placeholder {
+  width: 100%;
+  height: 100%;
+}
+
+.book-recommendation-card__cover {
+  display: block;
+  object-fit: cover;
+}
+
+.book-recommendation-card__cover-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(145deg, #dbeafe, #c4b5fd);
+  font-size: 42px;
+}
+
+.book-recommendation-card__body {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.book-recommendation-card__reason {
+  display: inline-flex;
+  align-items: center;
+  padding: 5px 9px;
+  border-radius: 999px;
+  background: #eff6ff;
+  color: #1d4ed8;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.book-recommendation-card__category {
+  margin-top: 12px;
+  color: #6b7280;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.book-recommendation-card__title {
+  margin: 4px 0 0;
+  font-size: 22px;
+  line-height: 1.25;
+}
+
+.book-recommendation-card__author {
+  margin: 4px 0 0;
+  color: #6b7280;
+  font-size: 13px;
+}
+
+.book-recommendation-card__rating {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 11px;
+  font-size: 13px;
+}
+
+.book-recommendation-card__stars {
+  color: #f59e0b;
+  letter-spacing: 1px;
+  font-size: 15px;
+}
+
+.book-recommendation-card__description {
+  margin: 12px 0 18px;
+  color: #4b5563;
+  font-size: 13px;
+  line-height: 1.55;
+}
+
+.book-recommendation-card__action {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: auto;
+  padding: 10px 14px;
+  border: 0;
+  border-radius: 9px;
+  background: #2563eb;
+  color: #fff;
+  font: 700 13px inherit;
+  cursor: pointer;
+  transition: transform 0.2s ease, background-color 0.2s ease;
+}
+
+.book-recommendation-card__action:hover {
+  background: #1d4ed8;
+  transform: translateY(-1px);
+}
+
+.book-recommendation-card__action:focus-visible {
+  outline: 3px solid rgba(37, 99, 235, 0.3);
+  outline-offset: 3px;
+}
+
+/* Variants */
+
+.book-recommendation-card--green .book-recommendation-card__reason {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.book-recommendation-card--green .book-recommendation-card__action {
+  background: #16a34a;
+}
+
+.book-recommendation-card--green .book-recommendation-card__action:hover {
+  background: #15803d;
+}
+
+.book-recommendation-card--purple .book-recommendation-card__reason {
+  background: #ede9fe;
+  color: #6d28d9;
+}
+
+.book-recommendation-card--purple .book-recommendation-card__action {
+  background: #7c3aed;
+}
+
+.book-recommendation-card--purple .book-recommendation-card__action:hover {
+  background: #6d28d9;
+}
+
+.book-recommendation-card--orange .book-recommendation-card__reason {
+  background: #ffedd5;
+  color: #c2410c;
+}
+
+.book-recommendation-card--orange .book-recommendation-card__action {
+  background: #f97316;
+}
+
+.book-recommendation-card--orange .book-recommendation-card__action:hover {
+  background: #ea580c;
+}
+
+/* Responsive */
+
+@media (max-width: 560px) {
+  .book-recommendation-card {
+    grid-template-columns: 100px minmax(0, 1fr);
+    gap: 15px;
+    padding: 16px;
+  }
+
+  .book-recommendation-card__cover-wrap {
+    width: 100px;
+  }
+
+  .book-recommendation-card__title {
+    font-size: 18px;
+  }
+
+  .book-recommendation-card__description {
+    margin-bottom: 14px;
+  }
+}
+
+@media (max-width: 420px) {
+  .book-recommendation-card {
+    grid-template-columns: 1fr;
+  }
+
+  .book-recommendation-card__cover-wrap {
+    width: 120px;
+  }
+
+  .book-recommendation-card__body {
+    width: 100%;
+  }
+}
+
+/* Reduced motion */
+
+@media (prefers-reduced-motion: reduce) {
+  .book-recommendation-card,
+  .book-recommendation-card__action {
+    transition: none;
+  }
+
+  .book-recommendation-card:hover,
+  .book-recommendation-card__action:hover {
+    transform: none;
+  }
+}
