@@ -1,0 +1,330 @@
+*,
+*::before,
+*::after{
+  box-sizing:border-box;
+}
+
+.currently-reading{
+  width:100%;
+  max-width:620px;
+  padding:22px;
+  border:1px solid #e5e7eb;
+  border-radius:20px;
+  background:#fff;
+  color:#111827;
+  box-shadow:0 8px 24px rgba(0,0,0,.08);
+  transition:transform .25s ease,box-shadow .25s ease,border-color .25s ease;
+}
+
+.currently-reading:hover{
+  transform:translateY(-3px);
+  box-shadow:0 15px 34px rgba(0,0,0,.12);
+}
+
+.currently-reading__header{
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:16px;
+  margin-bottom:20px;
+}
+
+.currently-reading__eyebrow{
+  margin:0 0 6px;
+  color:#111827;
+  font-size:17px;
+  font-weight:800;
+}
+
+.currently-reading__status{
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  color:#6b7280;
+  font-size:11px;
+  font-weight:700;
+}
+
+.currently-reading__status i{
+  width:7px;
+  height:7px;
+  border-radius:50%;
+  background:#16a34a;
+  box-shadow:0 0 0 4px rgba(22,163,74,.10);
+}
+
+.currently-reading__genre{
+  padding:6px 10px;
+  border-radius:999px;
+  background:#eff6ff;
+  color:#1d4ed8;
+  font-size:10px;
+  font-weight:800;
+}
+
+.currently-reading__body{
+  display:flex;
+  gap:18px;
+}
+
+.currently-reading__cover{
+  width:105px;
+  height:150px;
+  flex:0 0 105px;
+  overflow:hidden;
+  border-radius:12px;
+  background:#eef2ff;
+  box-shadow:0 6px 14px rgba(0,0,0,.12);
+}
+
+.currently-reading__cover img{
+  display:block;
+  width:100%;
+  height:100%;
+  object-fit:cover;
+}
+
+.currently-reading__cover-placeholder{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  width:100%;
+  height:100%;
+  background:linear-gradient(145deg,#2563eb,#7c3aed);
+}
+
+.currently-reading__cover-placeholder span{
+  font-size:38px;
+}
+
+.currently-reading__details{
+  min-width:0;
+  flex:1;
+  display:flex;
+  flex-direction:column;
+}
+
+.currently-reading__title{
+  margin:2px 0 4px;
+  font-size:21px;
+  line-height:1.25;
+}
+
+.currently-reading__author{
+  margin:0;
+  color:#6b7280;
+  font-size:12px;
+}
+
+.currently-reading__progress-info{
+  display:flex;
+  align-items:baseline;
+  justify-content:space-between;
+  gap:10px;
+  margin-top:auto;
+  margin-bottom:8px;
+}
+
+.currently-reading__progress-info strong{
+  color:#2563eb;
+  font-size:20px;
+}
+
+.currently-reading__progress-info span{
+  color:#6b7280;
+  font-size:11px;
+}
+
+.currently-reading__track{
+  width:100%;
+  height:9px;
+  overflow:hidden;
+  border-radius:999px;
+  background:#e5e7eb;
+}
+
+.currently-reading__fill{
+  display:block;
+  width:var(--reading-progress);
+  height:100%;
+  border-radius:inherit;
+  background:#2563eb;
+  transition:width .6s ease;
+}
+
+.currently-reading__footer{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  margin-top:12px;
+}
+
+.currently-reading__footer > span{
+  color:#9ca3af;
+  font-size:10px;
+  line-height:1.4;
+}
+
+.currently-reading__button{
+  flex-shrink:0;
+  min-height:34px;
+  padding:7px 12px;
+  border:0;
+  border-radius:9px;
+  background:#2563eb;
+  color:#fff;
+  font:700 11px/1 inherit;
+  cursor:pointer;
+  transition:transform .2s ease,filter .2s ease;
+}
+
+.currently-reading__button:hover{
+  transform:translateY(-1px);
+  filter:brightness(.95);
+}
+
+.currently-reading__button:focus-visible,
+.currently-reading:focus-visible{
+  outline:3px solid rgba(37,99,235,.35);
+  outline-offset:4px;
+}
+
+/* Variants */
+
+.currently-reading--green .currently-reading__genre{
+  background:#ecfdf5;
+  color:#15803d;
+}
+
+.currently-reading--green .currently-reading__fill,
+.currently-reading--green .currently-reading__button{
+  background:#16a34a;
+}
+
+.currently-reading--purple .currently-reading__genre{
+  background:#faf5ff;
+  color:#6d28d9;
+}
+
+.currently-reading--purple .currently-reading__fill,
+.currently-reading--purple .currently-reading__button{
+  background:#7c3aed;
+}
+
+.currently-reading--orange .currently-reading__genre{
+  background:#fff7ed;
+  color:#c2410c;
+}
+
+.currently-reading--orange .currently-reading__fill,
+.currently-reading--orange .currently-reading__button{
+  background:#f97316;
+}
+
+.currently-reading--pink .currently-reading__genre{
+  background:#fdf2f8;
+  color:#be185d;
+}
+
+.currently-reading--pink .currently-reading__fill,
+.currently-reading--pink .currently-reading__button{
+  background:#db2777;
+}
+
+.currently-reading--dark{
+  border-color:#374151;
+  background:#1f2937;
+  color:#f9fafb;
+}
+
+.currently-reading--dark .currently-reading__eyebrow{
+  color:#f9fafb;
+}
+
+.currently-reading--dark .currently-reading__author,
+.currently-reading--dark .currently-reading__progress-info span,
+.currently-reading--dark .currently-reading__footer > span{
+  color:#9ca3af;
+}
+
+.currently-reading--dark .currently-reading__track{
+  background:#374151;
+}
+
+.currently-reading--compact{
+  padding:17px;
+}
+
+.currently-reading--compact .currently-reading__cover{
+  width:78px;
+  height:112px;
+  flex-basis:78px;
+}
+
+.currently-reading--compact .currently-reading__title{
+  font-size:17px;
+}
+
+.currently-reading--compact .currently-reading__header{
+  margin-bottom:14px;
+}
+
+@media(max-width:600px){
+  .currently-reading{
+    max-width:100%;
+    padding:18px;
+  }
+
+  .currently-reading__body{
+    gap:14px;
+  }
+
+  .currently-reading__cover{
+    width:88px;
+    height:128px;
+    flex-basis:88px;
+  }
+
+  .currently-reading__title{
+    font-size:18px;
+  }
+
+  .currently-reading__footer{
+    align-items:flex-start;
+    flex-direction:column;
+  }
+
+  .currently-reading__button{
+    width:100%;
+  }
+}
+
+@media(max-width:390px){
+  .currently-reading__header{
+    flex-direction:column;
+  }
+
+  .currently-reading__body{
+    flex-direction:column;
+  }
+
+  .currently-reading__cover{
+    width:100px;
+    height:140px;
+    flex-basis:140px;
+  }
+}
+
+@media(prefers-reduced-motion:reduce){
+  .currently-reading,
+  .currently-reading__fill,
+  .currently-reading__button{
+    transition:none;
+  }
+
+  .currently-reading:hover,
+  .currently-reading__button:hover{
+    transform:none;
+  }
+}
