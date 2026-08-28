@@ -15,7 +15,8 @@
     "total": "Total",
     "price": "Prix",
     "subtotal": "Sous-total",
-    "remove": "Supprimer"
+    "remove": "Supprimer",
+    "genericError": "Une erreur s'est produite. Veuillez réessayer."
   },
   "navbar": {
     "logo": "BookShelf",
@@ -113,7 +114,15 @@
     "items": "Articles",
     "viewDetails": "Voir les Détails",
     "cancelOrder": "Annuler la Commande",
-    "reorder": "Recommander"
+    "reorder": "Recommander",
+    "orderCount_one": "{{count}} commande",
+    "orderCount_other": "{{count}} commandes",
+    "bookCount_one": "{{count}} livre",
+    "bookCount_other": "{{count}} livres",
+    "totalPaid": "{{amount}} payé",
+    "loadError": "Nous n’avons pas pu charger vos commandes",
+    "retry": "Réessayer",
+    "signIn": "Se connecter"
   },
   "orderDetails": {
     "title": "Détails de la Commande",
@@ -136,7 +145,16 @@
     "browseBooks": "Parcourir le Catalogue",
     "remove": "Retirer de la Liste",
     "addToCart": "Déplacer vers le Panier",
-    "clearWishlist": "Vider la Liste"
+    "clearWishlist": "Vider la Liste",
+    "itemCount_one": "{{count}} article",
+    "itemCount_other": "{{count}} articles",
+    "loadError": "Nous n’avons pas pu charger votre liste de souhaits",
+    "missingNotice_one": "{{count}} livre enregistré n’est plus au catalogue.",
+    "missingNotice_other": "{{count}} livres enregistrés ne sont plus au catalogue.",
+    "removeMissing_one": "Le retirer de ma liste de souhaits",
+    "removeMissing_other": "Les retirer de ma liste de souhaits",
+    "failedNotice_one": "{{count}} livre enregistré n’a pas pu être chargé pour le moment. Il n’a pas été supprimé.",
+    "failedNotice_other": "{{count}} livres enregistrés n’ont pas pu être chargés pour le moment. Ils n’ont pas été supprimés."
   },
   "auth": {
     "loginTitle": "Bon Retour",

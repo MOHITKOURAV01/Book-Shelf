@@ -15,7 +15,8 @@
     "total": "Total",
     "price": "Price",
     "subtotal": "Subtotal",
-    "remove": "Remove"
+    "remove": "Remove",
+    "genericError": "Something went wrong. Please try again."
   },
   "navbar": {
     "logo": "BookShelf",
@@ -113,7 +114,15 @@
     "items": "Items",
     "viewDetails": "View Details",
     "cancelOrder": "Cancel Order",
-    "reorder": "Reorder"
+    "reorder": "Reorder",
+    "orderCount_one": "{{count}} order",
+    "orderCount_other": "{{count}} orders",
+    "bookCount_one": "{{count}} book",
+    "bookCount_other": "{{count}} books",
+    "totalPaid": "{{amount}} paid",
+    "loadError": "We could not load your orders",
+    "retry": "Try again",
+    "signIn": "Sign in"
   },
   "orderDetails": {
     "title": "Order Details",
@@ -136,7 +145,16 @@
     "browseBooks": "Browse Books",
     "remove": "Remove from Wishlist",
     "addToCart": "Move to Cart",
-    "clearWishlist": "Clear Wishlist"
+    "clearWishlist": "Clear Wishlist",
+    "itemCount_one": "{{count}} item",
+    "itemCount_other": "{{count}} items",
+    "loadError": "We could not load your wishlist",
+    "missingNotice_one": "{{count}} saved book is no longer in the catalogue.",
+    "missingNotice_other": "{{count}} saved books are no longer in the catalogue.",
+    "removeMissing_one": "Remove it from my wishlist",
+    "removeMissing_other": "Remove them from my wishlist",
+    "failedNotice_one": "{{count}} saved book could not be loaded just now. It has not been removed.",
+    "failedNotice_other": "{{count}} saved books could not be loaded just now. They have not been removed."
   },
   "auth": {
     "loginTitle": "Welcome Back",
