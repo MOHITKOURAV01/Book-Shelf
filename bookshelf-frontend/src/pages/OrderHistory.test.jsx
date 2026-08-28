@@ -2,9 +2,11 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { MemoryRouter } from 'react-router-dom';
+import { I18nextProvider } from 'react-i18next';
 
 import OrderHistory from './OrderHistory.jsx';
 import orderService from '../services/orderService.js';
+import { createI18nForTests } from '../test/i18nTestInstance.js';
 
 /**
  * The regression: this page read a localStorage key that nothing wrote, so it
@@ -47,11 +49,21 @@ const unpaidOrder = {
   total: 110.99,
 };
 
-function renderPage() {
+/*
+ * Rendered against a real, initialised i18next instance.
+ *
+ * Without one, `useTranslation()` returns a `t` that echoes the defaultValue
+ * and never touches the resource bundles — so a page rendering `t(...)` with
+ * no matching key, or with a plural that never resolves, looks perfectly
+ * healthy in a test and shows a raw key in the browser. See #367.
+ */
+function renderPage({ language = 'en' } = {}) {
   return render(
-    <MemoryRouter>
-      <OrderHistory />
-    </MemoryRouter>
+    <I18nextProvider i18n={createI18nForTests(language)}>
+      <MemoryRouter>
+        <OrderHistory />
+      </MemoryRouter>
+    </I18nextProvider>
   );
 }
 
@@ -223,5 +235,88 @@ describe('OrderHistory', () => {
 
     resolve([]);
     await waitFor(() => expect(screen.queryByTestId('skeleton')).not.toBeInTheDocument());
+  });
+});
+
+/*
+ * The page threw on its first render.
+ *
+ * `useTranslation` was imported and `t(...)` was called three times in the
+ * markup, but `const { t } = useTranslation();` was not there, so `t` was a
+ * free variable and the <h2> died with `ReferenceError: t is not defined`.
+ * All 13 tests above failed on it. See #367.
+ *
+ * They would have caught the crash on their own. What they could not catch,
+ * and what these cover, is the half of the bug that survives it: the page
+ * renders untranslated template literals next to translated headings, and
+ * every test in this file used to run against an uninitialised i18next where
+ * that difference is invisible.
+ */
+describe('OrderHistory in other languages', () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
+  it('translates the heading', async () => {
+    orderService.getMyOrders.mockResolvedValue([paidOrder]);
+
+    renderPage({ language: 'es' });
+
+    expect(
+      await screen.findByRole('heading', { name: 'Historial de Pedidos' })
+    ).toBeInTheDocument();
+  });
+
+  it('translates the summary line, not just the heading above it', async () => {
+    orderService.getMyOrders.mockResolvedValue([paidOrder, unpaidOrder]);
+
+    renderPage({ language: 'es' });
+
+    // "2 orders · 4 books · ₹1,058.83 paid" was three untranslated template
+    // literals sitting directly under a translated <h2>.
+    const summary = await screen.findByTestId('order-history-summary');
+    expect(summary).toHaveTextContent('2 pedidos');
+    expect(summary).toHaveTextContent('4 libros');
+    expect(summary).toHaveTextContent('pagado');
+  });
+
+  it('picks the singular form for a single order', async () => {
+    orderService.getMyOrders.mockResolvedValue([paidOrder]);
+
+    renderPage({ language: 'fr' });
+
+    const summary = await screen.findByTestId('order-history-summary');
+    expect(summary).toHaveTextContent('1 commande');
+    expect(summary).not.toHaveTextContent('1 commandes');
+  });
+
+  it('translates the error state and its actions', async () => {
+    orderService.getMyOrders.mockRejectedValue({
+      status: 401,
+      message: 'Session expired',
+    });
+
+    renderPage({ language: 'fr' });
+
+    expect(await screen.findByRole('alert')).toHaveTextContent(
+      'Nous n’avons pas pu charger vos commandes'
+    );
+    expect(
+      screen.getByRole('button', { name: 'Réessayer' })
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole('link', { name: 'Se connecter' })
+    ).toBeInTheDocument();
+  });
+
+  it('renders no raw translation keys', async () => {
+    orderService.getMyOrders.mockResolvedValue([paidOrder, unpaidOrder]);
+
+    const { container } = renderPage({ language: 'es' });
+    await screen.findByText('Order #B9C0D1');
+
+    // A key that does not resolve renders as its own name. Cheap to assert
+    // once, and it covers every string on the page at the same time.
+    expect(container.textContent).not.toMatch(/\b(orderHistory|common)\.[a-zA-Z]/);
   });
 });

@@ -2,10 +2,12 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { MemoryRouter } from 'react-router-dom';
+import { I18nextProvider } from 'react-i18next';
 
 import WishlistPage from './WishlistPage.jsx';
 import { WishlistContext } from '../context/WishlistContext.jsx';
 import * as bookService from '../services/bookService.js';
+import { createI18nForTests } from '../test/i18nTestInstance.js';
 
 /**
  * The regression: this page filtered `src/data/books.js`, a hardcoded copy of
@@ -59,7 +61,17 @@ const fieldNotes = {
   genre: 'Nonfiction',
 };
 
-function renderPage({ wishlist = [], loading = false, toggleWishlist = vi.fn() } = {}) {
+/*
+ * As in OrderHistory.test.jsx: a real i18next instance, so a key that does
+ * not resolve shows up as a failing assertion rather than as the literal
+ * default the uninitialised `t` hands back. See #367.
+ */
+function renderPage({
+  wishlist = [],
+  loading = false,
+  toggleWishlist = vi.fn(),
+  language = 'en',
+} = {}) {
   const value = {
     wishlist,
     loading,
@@ -69,11 +81,13 @@ function renderPage({ wishlist = [], loading = false, toggleWishlist = vi.fn() }
   };
 
   return render(
-    <MemoryRouter>
-      <WishlistContext.Provider value={value}>
-        <WishlistPage />
-      </WishlistContext.Provider>
-    </MemoryRouter>
+    <I18nextProvider i18n={createI18nForTests(language)}>
+      <MemoryRouter>
+        <WishlistContext.Provider value={value}>
+          <WishlistPage />
+        </WishlistContext.Provider>
+      </MemoryRouter>
+    </I18nextProvider>
   );
 }
 
@@ -208,5 +222,106 @@ describe('WishlistPage', () => {
     renderPage({ wishlist: ['b1', 's3'] });
 
     await waitFor(() => expect(screen.getByText('1 item')).toBeInTheDocument());
+  });
+});
+
+/*
+ * Same omission as OrderHistory, same first render, same crash:
+ * `useTranslation` imported, `t(...)` called four times, the hook never
+ * called. All 9 tests above failed with `ReferenceError: t is not defined`.
+ * See #367.
+ *
+ * These cover the strings the page was still building by hand next to the
+ * translated ones — the item count and the three notices.
+ */
+describe('WishlistPage in other languages', () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
+  it('translates the heading and the item count together', async () => {
+    bookService.getBooksByIds.mockResolvedValue({
+      books: [quietOnes, fieldNotes],
+      missingIds: [],
+      failedIds: [],
+    });
+
+    renderPage({ wishlist: ['b1', 'b2'], language: 'es' });
+
+    expect(
+      await screen.findByRole('heading', { name: 'Mi Lista de Deseos' })
+    ).toBeInTheDocument();
+    // The count was `${count} items`, a template literal, directly under it.
+    expect(screen.getByText('2 artículos')).toBeInTheDocument();
+  });
+
+  it('picks the singular form for one item', async () => {
+    bookService.getBooksByIds.mockResolvedValue({
+      books: [quietOnes],
+      missingIds: [],
+      failedIds: [],
+    });
+
+    renderPage({ wishlist: ['b1'], language: 'fr' });
+
+    expect(await screen.findByText('1 article')).toBeInTheDocument();
+  });
+
+  it('translates the stale-id notice and its button', async () => {
+    bookService.getBooksByIds.mockResolvedValue({
+      books: [quietOnes],
+      missingIds: ['s3', 's4'],
+      failedIds: [],
+    });
+
+    renderPage({ wishlist: ['b1', 's3', 's4'], language: 'es' });
+
+    expect(
+      await screen.findByText('2 libros guardados ya no están en el catálogo.')
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole('button', { name: 'Quitarlos de mi lista de deseos' })
+    ).toBeInTheDocument();
+  });
+
+  it('translates the could-not-load notice', async () => {
+    bookService.getBooksByIds.mockResolvedValue({
+      books: [quietOnes],
+      missingIds: [],
+      failedIds: ['b9'],
+    });
+
+    renderPage({ wishlist: ['b1', 'b9'], language: 'fr' });
+
+    expect(
+      await screen.findByText(/n’a pas pu être chargé pour le moment/)
+    ).toBeInTheDocument();
+  });
+
+  it('translates the empty state', async () => {
+    renderPage({ wishlist: [], language: 'es' });
+
+    expect(
+      await screen.findByText('Tu lista de deseos está vacía')
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole('button', { name: 'Explorar Catálogo' })
+    ).toBeInTheDocument();
+  });
+
+  it('renders no raw translation keys', async () => {
+    bookService.getBooksByIds.mockResolvedValue({
+      books: [quietOnes],
+      missingIds: ['s3'],
+      failedIds: ['b9'],
+    });
+
+    const { container } = renderPage({
+      wishlist: ['b1', 's3', 'b9'],
+      language: 'fr',
+    });
+    await screen.findByText('The Quiet Ones');
+
+    expect(container.textContent).not.toMatch(/\b(wishlist|common)\.[a-zA-Z]/);
   });
 });
