@@ -1,7 +1,7 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { MemoryRouter, Outlet, Route, Routes, useLocation } from 'react-router-dom';
+import { MemoryRouter, Outlet, Route, Routes, useLocation, useNavigate } from 'react-router-dom';
 
 vi.mock('react-i18next', () => ({
   useTranslation: () => ({
@@ -93,6 +93,25 @@ function LocationProbe() {
   return <span data-testid="location">{`${location.pathname}${location.search}`}</span>;
 }
 
+/**
+ * A Back button that goes through the router rather than through
+ * window.history, because MemoryRouter keeps its own stack.
+ *
+ * Back is the interesting direction for #338 and #365 together: it is the
+ * one case a mirrored copy of the filters in component state cannot get
+ * right, because the URL changes underneath a component that never
+ * re-mounts.
+ */
+function HistoryProbe() {
+  const navigate = useNavigate();
+
+  return (
+    <button type="button" onClick={() => navigate(-1)}>
+      probe: back
+    </button>
+  );
+}
+
 function renderHome({ at = '/', searchQuery = '' } = {}) {
   return render(
     <MemoryRouter initialEntries={[at]}>
@@ -100,6 +119,7 @@ function renderHome({ at = '/', searchQuery = '' } = {}) {
         <CartProvider>
           <Home searchQuery={searchQuery} />
           <LocationProbe />
+          <HistoryProbe />
         </CartProvider>
       </WishlistContext.Provider>
     </MemoryRouter>
@@ -358,5 +378,115 @@ describe('Home catalogue', () => {
       expect(requested.get('minRating')).toBeNull();
       expect(requested.get('sort')).toBeNull();
     });
+  });
+});
+
+/*
+ * The page did not render at all on main.
+ *
+ * Two leftover effects sat between the search wiring and the memoised
+ * filters, reading thirteen identifiers that no longer existed in the file.
+ * The first statement of the first one was `if (!setSearchParams) return;` —
+ * a ReferenceError, not a guard — so Home threw on its first render, the
+ * ErrorBoundary around the layout caught it, and the whole site was replaced
+ * by the fallback screen. See #365.
+ *
+ * A test that only asserted "the grid renders" would have caught the crash,
+ * and the nineteen above did. These are about the shape the fix has to keep:
+ * the filters live in the URL and nowhere else, so nothing may reintroduce a
+ * mirrored copy in component state, or an effect that writes the URL back to
+ * itself.
+ */
+describe('Home keeps the URL as its only source of truth', () => {
+  beforeEach(() => {
+    window.localStorage.clear();
+    globalThis.fetch = vi.fn((requested) => Promise.resolve(fakeApi(requested)));
+  });
+
+  afterEach(() => {
+    vi.restoreAllMocks();
+  });
+
+  it('mounts without throwing', async () => {
+    const onError = vi.spyOn(console, 'error').mockImplementation(() => {});
+
+    renderHome();
+
+    await waitFor(() => expect(titles()).toHaveLength(4));
+    expect(onError).not.toHaveBeenCalled();
+  });
+
+  it('leaves a bare / alone instead of rewriting it on mount', async () => {
+    renderHome();
+    await waitFor(() => expect(titles()).toHaveLength(4));
+
+    // The removed effect built the whole query string and wrote it on the
+    // first render, so simply arriving at the site turned the address bar
+    // into /?page=1&limit=4 before the reader had asked for anything.
+    expect(url()).toBe('/');
+  });
+
+  it('keeps a deep-linked URL byte for byte', async () => {
+    renderHome({ at: '/?genre=Poetry&maxPrice=250&page=1' });
+
+    await waitFor(() => expect(titles()).toEqual(['Low Tide']));
+    expect(url()).toBe('/?genre=Poetry&maxPrice=250&page=1');
+  });
+
+  it('undoes a filter with Back', async () => {
+    const user = userEvent.setup();
+    renderHome();
+    await waitFor(() => expect(titles()).toHaveLength(4));
+
+    await user.click(screen.getByLabelText('Poetry'));
+    await waitFor(() => expect(titles()).toEqual(['Low Tide']));
+
+    await user.click(screen.getByRole('button', { name: 'probe: back' }));
+
+    await waitFor(() => expect(url()).toBe('/'));
+    await waitFor(() => expect(titles()).toHaveLength(4));
+  });
+
+  it('follows Back through a sort as well as a filter', async () => {
+    const user = userEvent.setup();
+    renderHome();
+    await waitFor(() => expect(titles()).toHaveLength(4));
+
+    await user.selectOptions(
+      screen.getByLabelText('home.sortAriaLabel'),
+      'price_asc'
+    );
+    await waitFor(() => expect(url()).toContain('sort=price_asc'));
+
+    await user.click(screen.getByRole('button', { name: 'probe: back' }));
+
+    await waitFor(() => expect(url()).toBe('/'));
+
+    // The grid follows the URL rather than a stale copy of the sort.
+    await waitFor(() => {
+      const requested = new URL(
+        globalThis.fetch.mock.calls.at(-1)[0],
+        'http://x'
+      ).searchParams;
+      expect(requested.get('sort')).toBeNull();
+    });
+  });
+
+  it('does not re-request the catalogue when nothing changed', async () => {
+    const user = userEvent.setup();
+    renderHome();
+    await waitFor(() => expect(titles()).toHaveLength(4));
+
+    const before = globalThis.fetch.mock.calls.length;
+
+    // Re-selecting the sort that is already active is a no-op. An effect
+    // mirroring state into the URL would write it back anyway and start a
+    // fetch for the page already on screen.
+    await user.selectOptions(screen.getByLabelText('home.sortAriaLabel'), '');
+
+    await new Promise((resolve) => setTimeout(resolve, 20));
+
+    expect(globalThis.fetch.mock.calls.length).toBe(before);
+    expect(url()).toBe('/');
   });
 });
