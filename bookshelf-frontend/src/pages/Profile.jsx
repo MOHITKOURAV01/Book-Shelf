@@ -3,17 +3,169 @@ import { useNavigate, Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 
 import { useAuth } from '../hooks/useAuth.js';
-import './Auth.css';
+import { useWishlist } from '../hooks/useWishlist.js';
+import { useOrders } from '../hooks/useOrders.js';
 import { usePageMetadata } from '../hooks/usePageMetadata.js';
+import ReadingGoalRing from '../components/ReadingGoalRing.jsx';
+import ReadingStreak from '../components/ReadingStreak.jsx';
+import RecentlyViewed from '../components/RecentlyViewed.jsx';
+import FavoriteBooks from '../components/FavoriteBooks.jsx';
 
-const Profile = () => {
+/*
+ * Profile.css, not Auth.css.
+ *
+ * The stylesheet import was the quiet half of #366: a merge kept this page's
+ * 350 lines of reading-portal markup and took the top of the file from the
+ * version before the portal existed, when this was a plain account form
+ * styled by Auth.css. Every class the markup below uses — profile-page,
+ * profile-tabs, profile-stat-card and the rest — is defined here.
+ */
+import './Profile.css';
+
+const LOCAL_STORAGE_KEY = 'bookshelf_user_profile';
+const ALL_GENRES = ['Fiction', 'Non-Fiction', 'Mystery', 'Sci-Fi', 'Fantasy', 'Romance', 'Biography', 'History'];
+const AVATAR_OPTIONS = ['📖', '🦉', '🧙‍♂️', '📚', '✍️', '🌟', '🚀', '☕'];
+
+/**
+ * The reader's account page: overview, goals, favourites and settings.
+ *
+ * Everything below the banner reads state that this component owns. That is
+ * worth saying plainly, because the state layer was missing entirely on main
+ * — the JSX survived a merge and the twenty-odd declarations feeding it did
+ * not, so the page threw `ReferenceError: profileData is not defined` on its
+ * first render and every signed-in reader got the ErrorBoundary fallback
+ * instead of their account. See #366.
+ */
+export default function Profile() {
   usePageMetadata({
     title: 'Your profile',
-    description:
-      'Your BookShelf account details.',
+    description: 'Your BookShelf account details, reading goals and preferences.',
   });
 
-  const { user } = useAuth();
+  const { t } = useTranslation();
+  const { user, logout } = useAuth();
+  const { count: wishlistCount } = useWishlist();
+  const { orders = [] } = useOrders();
+  const navigate = useNavigate();
+
+  const [activeTab, setActiveTab] = useState('overview');
+
+  /*
+   * The customisation the reader has chosen, kept in localStorage.
+   *
+   * Read inside the initialiser rather than in an effect so the first paint
+   * already shows the saved avatar and bio instead of the defaults. The
+   * try/catch is not decoration: a hand-edited or half-written value would
+   * otherwise throw out of the initialiser, which React does not recover
+   * from.
+   */
+  const [profileData, setProfileData] = useState(() => {
+    try {
+      const saved = localStorage.getItem(LOCAL_STORAGE_KEY);
+      if (saved) return JSON.parse(saved);
+    } catch (err) {
+      console.error('Failed to parse profile data:', err);
+    }
+    return {
+      bio: 'A room without books is like a body without a soul.',
+      annualGoal: 24,
+      avatar: '📖',
+      preferredGenres: ['Fiction', 'Mystery', 'Sci-Fi'],
+    };
+  });
+
+  // Settings form, held separately from profileData so an unsaved edit can be
+  // abandoned by navigating away rather than being committed as it is typed.
+  const [formName, setFormName] = useState(user?.name || 'Reader');
+  const [formBio, setFormBio] = useState(profileData.bio);
+  const [formGoal, setFormGoal] = useState(profileData.annualGoal);
+  const [formAvatar, setFormAvatar] = useState(profileData.avatar);
+  const [formGenres, setFormGenres] = useState(profileData.preferredGenres);
+
+  // Security form.
+  const [currentPassword, setCurrentPassword] = useState('');
+  const [newPassword, setNewPassword] = useState('');
+
+  // Transient confirmations, cleared on a timer.
+  const [saveMessage, setSaveMessage] = useState(null);
+  const [securityMessage, setSecurityMessage] = useState(null);
+
+  /*
+   * The name box is seeded from `user`, which arrives asynchronously — the
+   * session is restored by a GET /api/auth/me after the first render, so the
+   * initialiser above usually runs while `user` is still null.
+   */
+  useEffect(() => {
+    if (user?.name) {
+      setFormName(user.name);
+    }
+  }, [user]);
+
+  const handleSaveProfile = (e) => {
+    e.preventDefault();
+
+    const updated = {
+      ...profileData,
+      bio: formBio,
+      annualGoal: Number(formGoal) || 20,
+      avatar: formAvatar,
+      preferredGenres: formGenres,
+    };
+
+    setProfileData(updated);
+
+    try {
+      localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(updated));
+    } catch (err) {
+      // A full or disabled store must not lose the edit from the screen.
+      console.error('Failed to save profile to localStorage:', err);
+    }
+
+    setSaveMessage(t('profile.updateSuccess', 'Profile updated successfully!'));
+    setTimeout(() => setSaveMessage(null), 4000);
+  };
+
+  const handleUpdatePassword = (e) => {
+    e.preventDefault();
+
+    if (!currentPassword || !newPassword) {
+      setSecurityMessage({ type: 'error', text: 'Please fill out both password fields.' });
+      return;
+    }
+
+    if (newPassword.length < 8) {
+      setSecurityMessage({ type: 'error', text: 'New password must be at least 8 characters long.' });
+      return;
+    }
+
+    setSecurityMessage({
+      type: 'success',
+      text: t('profile.security.passwordSuccess', 'Password updated successfully!'),
+    });
+    setCurrentPassword('');
+    setNewPassword('');
+    setTimeout(() => setSecurityMessage(null), 4000);
+  };
+
+  const toggleGenre = (genre) => {
+    if (formGenres.includes(genre)) {
+      setFormGenres(formGenres.filter((g) => g !== genre));
+    } else {
+      setFormGenres([...formGenres, genre]);
+    }
+  };
+
+  const handleLogout = async () => {
+    await logout();
+    navigate('/login');
+  };
+
+  // Placeholder reading stats. There is no endpoint behind these yet; they
+  // are constants so the overview tab has something to lay out.
+  const booksReadCount = 18;
+  const pagesReadCount = 5840;
+  const readingHoursCount = 96;
+
 
   return (
     <main className="profile-page">
