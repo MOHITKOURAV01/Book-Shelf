@@ -149,3 +149,159 @@ describe('Profile Page (Reading Portal)', () => {
     expect(navigate).toHaveBeenCalledWith('/login');
   });
 });
+
+/*
+ * The page did not render at all on main.
+ *
+ * A merge kept the 350 lines of reading-portal JSX and took the top of the
+ * file from the version before the portal existed, so every declaration the
+ * markup reads — profileData, formName, activeTab, handleLogout, t and
+ * seventeen others — was gone, along with six imports and the Profile.css
+ * that styles all of it. `ReferenceError: profileData is not defined` on the
+ * first render, ErrorBoundary fallback for every signed-in reader. See #366.
+ *
+ * The six tests above cover the happy paths and would have caught the crash
+ * on their own. These are the parts of the restored state layer they do not
+ * reach: persistence across a remount, the corrupt-store path, the late
+ * session, and the second password rule.
+ */
+describe('Profile state layer', () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+    localStorage.clear();
+  });
+
+  it('names the page for the browser tab', () => {
+    renderProfile();
+
+    // usePageMetadata was added on the broken side of the merge; it has to
+    // survive the restore rather than be reverted with the rest of the head.
+    expect(document.title).toBe('Your profile — BookShelf');
+  });
+
+  it('reads the saved profile back on a fresh mount', async () => {
+    const user = userEvent.setup();
+    const { unmount } = renderProfile();
+
+    await user.click(screen.getByRole('button', { name: /⚙️ Account Settings/i }));
+
+    const bio = screen.getByPlaceholderText(/share your reading motto/i);
+    await user.clear(bio);
+    await user.type(bio, 'Two chapters before bed.');
+    await user.click(screen.getByRole('button', { name: /save changes/i }));
+
+    await screen.findByText(/profile updated successfully!/i);
+    unmount();
+
+    // The initialiser reads localStorage rather than an effect doing it after
+    // the first paint, so the saved bio is on screen from the first render.
+    renderProfile();
+    expect(screen.getByText('"Two chapters before bed."')).toBeInTheDocument();
+  });
+
+  it('falls back to the defaults when the stored profile is unreadable', () => {
+    localStorage.setItem('bookshelf_user_profile', '{ not json');
+    const onError = vi.spyOn(console, 'error').mockImplementation(() => {});
+
+    renderProfile();
+
+    // A throw out of a useState initialiser is not recoverable, so the parse
+    // has to be guarded rather than left to the ErrorBoundary.
+    expect(screen.getByText('Jane Reader')).toBeInTheDocument();
+    expect(
+      screen.getByText('"A room without books is like a body without a soul."')
+    ).toBeInTheDocument();
+    expect(onError).toHaveBeenCalled();
+  });
+
+  it('seeds the name box when the session arrives after the first render', async () => {
+    const user = userEvent.setup();
+    // GET /api/auth/me resolves after mount, so `user` is null on the render
+    // that initialises the form.
+    const { rerender } = renderProfile(null);
+
+    await user.click(screen.getByRole('button', { name: /⚙️ Account Settings/i }));
+    expect(screen.getByLabelText(/full name/i)).toHaveValue('Reader');
+
+    rerender(
+      <MemoryRouter>
+        <AuthContext.Provider
+          value={{
+            user: { name: 'Jane Reader', email: 'jane@example.com', role: 'Member' },
+            isAuthenticated: true,
+            loading: false,
+            logout: vi.fn(),
+            login: vi.fn(),
+            register: vi.fn(),
+            checkAuth: vi.fn(),
+          }}
+        >
+          <WishlistContext.Provider
+            value={{
+              wishlist: ['b1', 'b2'],
+              loading: false,
+              count: 2,
+              isWishlisted: () => true,
+              toggleWishlist: vi.fn(),
+            }}
+          >
+            <Profile />
+          </WishlistContext.Provider>
+        </AuthContext.Provider>
+      </MemoryRouter>
+    );
+
+    await waitFor(() =>
+      expect(screen.getByLabelText(/full name/i)).toHaveValue('Jane Reader')
+    );
+  });
+
+  it('rejects a new password shorter than eight characters', async () => {
+    const user = userEvent.setup();
+    renderProfile();
+
+    await user.click(screen.getByRole('button', { name: /⚙️ Account Settings/i }));
+
+    await user.type(screen.getByLabelText(/current password/i), 'oldsecret1');
+    await user.type(screen.getByLabelText(/new password/i), 'short');
+    await user.click(screen.getByRole('button', { name: /update password/i }));
+
+    expect(
+      await screen.findByText(/at least 8 characters long/i)
+    ).toBeInTheDocument();
+  });
+
+  it('persists the genres the reader picks', async () => {
+    const user = userEvent.setup();
+    renderProfile();
+
+    await user.click(screen.getByRole('button', { name: /⚙️ Account Settings/i }));
+
+    // Fiction is on by default, so this removes it; Fantasy is not, so this
+    // adds it. Both directions go through the same toggle.
+    await user.click(screen.getByRole('button', { name: /^Fiction/ }));
+    await user.click(screen.getByRole('button', { name: /^Fantasy/ }));
+    await user.click(screen.getByRole('button', { name: /save changes/i }));
+
+    await screen.findByText(/profile updated successfully!/i);
+
+    const stored = JSON.parse(localStorage.getItem('bookshelf_user_profile'));
+    expect(stored.preferredGenres).not.toContain('Fiction');
+    expect(stored.preferredGenres).toContain('Fantasy');
+  });
+
+  it('shows the wishlist count from context rather than a copy of it', async () => {
+    const user = userEvent.setup();
+    renderProfile();
+
+    await user.click(
+      screen.getByRole('button', { name: /📖 My Activity/i })
+    );
+
+    // Straight from WishlistContext. The library tab is the only place the
+    // restored `useWishlist()` call is visible, so it is the only test that
+    // would notice if the import went missing again.
+    expect(screen.getByText('💖 Wishlist (2)')).toBeInTheDocument();
+    expect(screen.getByText(/You currently have 2 books saved/)).toBeInTheDocument();
+  });
+});
