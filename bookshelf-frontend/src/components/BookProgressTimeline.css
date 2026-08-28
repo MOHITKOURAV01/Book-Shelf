@@ -1,0 +1,319 @@
+*,
+*::before,
+*::after{
+  box-sizing:border-box;
+}
+
+.book-progress-timeline{
+  width:100%;
+  max-width:760px;
+  padding:24px;
+  border:1px solid #e5e7eb;
+  border-radius:20px;
+  background:#fff;
+  color:#111827;
+  box-shadow:0 8px 24px rgba(0,0,0,.08);
+  transition:transform .25s ease,box-shadow .25s ease;
+}
+
+.book-progress-timeline:hover{
+  transform:translateY(-2px);
+  box-shadow:0 14px 32px rgba(0,0,0,.12);
+}
+
+.book-progress-timeline__header{
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:20px;
+}
+
+.book-progress-timeline__eyebrow{
+  margin:0 0 4px;
+  color:#9ca3af;
+  font-size:11px;
+  font-weight:800;
+  letter-spacing:.06em;
+  text-transform:uppercase;
+}
+
+.book-progress-timeline__title{
+  margin:0;
+  font-size:20px;
+  line-height:1.3;
+}
+
+.book-progress-timeline__subtitle{
+  margin:5px 0 0;
+  color:#6b7280;
+  font-size:13px;
+  line-height:1.5;
+}
+
+.book-progress-timeline__percentage{
+  display:flex;
+  flex-direction:column;
+  align-items:flex-end;
+  flex-shrink:0;
+}
+
+.book-progress-timeline__percentage strong{
+  color:#2563eb;
+  font-size:27px;
+  line-height:1;
+}
+
+.book-progress-timeline__percentage span{
+  margin-top:4px;
+  color:#9ca3af;
+  font-size:11px;
+  font-weight:600;
+}
+
+.book-progress-timeline__track{
+  display:grid;
+  grid-template-columns:repeat(var(--timeline-count,1),1fr);
+  margin-top:34px;
+}
+
+.book-progress-timeline__step{
+  position:relative;
+  min-width:0;
+  padding-right:18px;
+}
+
+.book-progress-timeline__step:last-child{
+  padding-right:0;
+}
+
+.book-progress-timeline__connector{
+  position:absolute;
+  top:18px;
+  left:36px;
+  right:0;
+  height:3px;
+  background:#e5e7eb;
+  transform:translateY(-50%);
+  z-index:0;
+}
+
+.book-progress-timeline__connector--filled{
+  background:#2563eb;
+}
+
+.book-progress-timeline__marker{
+  position:relative;
+  z-index:1;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  width:36px;
+  height:36px;
+  border:2px solid #d1d5db;
+  border-radius:50%;
+  background:#fff;
+  color:#6b7280;
+  font-size:12px;
+  font-weight:800;
+  transition:transform .2s ease,background-color .2s ease,border-color .2s ease;
+}
+
+.book-progress-timeline__content{
+  display:flex;
+  flex-direction:column;
+  gap:4px;
+  margin-top:11px;
+  padding-right:4px;
+}
+
+.book-progress-timeline__content strong{
+  overflow:hidden;
+  color:#374151;
+  font-size:12px;
+  line-height:1.35;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+
+.book-progress-timeline__content span,
+.book-progress-timeline__content small{
+  color:#9ca3af;
+  font-size:10px;
+  line-height:1.4;
+}
+
+.book-progress-timeline__step--completed .book-progress-timeline__marker{
+  border-color:#2563eb;
+  background:#2563eb;
+  color:#fff;
+}
+
+.book-progress-timeline__step--active .book-progress-timeline__marker{
+  border-color:#2563eb;
+  box-shadow:0 0 0 5px rgba(37,99,235,.12);
+  transform:scale(1.08);
+}
+
+.book-progress-timeline__step--active .book-progress-timeline__content strong{
+  color:#1d4ed8;
+}
+
+.book-progress-timeline__step:hover .book-progress-timeline__marker{
+  transform:translateY(-2px);
+}
+
+/* Variants */
+
+.book-progress-timeline--green .book-progress-timeline__percentage strong{
+  color:#16a34a;
+}
+
+.book-progress-timeline--green .book-progress-timeline__connector--filled,
+.book-progress-timeline--green .book-progress-timeline__step--completed .book-progress-timeline__marker,
+.book-progress-timeline--green .book-progress-timeline__step--active .book-progress-timeline__marker{
+  border-color:#16a34a;
+  background:#16a34a;
+}
+
+.book-progress-timeline--green .book-progress-timeline__step--active .book-progress-timeline__content strong{
+  color:#15803d;
+}
+
+.book-progress-timeline--purple .book-progress-timeline__percentage strong{
+  color:#7c3aed;
+}
+
+.book-progress-timeline--purple .book-progress-timeline__connector--filled,
+.book-progress-timeline--purple .book-progress-timeline__step--completed .book-progress-timeline__marker,
+.book-progress-timeline--purple .book-progress-timeline__step--active .book-progress-timeline__marker{
+  border-color:#7c3aed;
+  background:#7c3aed;
+}
+
+.book-progress-timeline--purple .book-progress-timeline__step--active .book-progress-timeline__content strong{
+  color:#6d28d9;
+}
+
+.book-progress-timeline--orange .book-progress-timeline__percentage strong{
+  color:#f97316;
+}
+
+.book-progress-timeline--orange .book-progress-timeline__connector--filled,
+.book-progress-timeline--orange .book-progress-timeline__step--completed .book-progress-timeline__marker,
+.book-progress-timeline--orange .book-progress-timeline__step--active .book-progress-timeline__marker{
+  border-color:#f97316;
+  background:#f97316;
+}
+
+.book-progress-timeline--orange .book-progress-timeline__step--active .book-progress-timeline__content strong{
+  color:#c2410c;
+}
+
+.book-progress-timeline--pink .book-progress-timeline__percentage strong{
+  color:#db2777;
+}
+
+.book-progress-timeline--pink .book-progress-timeline__connector--filled,
+.book-progress-timeline--pink .book-progress-timeline__step--completed .book-progress-timeline__marker,
+.book-progress-timeline--pink .book-progress-timeline__step--active .book-progress-timeline__marker{
+  border-color:#db2777;
+  background:#db2777;
+}
+
+.book-progress-timeline--pink .book-progress-timeline__step--active .book-progress-timeline__content strong{
+  color:#be185d;
+}
+
+.book-progress-timeline--dark{
+  border-color:#374151;
+  background:#1f2937;
+  color:#f9fafb;
+}
+
+.book-progress-timeline--dark .book-progress-timeline__eyebrow,
+.book-progress-timeline--dark .book-progress-timeline__subtitle,
+.book-progress-timeline--dark .book-progress-timeline__content span,
+.book-progress-timeline--dark .book-progress-timeline__content small{
+  color:#9ca3af;
+}
+
+.book-progress-timeline--dark .book-progress-timeline__marker{
+  border-color:#4b5563;
+  background:#111827;
+  color:#d1d5db;
+}
+
+.book-progress-timeline--compact{
+  padding:18px;
+}
+
+.book-progress-timeline--compact .book-progress-timeline__track{
+  margin-top:24px;
+}
+
+.book-progress-timeline--compact .book-progress-timeline__content span,
+.book-progress-timeline--compact .book-progress-timeline__content small{
+  display:none;
+}
+
+@media(max-width:650px){
+  .book-progress-timeline{
+    max-width:100%;
+    padding:18px;
+  }
+
+  .book-progress-timeline__header{
+    flex-direction:column;
+    gap:12px;
+  }
+
+  .book-progress-timeline__percentage{
+    align-items:flex-start;
+  }
+
+  .book-progress-timeline__track{
+    display:flex;
+    flex-direction:column;
+    gap:0;
+    margin-top:25px;
+  }
+
+  .book-progress-timeline__step{
+    display:grid;
+    grid-template-columns:36px 1fr;
+    column-gap:14px;
+    min-height:74px;
+    padding:0;
+  }
+
+  .book-progress-timeline__connector{
+    top:36px;
+    bottom:-20px;
+    left:17px;
+    right:auto;
+    width:3px;
+    height:auto;
+    transform:none;
+  }
+
+  .book-progress-timeline__step:last-child{
+    min-height:36px;
+  }
+
+  .book-progress-timeline__content{
+    margin-top:1px;
+    padding:4px 0 14px;
+  }
+}
+
+@media(prefers-reduced-motion:reduce){
+  .book-progress-timeline,
+  .book-progress-timeline__marker{
+    transition:none;
+  }
+
+  .book-progress-timeline:hover,
+  .book-progress-timeline__step:hover .book-progress-timeline__marker{
+    transform:none;
+  }
+}
