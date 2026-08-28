@@ -15,7 +15,8 @@
     "total": "Total",
     "price": "Precio",
     "subtotal": "Subtotal",
-    "remove": "Eliminar"
+    "remove": "Eliminar",
+    "genericError": "Algo salió mal. Vuelve a intentarlo."
   },
   "navbar": {
     "logo": "BookShelf",
@@ -113,7 +114,15 @@
     "items": "Artículos",
     "viewDetails": "Ver Detalles",
     "cancelOrder": "Cancelar Pedido",
-    "reorder": "Volver a Pedir"
+    "reorder": "Volver a Pedir",
+    "orderCount_one": "{{count}} pedido",
+    "orderCount_other": "{{count}} pedidos",
+    "bookCount_one": "{{count}} libro",
+    "bookCount_other": "{{count}} libros",
+    "totalPaid": "{{amount}} pagado",
+    "loadError": "No pudimos cargar tus pedidos",
+    "retry": "Reintentar",
+    "signIn": "Iniciar sesión"
   },
   "orderDetails": {
     "title": "Detalles del Pedido",
@@ -136,7 +145,16 @@
     "browseBooks": "Explorar Catálogo",
     "remove": "Quitar de la Lista",
     "addToCart": "Mover al Carrito",
-    "clearWishlist": "Limpiar Lista"
+    "clearWishlist": "Limpiar Lista",
+    "itemCount_one": "{{count}} artículo",
+    "itemCount_other": "{{count}} artículos",
+    "loadError": "No pudimos cargar tu lista de deseos",
+    "missingNotice_one": "{{count}} libro guardado ya no está en el catálogo.",
+    "missingNotice_other": "{{count}} libros guardados ya no están en el catálogo.",
+    "removeMissing_one": "Quitarlo de mi lista de deseos",
+    "removeMissing_other": "Quitarlos de mi lista de deseos",
+    "failedNotice_one": "No se pudo cargar {{count}} libro guardado en este momento. No se ha eliminado.",
+    "failedNotice_other": "No se pudieron cargar {{count}} libros guardados en este momento. No se han eliminado."
   },
   "auth": {
     "loginTitle": "Bienvenido de Nuevo",

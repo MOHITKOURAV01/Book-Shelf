@@ -55,3 +55,54 @@
     font-size: 13px;
   }
 }
+
+/*
+ * The skipped-run marker. Sized to match a page button so the row does not
+ * jog as the window moves and an ellipsis appears or disappears.
+ */
+.pagination__ellipsis {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 38px;
+  padding: 10px 6px;
+  color: var(--ink-soft, #6b7280);
+  font-size: 14px;
+  font-weight: 600;
+  user-select: none;
+}
+
+/*
+ * "Page 5 of 50", for assistive technology only. The numbers above say the
+ * same thing on screen, so showing it as well would be noise.
+ *
+ * Not `display: none` and not `visibility: hidden` — both remove the element
+ * from the accessibility tree, which is the one thing it is here for.
+ */
+.pagination__status {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.pagination__page[aria-current='page'] {
+  /* Not colour alone: the active page also carries a heavier outline, so it
+     is still distinguishable in a high-contrast or forced-colours mode where
+     the background swap is dropped. */
+  outline: 2px solid var(--ink, #222);
+  outline-offset: 2px;
+}
+
+@media (max-width: 600px) {
+  .pagination__ellipsis {
+    min-width: 30px;
+    padding: 8px 4px;
+    font-size: 13px;
+  }
+}
