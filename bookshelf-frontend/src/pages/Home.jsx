@@ -101,40 +101,28 @@ export default function Home({ searchQuery: searchQueryProp }) {
   // the shared results even before the box has been hydrated.
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
-  // Sync state to URL search parameters whenever filters change
-  useEffect(() => {
-    if (!setSearchParams) return;
-
-    const currentQuery = buildCatalogQuery({
-      search: searchQuery,
-      genres: selectedGenres,
-      minPrice,
-      maxPrice,
-      minRating,
-      sort: activeSort,
-      page: currentPage,
-      limit: PAGE_SIZE,
-    });
-
-    const currentQueryStr = currentQuery.toString();
-    if (currentQueryStr !== searchParams.toString()) {
-      setSearchParams(currentQuery, { replace: true });
-    }
-  }, [searchQuery, selectedGenres, minPrice, maxPrice, minRating, activeSort, currentPage, setSearchParams, searchParams]);
-
-  // Handle external searchParams updates (e.g., browser Back/Forward navigation)
-  useEffect(() => {
-    const parsed = parseCatalogParams(searchParams);
-    setSelectedGenres((prev) => (JSON.stringify(prev) !== JSON.stringify(parsed.genres) ? parsed.genres : prev));
-    setMinPrice((prev) => (prev !== parsed.minPrice ? parsed.minPrice : prev));
-    setMaxPrice((prev) => (prev !== parsed.maxPrice ? parsed.maxPrice : prev));
-    setMinRating((prev) => (prev !== parsed.minRating ? parsed.minRating : prev));
-    setActiveSort((prev) => (prev !== parsed.sort ? parsed.sort : prev));
-    setCurrentPage((prev) => (prev !== parsed.page ? parsed.page : prev));
-    if (outletContext?.setSearchQuery && parsed.search !== outletContext.searchQuery && searchQueryProp === undefined) {
-      outletContext.setSearchQuery(parsed.search);
-    }
-  }, [searchParams]);
+  /*
+   * There is deliberately no effect here mirroring the filters into the URL,
+   * and none reading them back out on a history change.
+   *
+   * Two of them used to sit at this point in the file, left over from a
+   * merge, and they referenced thirteen identifiers that this component does not
+   * have: `searchParams`, `setSearchParams`, `buildCatalogQuery`,
+   * `parseCatalogParams`, `selectedGenres`, `setSelectedGenres`, `minPrice`,
+   * `maxPrice`, `minRating`, `activeSort`, `setActiveSort`, `currentPage` and
+   * `setCurrentPage`. The `useState` calls behind those names went away when
+   * the filters moved into the URL; the effects reading them did not. The
+   * first line of the first one was `if (!setSearchParams) return;`, which
+   * throws a ReferenceError rather than returning, so the page died on its
+   * first render and the ErrorBoundary replaced the whole site. See #365.
+   *
+   * Both jobs are `useCatalogFilters`'s, twelve lines above: it reads the
+   * filters out of `useSearchParams` on every render and writes them back
+   * through the same hook, so a history change re-renders with the new values
+   * and there is nothing to synchronise. A mirrored copy in component state
+   * is exactly what that hook was written to remove — restoring one would
+   * bring back the two-sources-of-truth bug from #338 along with the crash.
+   */
 
   // The active-filter chips said "Min ₹250" whatever the shop was priced in.
   // See #335.
