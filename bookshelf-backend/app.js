@@ -13,12 +13,6 @@ import { configureTrustProxy } from './config/trustProxy.js';
 
 const app = express();
 
-/*
- * Must run before anything reads req.ip — which the rate limiters on
- * /api/auth do. Without it, req.ip behind a proxy is the proxy's own address
- * on every request, so a per-IP limit applied to every user at once.
- * Defaults to trusting nothing, which is correct for a local run. See #298.
- */
 configureTrustProxy(app);
 
 app.use(cors({

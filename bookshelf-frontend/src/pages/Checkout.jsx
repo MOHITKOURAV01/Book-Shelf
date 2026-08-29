@@ -5,6 +5,8 @@ import { Elements } from '@stripe/react-stripe-js';
 
 import paymentService from '../services/paymentService.js';
 import CheckoutForm from '../components/CheckoutForm.jsx';
+import CheckoutGateway from '../components/CheckoutGateway.jsx';
+import GuestCheckoutForm from '../components/GuestCheckoutForm.jsx';
 import { useCart } from '../hooks/useCart.js';
 import {
   ADDRESS_FIELDS,
@@ -166,6 +168,8 @@ export default function Checkout() {
     );
   }
 
+  const [mode, setMode] = useState('standard');
+
   if (items.length === 0 && !clientSecret) {
     return (
       <main className="checkout">
@@ -180,8 +184,43 @@ export default function Checkout() {
     );
   }
 
+  if (mode === 'gateway') {
+    return (
+      <main className="checkout">
+        <CheckoutGateway
+          onProceedToAuth={() => setMode('standard')}
+          onProceedToGuest={() => setMode('guest')}
+        />
+      </main>
+    );
+  }
+
+  if (mode === 'guest') {
+    return (
+      <main className="checkout">
+        <GuestCheckoutForm
+          onOrderComplete={() => {
+            clearCart();
+            navigate('/order-confirmation');
+          }}
+        />
+      </main>
+    );
+  }
+
   return (
     <main className="checkout">
+      <div style={{ marginBottom: '16px', display: 'flex', gap: '12px' }}>
+        <button
+          type="button"
+          className="checkout__guest-btn"
+          onClick={() => setMode('guest')}
+          style={{ background: 'var(--surface-color, #f1f5f9)', color: 'var(--ink-color, #0f172a)', padding: '8px 16px', borderRadius: '6px', border: '1px solid #cbd5e1', cursor: 'pointer' }}
+        >
+          Checkout as Guest
+        </button>
+      </div>
+
       <h1 className="checkout__title">Secure checkout</h1>
 
       <div className="checkout__layout">
