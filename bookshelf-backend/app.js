@@ -7,6 +7,7 @@ import paymentRoutes from './routes/paymentRoutes.js';
 import orderRoutes from './routes/orderRoutes.js';
 import wishlistRoutes from './routes/wishlistRoutes.js';
 import bookRoutes from './routes/books.js';
+import collectionRoutes from './routes/collectionRoutes.js';
 import stripeWebhookHandler from './webhook/stripeWebhook.js';
 import { configureTrustProxy } from './config/trustProxy.js';
 
@@ -41,6 +42,7 @@ app.use('/api/payments', paymentRoutes);
 app.use('/api/orders', orderRoutes);
 app.use('/api/wishlist', wishlistRoutes);
 app.use('/api/books', bookRoutes);
+app.use('/api/collections', collectionRoutes);
 
 app.get('/', (req, res) => {
   res.send('API is running...');
