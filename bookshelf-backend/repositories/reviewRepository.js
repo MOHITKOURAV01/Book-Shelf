@@ -1,3 +1,4 @@
+import { randomUUID } from 'node:crypto';
 import mongoose from 'mongoose';
 import Review from '../models/Review.js';
 import Order from '../models/Order.js';
@@ -60,7 +61,22 @@ class ReviewRepository {
         error.status = 400;
         throw error;
       }
-      const reviewDoc = { ...reviewPayload, _id: `rev_${Date.now()}` };
+      /*
+       * A unique id, not a timestamp.
+       *
+       * This was `rev_${Date.now()}`, and two reviews stored in the same
+       * millisecond therefore shared one. Everything downstream looks a review
+       * up by id, so a collision meant voteHelpful crediting the wrong review,
+       * and deleteReview finding the other user's document — either rejecting
+       * a legitimate delete as unauthorised, or removing a review its author
+       * had not asked to remove.
+       *
+       * A millisecond is not a rare window. Seeding, a burst of traffic, and
+       * any test that creates two reviews in a row all land inside one; the
+       * three tests in reviewSystem.test.js that caught this are the last of
+       * those.
+       */
+      const reviewDoc = { ...reviewPayload, _id: `rev_${randomUUID()}` };
       inMemoryReviews.push(reviewDoc);
       await this.recalculateBookRating(bookId);
       return reviewDoc;
