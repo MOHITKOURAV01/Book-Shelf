@@ -5,8 +5,7 @@ import { Elements } from '@stripe/react-stripe-js';
 
 import paymentService from '../services/paymentService.js';
 import CheckoutForm from '../components/CheckoutForm.jsx';
-import CheckoutGateway from '../components/CheckoutGateway.jsx';
-import GuestCheckoutForm from '../components/GuestCheckoutForm.jsx';
+import CouponInput from '../components/CouponInput.jsx';
 import { useCart } from '../hooks/useCart.js';
 import {
   ADDRESS_FIELDS,
@@ -19,6 +18,7 @@ import {
   validateAddress,
 } from '../utils/checkoutValidation.js';
 import { formatMoney } from '../utils/currency.js';
+import '../components/CouponInput.css';
 import './Checkout.css';
 import { usePageMetadata } from '../hooks/usePageMetadata.js';
 
@@ -79,6 +79,8 @@ export default function Checkout() {
   // Only known once the server has priced the cart; until then the summary
   // labels its subtotal with this deployment's configured currency.
   const [currency, setCurrency] = useState(undefined);
+  const [couponDiscount, setCouponDiscount] = useState(0);
+  const [couponCode, setCouponCode] = useState('');
 
   const items = useMemo(() => toOrderItems(cart), [cart]);
   const bookCount = useMemo(() => countItems(cart), [cart]);
@@ -287,6 +289,73 @@ export default function Checkout() {
               >
                 {submitting ? 'Preparing payment…' : 'Continue to payment'}
               </button>
+            </form>
+          )}
+        </section>
+
+        <aside className="checkout__panel checkout__summary" aria-label="Order summary">
+          <h2 className="checkout__section-title">Order summary</h2>
+
+          <CouponInput
+            subtotal={subtotal}
+            onApply={(result) => {
+              setCouponDiscount(result.discount || 0);
+              setCouponCode(result.code || '');
+            }}
+            onRemove={() => { setCouponDiscount(0); setCouponCode(''); }}
+            disabled={!!clientSecret}
+          />
+
+          {couponCode && amount && (
+            <div className="checkout__total-row">
+              <dt>Discount ({couponCode})</dt>
+              <dd className="checkout__discount">−{money(couponDiscount, currency)}</dd>
+            </div>
+          )}
+
+          <ul className="checkout__lines">
+            {cart.map((item) => (
+              <li className="checkout__line" key={item.id ?? item.bookId}>
+                <span className="checkout__line-title">
+                  {item.title}
+                  <span className="checkout__line-qty"> × {item.quantity}</span>
+                </span>
+                <span className="checkout__line-price">
+                  {money(Number(item.price ?? 0) * Number(item.quantity ?? 0), currency)}
+                </span>
+              </li>
+            ))}
+          </ul>
+
+          <dl className="checkout__totals">
+            <div className="checkout__total-row">
+              <dt>Subtotal ({bookCount} {bookCount === 1 ? 'book' : 'books'})</dt>
+              <dd>{money(amount ? amount.subtotal : subtotal, currency)}</dd>
+            </div>
+
+            {amount && (
+              <>
+                <div className="checkout__total-row">
+                  <dt>Tax</dt>
+                  <dd>{money(amount.tax, currency)}</dd>
+                </div>
+                <div className="checkout__total-row">
+                  <dt>Shipping</dt>
+                  <dd>{money(amount.shipping, currency)}</dd>
+                </div>
+                <div className="checkout__total-row checkout__total-row--grand">
+                  <dt>Total</dt>
+                  <dd>{money(amount.total, currency)}</dd>
+                </div>
+              </>
+            )}
+          </dl>
+
+          {!amount && (
+            <p className="checkout__note">
+              Tax and shipping are calculated at the next step.
+            </p>
+          )}
             </form>
           )}
         </section>
