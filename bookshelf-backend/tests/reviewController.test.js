@@ -1,6 +1,12 @@
 import { describe, it } from 'node:test';
 import assert from 'node:assert/strict';
 
+import * as reviewController from '../controllers/reviewController.js';
+import {
+  createReviewSchema,
+  updateReviewSchema,
+} from '../validators/reviewValidators.js';
+
 /**
  * Unit tests for the review controller logic.
  *
@@ -116,13 +122,16 @@ describe('reviewController helpers', () => {
   });
 });
 
+/*
+ * These used to sit behind `const schemas = await import(…)` inside this
+ * describe callback, which is not async — so the file was a SyntaxError and
+ * node:test never ran a line of it, including the two suites above. The
+ * validators are plain objects with no side effects, which is the argument
+ * the old comment made for the dynamic import and is in fact the reason a
+ * static one at the top of the file is fine.
+ */
 describe('review validators (schema shape)', () => {
-  // Import the schema objects at test time — they are plain objects with
-  // no side effects so this is safe.
-  const schemas = await import('../validators/reviewValidators.js');
-
   it('createReviewSchema has all required fields', () => {
-    const { createReviewSchema } = schemas;
     assert.ok(createReviewSchema.bookId, 'bookId is missing');
     assert.ok(createReviewSchema.rating, 'rating is missing');
     assert.ok(createReviewSchema.title, 'title is missing');
@@ -130,11 +139,59 @@ describe('review validators (schema shape)', () => {
   });
 
   it('each field has at least one rule', () => {
-    for (const [field, config] of Object.entries(schemas.createReviewSchema)) {
+    for (const [field, config] of Object.entries(createReviewSchema)) {
       assert.ok(
         Array.isArray(config.rules) && config.rules.length > 0,
         `${field} has no rules`
       );
     }
+  });
+
+  it('updateReviewSchema carries the editable fields', () => {
+    assert.ok(updateReviewSchema.rating, 'rating is missing');
+    assert.ok(updateReviewSchema.title, 'title is missing');
+    assert.ok(updateReviewSchema.body, 'body is missing');
+  });
+
+  it('the schema names the request body field `body`, not `comment`', () => {
+    // reviewSystem.test.js was written against `comment` and never ran, so
+    // nothing noticed the two disagreed.
+    assert.ok(createReviewSchema.body);
+    assert.equal(createReviewSchema.comment, undefined);
+  });
+});
+
+/*
+ * The export surface.
+ *
+ * `routes/reviewRoutes.js` and `routes/standaloneReviewRoutes.js` both import
+ * named functions from this controller. When one of those names is wrong the
+ * failure is a module-link error at import time — the route file cannot load,
+ * and if it is mounted the server does not start. That is what
+ * `standaloneReviewRoutes.js` was doing with `voteHelpful`.
+ */
+describe('the controller exports what the routes import', () => {
+  const expected = [
+    'getBookReviews',
+    'getReviewBreakdown',
+    'createReview',
+    'updateReview',
+    'deleteReview',
+    'markHelpful',
+    'getMyReview',
+  ];
+
+  for (const name of expected) {
+    it(`exports ${name}`, () => {
+      assert.equal(
+        typeof reviewController[name],
+        'function',
+        `${name} is not exported from reviewController.js`
+      );
+    });
+  }
+
+  it('does not export voteHelpful — that name belongs to the repository', () => {
+    assert.equal(reviewController.voteHelpful, undefined);
   });
 });
