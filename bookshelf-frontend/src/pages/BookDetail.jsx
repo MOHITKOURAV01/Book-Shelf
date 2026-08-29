@@ -35,14 +35,8 @@ import './BookDetail.css';
  * copy), and a book added to the catalogue rendered "Book Not Found" on its
  * own page. See #317.
  */
-import AIBookSummaryCard from '../components/AIBookSummaryCard.jsx';
-import BookChapterList from '../components/BookChapterList.jsx';
 import BookReviewSummary from '../components/BookReviewSummary.jsx';
-import BookDimensions from '../components/BookDimensions.jsx';
-import BookWeight from '../components/BookWeight.jsx';
 import ISBNCopy from '../components/ISBNCopy.jsx';
-import BookMetadata from '../components/BookMetadata.jsx';
-import QRCodeGenerator from '../components/QRCodeGenerator.jsx';
 import BookBadge from '../components/BookBadge.jsx';
 import VerifiedPurchaseBadge from '../components/VerifiedPurchaseBadge.jsx';
 import BookSpine from '../components/BookSpine.jsx';
@@ -71,6 +65,21 @@ export default function BookDetail() {
   const [myReview, setMyReview] = useState(null);
   const [reviewSubmitting, setReviewSubmitting] = useState(false);
 
+  /*
+   * Bumped after a review is posted, to remount ReviewList and make it
+   * refetch.
+   *
+   * It belongs here, with every other hook, and not 130 lines down past the
+   * loading, not-found and error returns where it used to sit. The first
+   * render of this page is always the loading render and it returns before
+   * reaching that point, so React recorded one fewer hook than the render
+   * that followed it and threw `Rendered more hooks than during the previous
+   * render` the moment the book arrived — which is to say on every book, every
+   * time. Same defect as #365 and #366: React counts where the call is, not
+   * where the value is used.
+   */
+  const [reviewKey, setReviewKey] = useState(0);
+
   useEffect(() => {
     setRating(0);
     setReviewTitle('');
@@ -78,6 +87,7 @@ export default function BookDetail() {
     setReviewError('');
     setSuccessMsg('');
     setMyReview(null);
+    setReviewKey(0);
   }, [id]);
 
   /*
@@ -202,27 +212,19 @@ export default function BookDetail() {
     );
   }
 
-  const [reviewKey, setReviewKey] = useState(0);
-
   const ratingLabel = formatRating(book.rating);
   const priceLabel = formatPrice(book.price);
   const stockLabel = describeStock(book);
   const available = isInStock(book);
 
-  const sampleChapters = [
-    { id: 'c1', number: 1, title: 'Introduction & Foundations', duration: '12 min', completed: true },
-    { id: 'c2', number: 2, title: 'Core Concepts & Principles', duration: '18 min', completed: false },
-    { id: 'c3', number: 3, title: 'Practical Application', duration: '25 min', completed: false },
-    { id: 'c4', number: 4, title: 'Advanced Strategies', duration: '20 min', completed: false },
-  ];
-
-  const bookMetadataObj = {
-    Publisher: book.publisher || 'BookShelf Publishing',
-    Format: 'Hardcover',
-    Language: 'English',
-    Edition: '1st Edition (2026)',
-    Pages: book.pages || '340 pages',
-  };
+  /*
+   * `sampleChapters` and `bookMetadataObj` used to be built here, on every
+   * render, and were no longer read by anything. Both were hardcoded
+   * placeholders — four chapter titles beginning "Introduction & Foundations",
+   * and a metadata block asserting every book in the catalogue is a hardcover
+   * 1st Edition (2026) of 340 pages. Left in the tree they would eventually
+   * have been rendered by someone who took them for real data.
+   */
 
   return (
     <main className="book-detail-page">
