@@ -6,10 +6,12 @@ import Rating from '../components/Rating.jsx';
 import WishlistButton from '../components/WishlistButton.jsx';
 import SkeletonLoader from '../components/SkeletonLoader.jsx';
 import BookCard from '../components/BookCard.jsx';
+import ReviewList from '../components/ReviewList.jsx';
 import { useBook } from '../hooks/useBook.js';
 import { useCart } from '../hooks/useCart.js';
 import { useWishlist } from '../hooks/useWishlist.js';
 import { getBooks } from '../services/bookService.js';
+import { createReview, getMyReview } from '../services/reviewService.js';
 import {
   describeStock,
   formatPrice,
@@ -59,16 +61,52 @@ export default function BookDetail() {
   });
 
   const [rating, setRating] = useState(0);
+  const [reviewTitle, setReviewTitle] = useState('');
   const [reviewText, setReviewText] = useState('');
   const [reviewError, setReviewError] = useState('');
   const [successMsg, setSuccessMsg] = useState('');
   const [related, setRelated] = useState([]);
+  const [myReview, setMyReview] = useState(null);
+  const [reviewSubmitting, setReviewSubmitting] = useState(false);
 
   useEffect(() => {
     setRating(0);
+    setReviewTitle('');
     setReviewText('');
     setReviewError('');
     setSuccessMsg('');
+    setMyReview(null);
+  }, [id]);
+
+  /*
+   * Fetch the current user's existing review for this book so the form
+   * can pre-populate and the user knows they are editing rather than
+   * creating a new review.
+   */
+  useEffect(() => {
+    if (!id) return undefined;
+    const controller = new AbortController();
+    let cancelled = false;
+
+    getMyReview(id, { signal: controller.signal })
+      .then((data) => {
+        if (cancelled) return;
+        const existing = data?.review;
+        if (existing) {
+          setMyReview(existing);
+          setRating(existing.rating);
+          setReviewTitle(existing.title || '');
+          setReviewText(existing.body || '');
+        }
+      })
+      .catch(() => {
+        // 404 means no review exists yet — perfectly normal.
+      });
+
+    return () => {
+      cancelled = true;
+      controller.abort();
+    };
   }, [id]);
 
   useEffect(() => {
@@ -98,7 +136,7 @@ export default function BookDetail() {
     };
   }, [book?.id, book?.genre]);
 
-  const handleReviewSubmit = (event) => {
+  const handleReviewSubmit = async (event) => {
     event.preventDefault();
 
     if (rating === 0) {
@@ -107,11 +145,25 @@ export default function BookDetail() {
     }
 
     setReviewError('');
+    setReviewSubmitting(true);
 
-    setRating(0);
-    setReviewText('');
-    setSuccessMsg('Thank you! Your review has been submitted.');
-    setTimeout(() => setSuccessMsg(''), 4000);
+    try {
+      await createReview({
+        bookId: id,
+        rating,
+        title: reviewTitle.trim(),
+        body: reviewText.trim(),
+      });
+      setSuccessMsg('Thank you! Your review has been submitted.');
+      setMyReview({ rating, title: reviewTitle, body: reviewText });
+      // Force the ReviewList to re-fetch by toggling a key.
+      setReviewKey((k) => k + 1);
+      setTimeout(() => setSuccessMsg(''), 4000);
+    } catch (err) {
+      setReviewError(err.message || 'Failed to submit review. Please try again.');
+    } finally {
+      setReviewSubmitting(false);
+    }
   };
 
   if (loading) {
@@ -147,6 +199,8 @@ export default function BookDetail() {
       </div>
     );
   }
+
+  const [reviewKey, setReviewKey] = useState(0);
 
   const ratingLabel = formatRating(book.rating);
   const priceLabel = formatPrice(book.price);
@@ -239,41 +293,14 @@ export default function BookDetail() {
         </div>
       </div>
 
-      {/* Specifications & Overview */}
-      <section style={{ margin: '32px 0' }}>
-        <h2 style={{ fontSize: '20px', fontWeight: '700', marginBottom: '16px' }}>Book Specifications</h2>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '20px' }}>
-          <BookDimensions width="15 cm" height="23 cm" thickness="2.5 cm" />
-          <BookWeight weight="450g" unit="g" />
-          <BookMetadata title="Publication Details" metadata={bookMetadataObj} />
-        </div>
-      </section>
+      {/*
+        ReviewList is keyed by `reviewKey` so that after a new review is
+        submitted the component re-mounts and fetches the fresh data.
+        Without the key it would hold the stale first-page response
+        from when it first rendered.
+      */}
+      <ReviewList key={reviewKey} bookId={id} currentUserId={undefined} />
 
-      {/* AI Summary Card */}
-      <section style={{ margin: '32px 0' }}>
-        <AIBookSummaryCard
-          title={book.title}
-          author={book.author}
-          summary={book.description || 'An insightful look into themes, characters, and narrative concepts.'}
-          keyPoints={['Thought-provoking plot', 'Deep character development', 'Highly recommended for enthusiasts']}
-        />
-      </section>
-
-      {/* Chapter List */}
-      <section style={{ margin: '32px 0' }}>
-        <BookChapterList chapters={sampleChapters} title={`Table of Contents for ${book.title}`} />
-      </section>
-
-      {/* QR Code Sharing */}
-      <section style={{ margin: '32px 0', background: 'var(--surface-color, #f8fafc)', padding: '20px', borderRadius: '12px' }}>
-        <QRCodeGenerator
-          value={window.location.href}
-          title={`Share "${book.title}" via QR Code`}
-          downloadName={`book-${book.id}-qr`}
-        />
-      </section>
-
-      {/* Review Section */}
       <div className="book-review-section">
         {book.rating ? (
           <BookReviewSummary
@@ -287,7 +314,9 @@ export default function BookDetail() {
         </div>
 
         <h2 className="book-review-title">
-          {t('bookDetail.writeReview') || 'Write a Review'}
+          {myReview
+            ? (t('bookDetail.editReview') || 'Edit Your Review')
+            : (t('bookDetail.writeReview') || 'Write a Review')}
         </h2>
         <form className="book-review-form" onSubmit={handleReviewSubmit}>
           <div className="book-review-rating">
@@ -295,6 +324,13 @@ export default function BookDetail() {
           </div>
           {reviewError && <p className="book-review-error">{reviewError}</p>}
           {successMsg && <p className="book-review-success">{successMsg}</p>}
+          <input
+            className="book-review-input"
+            placeholder={t('bookDetail.reviewTitlePlaceholder') || 'Review title (optional)'}
+            value={reviewTitle}
+            onChange={(event) => setReviewTitle(event.target.value)}
+            maxLength={150}
+          />
           <textarea
             className="book-review-textarea"
             placeholder={t('bookDetail.reviewPlaceholder') || 'Share your thoughts...'}
@@ -303,8 +339,16 @@ export default function BookDetail() {
             rows={4}
             maxLength={1000}
           />
-          <button type="submit" className="book-review-submit-btn">
-            {t('bookDetail.submitReview') || 'Submit'}
+          <button
+            type="submit"
+            className="book-review-submit-btn"
+            disabled={reviewSubmitting}
+          >
+            {reviewSubmitting
+              ? (t('bookDetail.submitting') || 'Submitting...')
+              : myReview
+                ? (t('bookDetail.updateReview') || 'Update Review')
+                : (t('bookDetail.submitReview') || 'Submit Review')}
           </button>
         </form>
       </div>
