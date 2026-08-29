@@ -275,11 +275,13 @@ export default function BookDetail() {
 
       {/* Review Section */}
       <div className="book-review-section">
-        <BookReviewSummary
-          rating={book.rating || 4.5}
-          reviewCount={book.reviewsCount || 42}
-          totalRatings={50}
-        />
+        {book.rating ? (
+          <BookReviewSummary
+            rating={book.rating}
+            reviewCount={book.reviewsCount || 42}
+            totalRatings={50}
+          />
+        ) : null}
         <div style={{ margin: '16px 0 24px 0' }}>
           <VerifiedPurchaseBadge />
         </div>

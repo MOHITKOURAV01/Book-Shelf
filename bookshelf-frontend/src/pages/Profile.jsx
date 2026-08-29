@@ -80,6 +80,11 @@ export default function Profile() {
       annualGoal: 24,
       avatar: '📖',
       preferredGenres: ['Fiction', 'Mystery', 'Sci-Fi'],
+      booksRead: 18,
+      pagesRead: 5840,
+      readingHours: 96,
+      currentStreak: 12,
+      longestStreak: 28,
     };
   });
 
@@ -124,6 +129,20 @@ export default function Profile() {
     setTimeout(() => setSaveMessage(null), 4000);
   };
 
+  const handleLogReadingSession = (pages, minutes) => {
+    const updated = {
+      ...profileData,
+      pagesRead: (profileData.pagesRead || 5840) + (Number(pages) || 0),
+      readingHours: (profileData.readingHours || 96) + Math.round(((Number(minutes) || 0) / 60) * 10) / 10,
+    };
+    setProfileData(updated);
+    try {
+      localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(updated));
+    } catch (err) {
+      console.error('Failed to save updated reading session:', err);
+    }
+  };
+
   const handleUpdatePassword = (e) => {
     e.preventDefault();
 
@@ -159,9 +178,9 @@ export default function Profile() {
     navigate('/login');
   };
 
-  const booksReadCount = 18;
-  const pagesReadCount = 5840;
-  const readingHoursCount = 96;
+  const booksReadCount = profileData.booksRead || 18;
+  const pagesReadCount = profileData.pagesRead || 5840;
+  const readingHoursCount = profileData.readingHours || 96;
 
   return (
     <main className="profile-page">
