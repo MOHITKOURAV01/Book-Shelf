@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 
 import Rating from '../components/Rating.jsx';
 import WishlistButton from '../components/WishlistButton.jsx';
+import StockAlertButton from '../components/StockAlertButton.jsx';
 import SkeletonLoader from '../components/SkeletonLoader.jsx';
 import BookCard from '../components/BookCard.jsx';
 import ReviewList from '../components/ReviewList.jsx';
@@ -20,6 +21,7 @@ import {
 } from '../utils/bookFormat.js';
 import { usePageMetadata } from '../hooks/usePageMetadata.js';
 import { bookDescription, bookTitle } from '../utils/pageTitle.js';
+import '../components/StockAlertButton.css';
 import './BookDetail.css';
 
 /**
@@ -281,6 +283,9 @@ export default function BookDetail() {
               active={isWishlisted(book.id)}
               onToggle={() => toggleWishlist(book.id)}
             />
+            {!available && (
+              <StockAlertButton bookId={book.id} isLoggedIn={true} />
+            )}
           </div>
 
           <div style={{ marginTop: '12px' }}>

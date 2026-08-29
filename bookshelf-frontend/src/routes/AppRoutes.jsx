@@ -20,7 +20,7 @@ import TermsOfService from '../pages/TermsOfService.jsx';
 import AdminInventoryPage from '../pages/AdminInventoryPage.jsx';
 import DesignSystemPage from '../pages/DesignSystemPage.jsx';
 import NotFound from '../pages/NotFound.jsx';
-import CollectionsPage from '../pages/CollectionsPage.jsx';
+import StockAlertsPage from '../pages/StockAlertsPage.jsx';
 
 /**
  * The single route table for the app.
@@ -127,10 +127,10 @@ export default function AppRoutes() {
         />
 
         <Route
-          path="collections"
+          path="stock-alerts"
           element={
             <ProtectedRoute>
-              <CollectionsPage />
+              <StockAlertsPage />
             </ProtectedRoute>
           }
         />
