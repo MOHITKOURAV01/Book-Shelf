@@ -36,6 +36,21 @@ const AVATAR_OPTIONS = ['📖', '🦉', '🧙‍♂️', '📚', '✍️', '🌟
  * first render and every signed-in reader got the ErrorBoundary fallback
  * instead of their account. See #366.
  */
+import { useContext } from 'react';
+import { CartContext } from '../context/CartContext.jsx';
+import CurrentlyReading from '../components/CurrentlyReading.jsx';
+import BookProgressTimeline from '../components/BookProgressTimeline.jsx';
+import ReadingCalendar from '../components/ReadingCalendar.jsx';
+import ReadingHeatmap from '../components/ReadingHeatmap.jsx';
+import ReadingLeaderboard from '../components/ReadingLeaderboard.jsx';
+import ReadingProgressBar from '../components/ReadingProgressBar.jsx';
+import ReadingSessionCard from '../components/ReadingSessionCard.jsx';
+import ReadingSpeedMeter from '../components/ReadingSpeedMeter.jsx';
+import ReadingStatistics from '../components/ReadingStatistics.jsx';
+import ReadingTimer from '../components/ReadingTimer.jsx';
+import ProgressCircle from '../components/ProgressCircle.jsx';
+import { useWishlistBooks } from '../hooks/useWishlistBooks.js';
+
 export default function Profile() {
   usePageMetadata({
     title: 'Your profile',
@@ -44,21 +59,15 @@ export default function Profile() {
 
   const { t } = useTranslation();
   const { user, logout } = useAuth();
-  const { count: wishlistCount } = useWishlist();
+  const { count: wishlistCount, toggleWishlist } = useWishlist();
+  const { books: wishlistBooks = [] } = useWishlistBooks();
+  const cartContext = useContext(CartContext);
+  const addToCart = cartContext?.addToCart || (() => {});
   const { orders = [] } = useOrders();
   const navigate = useNavigate();
 
   const [activeTab, setActiveTab] = useState('overview');
 
-  /*
-   * The customisation the reader has chosen, kept in localStorage.
-   *
-   * Read inside the initialiser rather than in an effect so the first paint
-   * already shows the saved avatar and bio instead of the defaults. The
-   * try/catch is not decoration: a hand-edited or half-written value would
-   * otherwise throw out of the initialiser, which React does not recover
-   * from.
-   */
   const [profileData, setProfileData] = useState(() => {
     try {
       const saved = localStorage.getItem(LOCAL_STORAGE_KEY);
@@ -74,27 +83,18 @@ export default function Profile() {
     };
   });
 
-  // Settings form, held separately from profileData so an unsaved edit can be
-  // abandoned by navigating away rather than being committed as it is typed.
   const [formName, setFormName] = useState(user?.name || 'Reader');
   const [formBio, setFormBio] = useState(profileData.bio);
   const [formGoal, setFormGoal] = useState(profileData.annualGoal);
   const [formAvatar, setFormAvatar] = useState(profileData.avatar);
   const [formGenres, setFormGenres] = useState(profileData.preferredGenres);
 
-  // Security form.
   const [currentPassword, setCurrentPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
 
-  // Transient confirmations, cleared on a timer.
   const [saveMessage, setSaveMessage] = useState(null);
   const [securityMessage, setSecurityMessage] = useState(null);
 
-  /*
-   * The name box is seeded from `user`, which arrives asynchronously — the
-   * session is restored by a GET /api/auth/me after the first render, so the
-   * initialiser above usually runs while `user` is still null.
-   */
   useEffect(() => {
     if (user?.name) {
       setFormName(user.name);
@@ -117,7 +117,6 @@ export default function Profile() {
     try {
       localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(updated));
     } catch (err) {
-      // A full or disabled store must not lose the edit from the screen.
       console.error('Failed to save profile to localStorage:', err);
     }
 
@@ -160,12 +159,9 @@ export default function Profile() {
     navigate('/login');
   };
 
-  // Placeholder reading stats. There is no endpoint behind these yet; they
-  // are constants so the overview tab has something to lay out.
   const booksReadCount = 18;
   const pagesReadCount = 5840;
   const readingHoursCount = 96;
-
 
   return (
     <main className="profile-page">
@@ -268,6 +264,19 @@ export default function Profile() {
             </div>
           </div>
 
+          <div style={{ marginTop: '24px' }}>
+            <ReadingStatistics />
+          </div>
+
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '20px', marginTop: '24px' }}>
+            <ReadingHeatmap />
+            <ReadingSpeedMeter />
+          </div>
+
+          <div style={{ marginTop: '24px' }}>
+            <ReadingLeaderboard />
+          </div>
+
           <div className="profile-widget-row">
             <div className="profile-card">
               <h3>🎯 {t('profile.annualGoal', '2026 Annual Reading Goal')}</h3>
@@ -278,6 +287,9 @@ export default function Profile() {
                 unit="books"
                 variant="blue"
               />
+              <div style={{ marginTop: '16px', display: 'flex', justifyContent: 'center' }}>
+                <ProgressCircle percentage={Math.round((booksReadCount / profileData.annualGoal) * 100)} size={120} />
+              </div>
             </div>
 
             <div className="profile-card">
@@ -332,7 +344,16 @@ export default function Profile() {
             </div>
           </div>
 
-          <div className="profile-widget-row">
+          <div style={{ marginTop: '20px' }}>
+            <ReadingProgressBar current={booksReadCount} target={profileData.annualGoal} />
+          </div>
+
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '20px', marginTop: '20px' }}>
+            <ReadingTimer />
+            <ReadingCalendar />
+          </div>
+
+          <div className="profile-widget-row" style={{ marginTop: '20px' }}>
             <div className="profile-card">
               <h3>🔥 Reading Streak</h3>
               <ReadingStreak
@@ -380,8 +401,23 @@ export default function Profile() {
             </div>
           </div>
 
-          <div>
-            <FavoriteBooks />
+          <div style={{ marginTop: '24px' }}>
+            <CurrentlyReading />
+          </div>
+
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '20px', marginTop: '24px' }}>
+            <ReadingSessionCard />
+            <BookProgressTimeline />
+          </div>
+
+          <div style={{ marginTop: '24px' }}>
+            <FavoriteBooks
+              books={wishlistBooks}
+              onView={(b) => navigate(`/book/${b.id}`)}
+              onAddToCart={(b) => addToCart(b)}
+              onRemove={(id) => toggleWishlist(id)}
+              onBrowse={() => navigate('/#catalog')}
+            />
           </div>
 
           <div>
