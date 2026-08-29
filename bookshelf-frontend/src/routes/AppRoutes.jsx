@@ -18,6 +18,8 @@ import AboutUs from '../pages/AboutUs.jsx';
 import PrivacyPolicy from '../pages/PrivacyPolicy.jsx';
 import TermsOfService from '../pages/TermsOfService.jsx';
 import NotFound from '../pages/NotFound.jsx';
+import AdminRoute from '../components/AdminRoute.jsx';
+import AdminDashboard from '../pages/AdminDashboard.jsx';
 
 /**
  * The single route table for the app.
@@ -115,6 +117,16 @@ export default function AppRoutes() {
             <ProtectedRoute>
               <OrderDetailsPage />
             </ProtectedRoute>
+          }
+        />
+
+        {/* Admin */}
+        <Route
+          path="admin"
+          element={
+            <AdminRoute>
+              <AdminDashboard />
+            </AdminRoute>
           }
         />
 
