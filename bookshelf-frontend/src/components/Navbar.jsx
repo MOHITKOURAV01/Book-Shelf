@@ -186,8 +186,10 @@ export default function Navbar({ searchQuery, setSearchQuery }) {
     ? [
         { to: '/profile', label: t('navbar.profile') || 'Profile' },
         { to: '/account/orders', label: 'My orders' },
+        { to: '/admin/inventory', label: '🛠️ Admin Inventory' },
+        { to: '/design-system', label: '🎨 Design System' },
       ]
-    : [];
+    : [{ to: '/design-system', label: '🎨 Design System' }];
 
   const cartLabel = t('navbar.cart') || 'Cart';
   const cartAriaLabel =
