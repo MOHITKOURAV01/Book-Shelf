@@ -8,6 +8,7 @@ import {
   deleteBook,
   updateBookStock,
 } from '../controllers/bookController.js';
+import reviewRoutes from './reviewRoutes.js';
 import { protect, admin } from '../middleware/authMiddleware.js';
 import { validateBody } from '../middleware/validateBody.js';
 import { adminMutationLimiter } from '../middleware/rateLimiter.js';
@@ -18,6 +19,9 @@ import {
 } from '../validators/bookValidators.js';
 
 const router = express.Router();
+
+// Mount review sub-router
+router.use('/:id/reviews', reviewRoutes);
 
 router.get('/', getAllBooks);
 
