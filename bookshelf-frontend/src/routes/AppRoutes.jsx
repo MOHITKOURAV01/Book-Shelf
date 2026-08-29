@@ -17,7 +17,10 @@ import Register from '../pages/Register.jsx';
 import AboutUs from '../pages/AboutUs.jsx';
 import PrivacyPolicy from '../pages/PrivacyPolicy.jsx';
 import TermsOfService from '../pages/TermsOfService.jsx';
+import AdminInventoryPage from '../pages/AdminInventoryPage.jsx';
+import DesignSystemPage from '../pages/DesignSystemPage.jsx';
 import NotFound from '../pages/NotFound.jsx';
+import CollectionsPage from '../pages/CollectionsPage.jsx';
 
 /**
  * The single route table for the app.
@@ -54,16 +57,21 @@ export default function AppRoutes() {
         <Route path="about" element={<AboutUs />} />
         <Route path="privacy" element={<PrivacyPolicy />} />
         <Route path="terms" element={<TermsOfService />} />
+        <Route path="design-system" element={<DesignSystemPage />} />
         <Route path="login" element={<Login />} />
         <Route path="register" element={<Register />} />
 
-        {/*
-          Two sign-up pages existed: pages/Signup.jsx (a plain form that never
-          calls the auth API) and pages/Register.jsx (wired to useAuth). Only
-          /register was ever reachable, so /signup redirects to it rather than
-          silently 404ing links that point at the old path.
-        */}
         <Route path="signup" element={<Navigate to="/register" replace />} />
+
+        {/* Requires Admin */}
+        <Route
+          path="admin/inventory"
+          element={
+            <ProtectedRoute>
+              <AdminInventoryPage />
+            </ProtectedRoute>
+          }
+        />
 
         {/* Requires a session */}
         <Route
@@ -114,6 +122,15 @@ export default function AppRoutes() {
           element={
             <ProtectedRoute>
               <OrderDetailsPage />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="collections"
+          element={
+            <ProtectedRoute>
+              <CollectionsPage />
             </ProtectedRoute>
           }
         />
