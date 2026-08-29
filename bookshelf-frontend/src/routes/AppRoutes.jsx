@@ -20,8 +20,7 @@ import TermsOfService from '../pages/TermsOfService.jsx';
 import AdminInventoryPage from '../pages/AdminInventoryPage.jsx';
 import DesignSystemPage from '../pages/DesignSystemPage.jsx';
 import NotFound from '../pages/NotFound.jsx';
-import AdminRoute from '../components/AdminRoute.jsx';
-import AdminDashboard from '../pages/AdminDashboard.jsx';
+import CollectionsPage from '../pages/CollectionsPage.jsx';
 
 /**
  * The single route table for the app.
@@ -127,13 +126,12 @@ export default function AppRoutes() {
           }
         />
 
-        {/* Admin */}
         <Route
-          path="admin"
+          path="collections"
           element={
-            <AdminRoute>
-              <AdminDashboard />
-            </AdminRoute>
+            <ProtectedRoute>
+              <CollectionsPage />
+            </ProtectedRoute>
           }
         />
 
