@@ -215,4 +215,96 @@ describe('Checkout', () => {
       screen.getByRole('heading', { name: /checkout unavailable/i })
     ).toBeInTheDocument();
   });
+
+  it('renders the order summary once', async () => {
+    renderCheckout();
+
+    // The merge that broke this file left two <aside> summaries in the tree,
+    // each with its own subtotal. It failed the build before it could fail
+    // anything else, but a second copy that *did* parse would have been a
+    // page showing the same total twice.
+    expect(screen.getAllByRole('complementary', { name: /order summary/i })).toHaveLength(1);
+    expect(screen.getAllByText(/subtotal/i)).toHaveLength(1);
+  });
+
+  /*
+   * Guest checkout.
+   *
+   * The gateway was unreachable when it merged — `mode` began at 'standard'
+   * and nothing ever set it to 'gateway' — so the component and its three
+   * choices existed but no visitor could get to them. These walk the path.
+   */
+  describe('the guest path', () => {
+    it('offers a way to the checkout options from the address step', async () => {
+      renderCheckout();
+
+      expect(
+        await screen.findByRole('button', { name: /see your options/i })
+      ).toBeInTheDocument();
+    });
+
+    it('opens the gateway, and the gateway offers the guest route', async () => {
+      const user = userEvent.setup();
+      renderCheckout();
+
+      await user.click(screen.getByRole('button', { name: /see your options/i }));
+
+      expect(screen.getByRole('button', { name: /continue as guest/i })).toBeInTheDocument();
+      expect(screen.getByRole('button', { name: /log in/i })).toBeInTheDocument();
+    });
+
+    it('reaches the guest form and can come back from it', async () => {
+      const user = userEvent.setup();
+      renderCheckout();
+
+      await user.click(screen.getByRole('button', { name: /see your options/i }));
+      await user.click(screen.getByRole('button', { name: /continue as guest/i }));
+
+      expect(
+        screen.getByRole('heading', { name: /guest checkout/i })
+      ).toBeInTheDocument();
+
+      await user.click(screen.getByRole('button', { name: /back to checkout options/i }));
+
+      expect(
+        screen.getByRole('heading', { name: /shipping address/i })
+      ).toBeInTheDocument();
+    });
+
+    it('never contacts the payment API on the guest detour', async () => {
+      const user = userEvent.setup();
+      renderCheckout();
+
+      await user.click(screen.getByRole('button', { name: /see your options/i }));
+      await user.click(screen.getByRole('button', { name: /continue as guest/i }));
+
+      expect(createPaymentIntent).not.toHaveBeenCalled();
+    });
+  });
+
+  /*
+   * The hook-order defect, directly.
+   *
+   * `useState` for `mode` sat below the "checkout unavailable" early return.
+   * A render that took that branch ran one fewer hook than one that did not,
+   * and React throws the moment those two renders happen in sequence in the
+   * same tree. Rendering both shapes in one test is what reproduces it.
+   */
+  it('survives the configured and unconfigured payment states in one session', async () => {
+    const errors = [];
+    vi.spyOn(console, 'error').mockImplementation((message) => errors.push(String(message)));
+
+    await loadCheckout({ publishableKey: '' });
+    const { unmount } = renderCheckout();
+    expect(screen.getByRole('heading', { name: /checkout unavailable/i })).toBeInTheDocument();
+    unmount();
+
+    await loadCheckout({ publishableKey: 'pk_test_fake' });
+    renderCheckout();
+
+    await waitFor(() =>
+      expect(screen.getByRole('heading', { name: /shipping address/i })).toBeInTheDocument()
+    );
+    expect(errors.join('\n')).not.toMatch(/Rendered more hooks/);
+  });
 });

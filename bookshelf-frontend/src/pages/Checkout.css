@@ -547,3 +547,40 @@
   font-size: 13px;
   color: var(--ink-soft);
 }
+
+/*
+ * The way through to the guest / sign-in choice.
+ *
+ * This replaces a button that carried a nine-property inline `style` object —
+ * hardcoded #cbd5e1 and #0f172a among them, next to a stylesheet whose whole
+ * job is that those values live in one place and follow the theme. Inline
+ * styles also cannot express :hover or :focus-visible, so the old button had
+ * neither.
+ */
+.checkout__alt {
+  margin: -8px 0 24px;
+  font-size: 14px;
+  color: var(--ink-soft);
+}
+
+.checkout__alt-btn {
+  background: none;
+  border: none;
+  padding: 0;
+  font: inherit;
+  color: var(--ink);
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+}
+
+.checkout__alt-btn:hover {
+  color: var(--accent, var(--ink));
+}
+
+.checkout__alt-btn:focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
