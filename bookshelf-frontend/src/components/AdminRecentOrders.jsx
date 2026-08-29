@@ -1,5 +1,13 @@
 import { useState, useEffect } from 'react';
 import { getRecentOrders } from '../services/adminService.js';
+import { formatMoney } from '../utils/currency.js';
+
+/*
+ * Revenue is formatted by utils/currency.js. It used to be
+ * `₹{value.toLocaleString()}` inline: a hardcoded symbol beside grouping taken
+ * from the browser's locale rather than the currency's, and a method call that
+ * throws outright on a row whose amount came back null.
+ */
 
 /**
  * Maps an order status to a badge class and human label.
@@ -108,7 +116,7 @@ export default function AdminRecentOrders() {
                 <td className="admin-table__name">{order.customerName}</td>
                 <td>{order.itemCount}</td>
                 <td className="admin-table__right">
-                  ₹{order.total.toLocaleString()}
+                  {formatMoney(order.total, { minimumFractionDigits: 0 })}
                 </td>
                 <td>{statusBadge(order.status)}</td>
                 <td>{formatDate(order.createdAt)}</td>

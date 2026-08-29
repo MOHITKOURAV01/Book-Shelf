@@ -1,5 +1,13 @@
 import { useState, useEffect } from 'react';
 import { getSalesTrend } from '../services/adminService.js';
+import { formatMoney } from '../utils/currency.js';
+
+/*
+ * Revenue is formatted by utils/currency.js. It used to be
+ * `₹{value.toLocaleString()}` inline: a hardcoded symbol beside grouping taken
+ * from the browser's locale rather than the currency's, and a method call that
+ * throws outright on a row whose amount came back null.
+ */
 
 /**
  * AdminSalesChart — a pure-CSS bar chart showing revenue per day.
@@ -78,7 +86,7 @@ export default function AdminSalesChart() {
             return (
               <div key={entry.date} className="admin-chart__col">
                 <span className="admin-chart__tooltip">
-                  ₹{entry.revenue.toLocaleString()}
+                  {formatMoney(entry.revenue, { minimumFractionDigits: 0 })}
                 </span>
                 <div className="admin-chart__bar-track">
                   <div

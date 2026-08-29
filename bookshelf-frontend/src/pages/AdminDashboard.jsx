@@ -5,11 +5,19 @@ import AdminSalesChart from '../components/AdminSalesChart.jsx';
 import AdminTopBooks from '../components/AdminTopBooks.jsx';
 import AdminRecentOrders from '../components/AdminRecentOrders.jsx';
 import { getDashboardStats } from '../services/adminService.js';
+import { formatMoney } from '../utils/currency.js';
 
 import '../components/AdminKpiCard.css';
 import '../components/AdminSalesChart.css';
+/*
+ * AdminTopBooks.css also carries AdminRecentOrders' styles — the two share the
+ * whole `.admin-table*` set, badges included — so there is no
+ * AdminRecentOrders.css to import. There was an import for one anyway, which
+ * is an unresolved module: Vite fails the build on it. It went unnoticed
+ * because nothing routes to AdminDashboard, so the page has never been in the
+ * bundle graph for the build to walk.
+ */
 import '../components/AdminTopBooks.css';
-import '../components/AdminRecentOrders.css';
 import './AdminDashboard.css';
 
 /**
@@ -42,9 +50,23 @@ export default function AdminDashboard() {
     return () => controller.abort();
   }, []);
 
-  function formatCurrency(value) {
-    return `₹${(value || 0).toLocaleString()}`;
-  }
+  /*
+   * Money on this page goes through utils/currency.js, like money everywhere
+   * else does since #335.
+   *
+   * There was a local formatter here reading `₹${(value || 0)
+   * .toLocaleString()}`, and it was wrong twice over. `toLocaleString()` with
+   * no locale groups by whatever the *browser* is set to, so total revenue of
+   * 1234567 rendered ₹1,234,567 for most visitors and ₹12,34,567 for one on
+   * an en-IN browser — only the second of which is how a rupee figure is
+   * written. And `|| 0` turned a KPI that failed to load into a confident ₹0;
+   * a dashboard must not report zero revenue when what it means is that it
+   * does not know.
+   *
+   * formatMoney takes the locale from the currency table and renders — for an
+   * absent value. The 0 minimum keeps whole rupees free of a trailing .00.
+   */
+  const money = (value) => formatMoney(value, { minimumFractionDigits: 0 });
 
   return (
     <main className="admin-dashboard">
@@ -68,7 +90,7 @@ export default function AdminDashboard() {
         <AdminKpiCard
           icon="💰"
           label="Total Revenue"
-          value={loading ? undefined : formatCurrency(stats?.totalRevenue)}
+          value={loading ? undefined : money(stats?.totalRevenue)}
           loading={loading}
         />
         <AdminKpiCard
@@ -92,7 +114,7 @@ export default function AdminDashboard() {
         <AdminKpiCard
           icon="🧾"
           label="Avg. Order Value"
-          value={loading ? undefined : formatCurrency(stats?.avgOrderValue)}
+          value={loading ? undefined : money(stats?.avgOrderValue)}
           loading={loading}
         />
       </section>

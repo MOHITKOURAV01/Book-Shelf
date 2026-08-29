@@ -11,7 +11,7 @@ import bookRepository from '../repositories/bookRepository.js';
  * @param {string} period — '7d' | '30d' | '90d' | '1y' | 'all'
  * @returns {{ $gte?: Date }} — a Mongoose-compatible filter, or {} for all.
  */
-function dateFilter(period) {
+export function dateFilter(period) {
   if (!period || period === 'all') return {};
 
   const now = new Date();
