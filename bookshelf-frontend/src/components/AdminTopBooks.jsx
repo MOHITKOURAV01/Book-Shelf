@@ -1,5 +1,13 @@
 import { useState, useEffect } from 'react';
 import { getTopBooks } from '../services/adminService.js';
+import { formatMoney } from '../utils/currency.js';
+
+/*
+ * Revenue is formatted by utils/currency.js. It used to be
+ * `₹{value.toLocaleString()}` inline: a hardcoded symbol beside grouping taken
+ * from the browser's locale rather than the currency's, and a method call that
+ * throws outright on a row whose amount came back null.
+ */
 
 /**
  * AdminTopBooks — table showing the best-selling books for a given period.
@@ -81,7 +89,9 @@ export default function AdminTopBooks() {
                 <td className="admin-table__rank">{index + 1}</td>
                 <td className="admin-table__name">{book.title || book.bookId}</td>
                 <td className="admin-table__right">{book.totalSold}</td>
-                <td className="admin-table__right">₹{book.totalRevenue.toLocaleString()}</td>
+                <td className="admin-table__right">
+                  {formatMoney(book.totalRevenue, { minimumFractionDigits: 0 })}
+                </td>
               </tr>
             ))}
           </tbody>
