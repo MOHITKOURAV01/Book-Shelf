@@ -5,7 +5,9 @@ import { Elements } from '@stripe/react-stripe-js';
 
 import paymentService from '../services/paymentService.js';
 import CheckoutForm from '../components/CheckoutForm.jsx';
+import CheckoutGateway from '../components/CheckoutGateway.jsx';
 import CouponInput from '../components/CouponInput.jsx';
+import GuestCheckoutForm from '../components/GuestCheckoutForm.jsx';
 import { useCart } from '../hooks/useCart.js';
 import {
   ADDRESS_FIELDS,
@@ -82,6 +84,20 @@ export default function Checkout() {
   const [couponDiscount, setCouponDiscount] = useState(0);
   const [couponCode, setCouponCode] = useState('');
 
+  /*
+   * Which of the three views the page is showing: the address form
+   * ('standard'), the choice of how to check out ('gateway'), or the guest
+   * details form ('guest').
+   *
+   * It lives here, with the other hooks, and not next to the branch that
+   * reads it. It used to sit below the "checkout unavailable" early return,
+   * so a deployment with no publishable key ran one fewer hook than one with
+   * a key and React threw `Rendered more hooks than during the previous
+   * render` the moment the two rendered in sequence. Same defect as #365 and
+   * #366: what matters is where the call is, not where the value is used.
+   */
+  const [mode, setMode] = useState('standard');
+
   const items = useMemo(() => toOrderItems(cart), [cart]);
   const bookCount = useMemo(() => countItems(cart), [cart]);
   const subtotal = useMemo(() => cartSubtotal(cart), [cart]);
@@ -153,6 +169,22 @@ export default function Checkout() {
     clearCart();
   }, [clearCart]);
 
+  /*
+   * Stable identities, because CheckoutGateway takes onProceedToAuth as an
+   * effect dependency. Passed as inline arrows these were a fresh function on
+   * every render, so the effect re-ran on every render and only stopped
+   * looping because setMode happened to be called with the value it already
+   * held.
+   */
+  const showGateway = useCallback(() => setMode('gateway'), []);
+  const showAddressStep = useCallback(() => setMode('standard'), []);
+  const showGuestStep = useCallback(() => setMode('guest'), []);
+
+  const handleGuestOrderComplete = useCallback(() => {
+    clearCart();
+    navigate('/order-confirmation');
+  }, [clearCart, navigate]);
+
   if (!stripePromise) {
     return (
       <main className="checkout">
@@ -169,8 +201,6 @@ export default function Checkout() {
       </main>
     );
   }
-
-  const [mode, setMode] = useState('standard');
 
   if (items.length === 0 && !clientSecret) {
     return (
@@ -190,8 +220,8 @@ export default function Checkout() {
     return (
       <main className="checkout">
         <CheckoutGateway
-          onProceedToAuth={() => setMode('standard')}
-          onProceedToGuest={() => setMode('guest')}
+          onProceedToAuth={showAddressStep}
+          onProceedToGuest={showGuestStep}
         />
       </main>
     );
@@ -201,10 +231,8 @@ export default function Checkout() {
     return (
       <main className="checkout">
         <GuestCheckoutForm
-          onOrderComplete={() => {
-            clearCart();
-            navigate('/order-confirmation');
-          }}
+          onBack={showAddressStep}
+          onOrderComplete={handleGuestOrderComplete}
         />
       </main>
     );
@@ -212,18 +240,20 @@ export default function Checkout() {
 
   return (
     <main className="checkout">
-      <div style={{ marginBottom: '16px', display: 'flex', gap: '12px' }}>
-        <button
-          type="button"
-          className="checkout__guest-btn"
-          onClick={() => setMode('guest')}
-          style={{ background: 'var(--surface-color, #f1f5f9)', color: 'var(--ink-color, #0f172a)', padding: '8px 16px', borderRadius: '6px', border: '1px solid #cbd5e1', cursor: 'pointer' }}
-        >
-          Checkout as Guest
-        </button>
-      </div>
-
       <h1 className="checkout__title">Secure checkout</h1>
+
+      {/*
+        The gateway is how someone gets to the guest form. Before this it was
+        unreachable: `mode` started at 'standard' and the only setter on the
+        page passed 'guest', so the component, its stylesheet and the log-in
+        and register choices it offers were dead from the day they merged.
+      */}
+      <p className="checkout__alt">
+        Checking out for the first time?{' '}
+        <button type="button" className="checkout__alt-btn" onClick={showGateway}>
+          See your options
+        </button>
+      </p>
 
       <div className="checkout__layout">
         <section className="checkout__panel" aria-labelledby="checkout-details">
@@ -333,61 +363,6 @@ export default function Checkout() {
               <dd>{money(amount ? amount.subtotal : subtotal, currency)}</dd>
             </div>
 
-            {amount && (
-              <>
-                <div className="checkout__total-row">
-                  <dt>Tax</dt>
-                  <dd>{money(amount.tax, currency)}</dd>
-                </div>
-                <div className="checkout__total-row">
-                  <dt>Shipping</dt>
-                  <dd>{money(amount.shipping, currency)}</dd>
-                </div>
-                <div className="checkout__total-row checkout__total-row--grand">
-                  <dt>Total</dt>
-                  <dd>{money(amount.total, currency)}</dd>
-                </div>
-              </>
-            )}
-          </dl>
-
-          {!amount && (
-            <p className="checkout__note">
-              Tax and shipping are calculated at the next step.
-            </p>
-          )}
-            </form>
-          )}
-        </section>
-
-        <aside className="checkout__panel checkout__summary" aria-label="Order summary">
-          <h2 className="checkout__section-title">Order summary</h2>
-
-          <ul className="checkout__lines">
-            {cart.map((item) => (
-              <li className="checkout__line" key={item.id ?? item.bookId}>
-                <span className="checkout__line-title">
-                  {item.title}
-                  <span className="checkout__line-qty"> × {item.quantity}</span>
-                </span>
-                <span className="checkout__line-price">
-                  {money(Number(item.price ?? 0) * Number(item.quantity ?? 0), currency)}
-                </span>
-              </li>
-            ))}
-          </ul>
-
-          <dl className="checkout__totals">
-            <div className="checkout__total-row">
-              <dt>Subtotal ({bookCount} {bookCount === 1 ? 'book' : 'books'})</dt>
-              <dd>{money(amount ? amount.subtotal : subtotal, currency)}</dd>
-            </div>
-
-            {/*
-              Tax and shipping are decided by the server, so they only appear
-              once it has told us what they are. Showing a guess next to a
-              real card form is how a customer ends up disputing a charge.
-            */}
             {amount && (
               <>
                 <div className="checkout__total-row">
