@@ -1,5 +1,10 @@
 import React from "react";
-import "./FavoriteCategories.css";
+// The stylesheet is Bookstartent.css — this file and its CSS were renamed
+// together and the import was not. Its own header comment still says
+// "FavoriteCategories.css", and every rule in it is a .favorite-categories
+// one, so this is the right file under the wrong name rather than a missing
+// one. See #368.
+import "./Bookstartent.css";
 
 export default function FavoriteCategories({
   categories = [],

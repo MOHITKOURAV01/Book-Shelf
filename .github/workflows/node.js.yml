@@ -56,5 +56,15 @@ jobs:
         cache-dependency-path: ${{ matrix.workspace }}/package-lock.json
 
     - run: npm ci
+
+    # Before the build, because it is the cheaper of the two and it is the
+    # check that catches the class of bug the build does not. `vite build`
+    # will happily bundle a component whose body reads an identifier that
+    # does not exist — that is valid JavaScript to a bundler, and it fails
+    # only when the page renders. `no-undef` catches it here.
+    #
+    # --if-present because bookshelf-backend has no lint script yet.
+    - run: npm run lint --if-present
+
     - run: npm run build --if-present
     - run: npm test
