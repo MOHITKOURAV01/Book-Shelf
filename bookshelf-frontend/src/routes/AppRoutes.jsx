@@ -2,6 +2,7 @@ import { Routes, Route, Navigate } from 'react-router-dom';
 
 import App from '../App.jsx';
 import ProtectedRoute from '../components/ProtectedRoute.jsx';
+import AdminRoute from '../components/AdminRoute.jsx';
 import ErrorBoundary from '../components/ErrorBoundary.jsx';
 
 import Home from '../pages/Home.jsx';
@@ -18,6 +19,8 @@ import AboutUs from '../pages/AboutUs.jsx';
 import PrivacyPolicy from '../pages/PrivacyPolicy.jsx';
 import TermsOfService from '../pages/TermsOfService.jsx';
 import AdminInventoryPage from '../pages/AdminInventoryPage.jsx';
+import AdminDashboard from '../pages/AdminDashboard.jsx';
+import CollectionsPage from '../pages/CollectionsPage.jsx';
 import DesignSystemPage from '../pages/DesignSystemPage.jsx';
 import NotFound from '../pages/NotFound.jsx';
 import StockAlertsPage from '../pages/StockAlertsPage.jsx';
@@ -61,9 +64,32 @@ export default function AppRoutes() {
         <Route path="login" element={<Login />} />
         <Route path="register" element={<Register />} />
 
+        {/*
+          /signup has redirected here since #273. pages/Signup.jsx was left
+          behind at that point — a second registration form, imported by
+          nothing, that the redirect made permanently unreachable. Removed
+          rather than routed: /register is the registration page, and a second
+          one is how the two drift apart.
+        */}
         <Route path="signup" element={<Navigate to="/register" replace />} />
 
         {/* Requires Admin */}
+        {/*
+          The analytics dashboard, which had no route at all.
+
+          AdminDashboard.jsx is a finished page with a passing test file, and
+          nothing could reach it — its own header comment says so, and
+          AdminRoute's doc comment documents this exact line as its intended
+          usage. Both were written and neither was ever wired up. See #421.
+        */}
+        <Route
+          path="admin"
+          element={
+            <AdminRoute>
+              <AdminDashboard />
+            </AdminRoute>
+          }
+        />
         <Route
           path="admin/inventory"
           element={
@@ -131,6 +157,26 @@ export default function AppRoutes() {
           element={
             <ProtectedRoute>
               <StockAlertsPage />
+            </ProtectedRoute>
+          }
+        />
+
+        {/*
+          Collections had no route either, which stranded rather more than one
+          page: services/collectionService.js, routes/collectionRoutes.js,
+          controllers/collectionController.js and models/Collection.js are a
+          complete, mounted, serving feature that nothing in the shipped app
+          ever called.
+
+          Behind ProtectedRoute because the API is `router.use(protect)` — a
+          signed-out visitor would reach the page and see nothing but the
+          error from its first request.
+        */}
+        <Route
+          path="collections"
+          element={
+            <ProtectedRoute>
+              <CollectionsPage />
             </ProtectedRoute>
           }
         />

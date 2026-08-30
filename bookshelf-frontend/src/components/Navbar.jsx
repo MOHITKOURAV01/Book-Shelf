@@ -182,10 +182,19 @@ export default function Navbar({ searchQuery, setSearchQuery }) {
 
   const label = (key, fallback) => (key ? t(key) || fallback : fallback);
 
+  /*
+   * Collections and the admin dashboard had no route, so they also had no
+   * link. Adding the routes without the links would leave both pages
+   * reachable only by typing a URL, which is not meaningfully better than
+   * unreachable. Collections sits next to the wishlist, which is the other
+   * "books I have put aside" page. See #421.
+   */
   const accountLinks = isAuthenticated
     ? [
         { to: '/profile', label: t('navbar.profile') || 'Profile' },
         { to: '/account/orders', label: 'My orders' },
+        { to: '/collections', label: '📚 My collections' },
+        { to: '/admin', label: '📊 Admin Dashboard' },
         { to: '/admin/inventory', label: '🛠️ Admin Inventory' },
         { to: '/design-system', label: '🎨 Design System' },
       ]

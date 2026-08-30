@@ -256,4 +256,45 @@ describe('Navbar', () => {
       expect(hamburger).toHaveAttribute('aria-expanded', 'true');
     });
   });
+
+  /*
+   * Collections and the admin dashboard had no route and therefore no link.
+   * Adding the routes without the links would leave both reachable only by
+   * typing a URL. See #421.
+   */
+  describe('the account menu', () => {
+    it('offers the collections page', async () => {
+      const user = userEvent.setup();
+      renderNavbar({ auth: signedIn() });
+
+      await user.click(screen.getByRole('button', { name: /toggle menu/i }));
+
+      // Desktop and mobile menus both render the account links.
+      expect(
+        screen.getAllByRole('link', { name: /my collections/i }).length
+      ).toBeGreaterThan(0);
+    });
+
+    it('offers the admin dashboard', async () => {
+      const user = userEvent.setup();
+      renderNavbar({ auth: signedIn() });
+
+      await user.click(screen.getByRole('button', { name: /toggle menu/i }));
+
+      expect(
+        screen.getAllByRole('link', { name: /admin dashboard/i }).length
+      ).toBeGreaterThan(0);
+    });
+
+    it('offers neither to an anonymous visitor', () => {
+      renderNavbar();
+
+      expect(
+        screen.queryByRole('link', { name: /my collections/i })
+      ).not.toBeInTheDocument();
+      expect(
+        screen.queryByRole('link', { name: /admin dashboard/i })
+      ).not.toBeInTheDocument();
+    });
+  });
 });
