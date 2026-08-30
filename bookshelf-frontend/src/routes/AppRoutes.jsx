@@ -90,12 +90,29 @@ export default function AppRoutes() {
             </AdminRoute>
           }
         />
+
+        {/*
+          Requires admin — and now actually checks for it.
+
+          This said `<ProtectedRoute>` with no `requireAdmin`, and that prop
+          defaults to false, so the only thing the route checked was that
+          somebody was signed in. Any registered customer who typed the URL
+          got the full inventory manager: the add-book modal, the edit forms,
+          the delete buttons, the stock steppers, the bulk upload panel and
+          the user table. The backend's `protect, admin` middleware is the
+          only reason the catalogue survived that, which makes every action on
+          the page fail with an error rather than the page being closed.
+
+          `AdminRoute` is used rather than `<ProtectedRoute requireAdmin>`
+          because a guard whose protection depends on remembering a prop is
+          the thing that failed here. See #420.
+        */}
         <Route
           path="admin/inventory"
           element={
-            <ProtectedRoute>
+            <AdminRoute>
               <AdminInventoryPage />
-            </ProtectedRoute>
+            </AdminRoute>
           }
         />
 
